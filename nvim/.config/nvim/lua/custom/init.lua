@@ -1,0 +1,7 @@
+require("custom.opts")
+require("custom.binds")
+require("custom.terminal")
+require("custom.autocmd")
+require("custom.cmd")
+require("custom.statusline")
+require("custom.filetree")
