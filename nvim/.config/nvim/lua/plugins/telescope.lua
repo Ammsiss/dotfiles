@@ -51,7 +51,6 @@ function M.config()
         builtin.man_pages(themes[theme](layout))
     end, opts)
 
-    -- vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#66B2B2", bg = "NONE" })
     vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { fg = "#E67E22", bg = "NONE" })
     vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { fg = "#E67E22", bg = "NONE" })
     vim.api.nvim_set_hl(0, "TelescopePromptBorder", { fg = "#E67E22", bg = "NONE" })
