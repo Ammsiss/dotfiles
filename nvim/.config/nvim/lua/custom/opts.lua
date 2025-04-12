@@ -28,6 +28,7 @@ vim.opt.wrap = true
 vim.opt.pumheight = 10
 vim.opt.showmode = false
 vim.opt.winborder = "rounded"
+vim.opt.clipboard = "unnamedplus"
 
 --- Diagnostic settings
 vim.diagnostic.config({

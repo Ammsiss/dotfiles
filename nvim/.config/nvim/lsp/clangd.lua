@@ -10,7 +10,8 @@ local root_files = {
 }
 
 local set = vim.keymap.set
-local on_attach = function(_, bufnr) -- client
+local on_attach = function(_, bufnr)
+
     local opts = { noremap = true, silent = true, buffer = bufnr }
 
     set("n", "gd", vim.lsp.buf.definition, opts)
@@ -18,15 +19,12 @@ local on_attach = function(_, bufnr) -- client
     set("n", "gr", vim.lsp.buf.references, opts)
     set("n", "ca", vim.lsp.buf.code_action, opts)
     set("n", "rn", vim.lsp.buf.rename, opts)
-
     set("n", "]d", function()
         vim.diagnostic.jump({ count = 1, wrap = true })
     end, opts)
-
-    set("n", "[pd", function()
+    set("n", "[d", function()
         vim.diagnostic.jump({ count = -1, wrap = true })
     end, opts)
-
     set("n", "<leader>d", function()
         vim.diagnostic.open_float(nil, { scope = "cursor" })
     end, opts)
