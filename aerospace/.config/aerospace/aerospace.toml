@@ -1,0 +1,103 @@
+after-login-command = []
+after-startup-command = []
+start-at-login = true
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+key-mapping.preset = 'qwerty'
+
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+[gaps]
+    inner.horizontal = 0
+    inner.vertical =   0
+    outer.left =       0
+    outer.bottom =     0
+    outer.top =        0
+    outer.right =      0
+
+[mode.main.binding]
+
+    cmd-x = 'close'
+
+    #cmd-slash = 'layout tiles horizontal vertical'
+    #cmd-comma = 'layout accordion horizontal vertical'
+
+    cmd-h = 'focus left'
+    cmd-j = 'focus down'
+    cmd-k = 'focus up'
+    cmd-l = 'focus right'
+
+    cmd-shift-h = 'move left'
+    cmd-shift-j = 'move down'
+    cmd-shift-k = 'move up'
+    cmd-shift-l = 'move right'
+
+    cmd-shift-minus = 'resize smart -50'
+    cmd-shift-equal = 'resize smart +50'
+
+    cmd-0 = 'workspace 1'
+    cmd-9 = 'workspace 2'
+    cmd-8 = 'workspace 3'
+    cmd-7 = 'workspace 4'
+    cmd-6 = 'workspace 5'
+    cmd-5 = 'workspace 6'
+    cmd-4 = 'workspace 7'
+    cmd-3 = 'workspace 8'
+    cmd-2 = 'workspace 9'
+    cmd-1 = 'workspace 10'
+    cmd-m = 'workspace 11'
+
+    cmd-shift-0 = 'move-node-to-workspace 1'
+    cmd-shift-9 = 'move-node-to-workspace 2'
+    cmd-shift-8 = 'move-node-to-workspace 3'
+    cmd-shift-7 = 'move-node-to-workspace 4'
+    cmd-shift-6 = 'move-node-to-workspace 5'
+    cmd-shift-5 = 'move-node-to-workspace 6'
+    cmd-shift-4 = 'move-node-to-workspace 7'
+    cmd-shift-3 = 'move-node-to-workspace 8'
+    cmd-shift-2 = 'move-node-to-workspace 9'
+    cmd-shift-1 = 'move-node-to-workspace 10'
+    cmd-shift-m = 'move-node-to-workspace 11'
+
+    cmd-tab = 'workspace-back-and-forth'
+    cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+    cmd-shift-semicolon = 'mode service'
+[layouts]
+name = "2-left-1-right"
+windows = [
+  { x = 0.0, y = 0.0, width = 0.5, height = 0.5 },   # top-left
+  { x = 0.0, y = 0.5, width = 0.5, height = 0.5 },   # bottom-left
+  { x = 0.5, y = 0.0, width = 0.5, height = 1.0 }    # right half
+]
+
+# [rules]
+# app = "Notes"
+# layout = "2-left-1-right"
+# window = 0
+#
+# [[rules]]
+# app = "Mail"
+# layout = "2-left-1-right"
+# window = 1
+#
+# [[rules]]
+# app = "Safari"
+# layout = "2-left-1-right"
+# window = 2
+
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main']
+    f = ['layout floating tiling', 'mode main']
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    alt-shift-h = ['join-with left', 'mode main']
+    alt-shift-j = ['join-with down', 'mode main']
+    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-l = ['join-with right', 'mode main']

@@ -1,0 +1,13 @@
+[init]
+    defaultBranch = main
+[user]
+    name = Junji
+    email = j7nj1.t41@gmail.com
+[core]
+    editor = nvim
+[diff]
+    tool = nvim
+[difftool]
+    prompt = false
+[difftool "nvim"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
