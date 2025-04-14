@@ -2,14 +2,14 @@ local function open(title, command, path)
 
     local buf = vim.api.nvim_create_buf(false, true)
 
-    local width = vim.o.columns
-    local height = vim.o.lines - 3
+    local width = vim.o.columns - 20
+    local height = vim.o.lines - 6 - 3
     local design = {
         style = "minimal",
         relative = "editor",
         width = width,
         height = height,
-        row = (vim.o.lines - height) / 2,
+        row = (vim.o.lines - height) / 2 - 2,
         col = (vim.o.columns - width) / 2,
         title = title,
         title_pos = "center",
@@ -35,16 +35,29 @@ vim.keymap.set("n", "<leader>fd", function()
     open(" :-D File Search :-D ",
     [[
         gfind -type f -printf '%P\n' | \
-        fzf --layout=reverse --preview 'bat --style=header,grid,changes --color=always {}' \
+        fzf --layout=reverse --preview 'bat --style=header,grid,changes,numbers --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
-    ]], vim.fn.getcwd())
+    ]], vim.fn.getcwd() .. "/")
+end, { silent = true })
+
+vim.keymap.set("n", "<leader>fs", function()
+    open(" :-D Edit Neovim :-D ",
+    [[
+        git diff --name-only --diff-filter=ACMRT | \
+        fzf --layout=reverse \
+        --preview='
+        repo=$(git rev-parse --show-toplevel)
+        bat --style=header,grid,changes --color=always "$repo"/{}
+        ' \
+        --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
+    ]], "")
 end, { silent = true })
 
 vim.keymap.set("n", "<leader>en", function()
     open(" :-D Edit Neovim :-D ",
     [[
         gfind /Users/ammsiss/dotfiles/nvim/.config/nvim -type f | \
-        fzf --layout=reverse --preview 'bat --style=header,grid,changes --color=always {}' \
+        fzf --layout=reverse --preview 'bat --style=header,grid,changes,numbers --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], "")
 end, { silent = true })
@@ -68,7 +81,7 @@ vim.api.nvim_create_user_command("Fg", function(args)
                 start=$(( line - 15 )); [ $start -lt 1 ] && start=1
                 end=$(( line + 15 ))
 
-                bat --color=always --style=header,grid,changes \
+                bat --color=always --style=header,grid,changes,numbers \
                     --line-range "$start:$end" \
                     --highlight-line "$line" "$file"
             ' \
@@ -76,10 +89,3 @@ vim.api.nvim_create_user_command("Fg", function(args)
             --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]])
 end, { nargs = "?" })
-
--- vim.api.nvim_create_autocmd("TermClose", {
---   pattern = "*",
---   callback = function()
---     vim.cmd("bd!")
---   end,
--- })
