@@ -8,10 +8,11 @@ require("config.neoplug").setup({
     path = "plugins",
     extra = {
         { name = "nvim-tree/nvim-web-devicons", priority = 999 },
-        { name = "nvim-lua/plenary.nvim" },
-        { name = "hrsh7th/cmp-nvim-lsp" },
-        { name = "hrsh7th/cmp-path" },
-        { name = "hrsh7th/cmp-buffer" },
+        -- cmp sources
+        { name = "hrsh7th/cmp-nvim-lsp", enabled = true },
+        { name = "hrsh7th/cmp-path", enabled = true },
+        { name = "hrsh7th/cmp-buffer", enabled = true },
+        { name = "hrsh7th/cmp-nvim-lsp-signature-help", enabled = true },
     }
 }, { auto_update = true, ui = { border = "rounded" }})
 
@@ -21,10 +22,6 @@ require("custom")
 -- LSP SETUP (see https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/configs)
 vim.lsp.enable({ "lua_ls" })
 vim.lsp.enable({ "clangd" })
-
-
-
-
 
 -- Global Vim Color Highlights (#E67E22 = Orange)
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = "NONE", bg = "NONE" })

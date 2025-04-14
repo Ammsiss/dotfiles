@@ -22,7 +22,7 @@ local on_attach = function(_, bufnr) -- client
         vim.diagnostic.jump({ count = 1, wrap = true })
     end, opts)
 
-    set("n", "[pd", function()
+    set("n", "[d", function()
         vim.diagnostic.jump({ count = -1, wrap = true })
     end, opts)
 
