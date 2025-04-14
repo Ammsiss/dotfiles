@@ -41,17 +41,17 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     cmd-shift-minus = 'resize smart -50'
     cmd-shift-equal = 'resize smart +50'
 
-    cmd-0 = 'workspace 1'
-    cmd-9 = 'workspace 2'
-    cmd-8 = 'workspace 3'
-    cmd-7 = 'workspace 4'
-    cmd-6 = 'workspace 5'
-    cmd-5 = 'workspace 6'
-    cmd-4 = 'workspace 7'
-    cmd-3 = 'workspace 8'
-    cmd-2 = 'workspace 9'
-    cmd-1 = 'workspace 10'
-    cmd-m = 'workspace 11'
+    cmd-0 = 'workspace --auto-back-and-forth 1'
+    cmd-9 = 'workspace --auto-back-and-forth 2'
+    cmd-8 = 'workspace --auto-back-and-forth 3'
+    cmd-7 = 'workspace --auto-back-and-forth 4'
+    cmd-6 = 'workspace --auto-back-and-forth 5'
+    cmd-5 = 'workspace --auto-back-and-forth 6'
+    cmd-4 = 'workspace --auto-back-and-forth 7'
+    cmd-3 = 'workspace --auto-back-and-forth 8'
+    cmd-2 = 'workspace --auto-back-and-forth 9'
+    cmd-1 = 'workspace --auto-back-and-forth 10'
+    cmd-m = 'workspace --auto-back-and-forth 11'
 
     cmd-shift-0 = 'move-node-to-workspace 1'
     cmd-shift-9 = 'move-node-to-workspace 2'
@@ -66,30 +66,12 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     cmd-shift-m = 'move-node-to-workspace 11'
 
     cmd-tab = 'workspace-back-and-forth'
+
     cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
     cmd-shift-semicolon = 'mode service'
-[layouts]
-name = "2-left-1-right"
-windows = [
-  { x = 0.0, y = 0.0, width = 0.5, height = 0.5 },   # top-left
-  { x = 0.0, y = 0.5, width = 0.5, height = 0.5 },   # bottom-left
-  { x = 0.5, y = 0.0, width = 0.5, height = 1.0 }    # right half
-]
 
-# [rules]
-# app = "Notes"
-# layout = "2-left-1-right"
-# window = 0
-#
-# [[rules]]
-# app = "Mail"
-# layout = "2-left-1-right"
-# window = 1
-#
-# [[rules]]
-# app = "Safari"
-# layout = "2-left-1-right"
-# window = 2
+[workspace-to-monitor-force-assignment]
+    11 = 'secondary'
 
 [mode.service.binding]
     esc = ['reload-config', 'mode main']
@@ -101,3 +83,19 @@ windows = [
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.finder'
+    run = ['layout floating']
+
+[[on-window-detected]]
+    if.app-id = 'org.mozilla.firefox'
+    run = ['layout tiling', 'move-node-to-workspace 10']
+
+[[on-window-detected]]
+    if.app-id = 'com.googlecode.iterm2'
+    run = ['layout tiling', 'move-node-to-workspace 1']
+
+[[on-window-detected]]
+    if.app-id = 'com.openai.chat'
+    run = ['layout tiling', 'move-node-to-workspace 8']

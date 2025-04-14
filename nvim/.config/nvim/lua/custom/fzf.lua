@@ -32,22 +32,22 @@ local function open(title, command, path)
 end
 
 vim.keymap.set("n", "<leader>fd", function()
-    open(" :-D File Search :-D ",
+    open("  File Search  ",
     [[
         gfind -type f -printf '%P\n' | \
-        fzf --layout=reverse --preview 'bat --style=header,grid,changes,numbers --color=always {}' \
+        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], vim.fn.getcwd() .. "/")
 end, { silent = true })
 
 vim.keymap.set("n", "<leader>fs", function()
-    open(" :-D Edit Neovim :-D ",
+    open("  Git Changes  ",
     [[
         git diff --name-only --diff-filter=ACMRT | \
-        fzf --layout=reverse \
+        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse \
         --preview='
         repo=$(git rev-parse --show-toplevel)
-        bat --style=header,grid,changes --color=always "$repo"/{}
+        bat --style=changes --color=always "$repo"/{}
         ' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], "")
@@ -56,8 +56,8 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>en", function()
     open(" :-D Edit Neovim :-D ",
     [[
-        gfind /Users/ammsiss/dotfiles/nvim/.config/nvim -type f | \
-        fzf --layout=reverse --preview 'bat --style=header,grid,changes,numbers --color=always {}' \
+        gfind /Users/ammsiss/dotfiles -type f | \
+        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], "")
 end, { silent = true })
@@ -72,7 +72,7 @@ vim.api.nvim_create_user_command("Fg", function(args)
     open(" :-D Grep :-D ",
     [[
         grep -rn --color=always ]] .. args.fargs[1] .. [[ . | sed 's|^\./||' | \
-        fzf --ansi \
+        fzf --ansi --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " \
             --preview='
                 file=$(echo {} | cut -d":" -f1)
                 line=$(echo {} | cut -d":" -f2)
@@ -81,7 +81,7 @@ vim.api.nvim_create_user_command("Fg", function(args)
                 start=$(( line - 15 )); [ $start -lt 1 ] && start=1
                 end=$(( line + 15 ))
 
-                bat --color=always --style=header,grid,changes,numbers \
+                bat --color=always --style=changes \
                     --line-range "$start:$end" \
                     --highlight-line "$line" "$file"
             ' \
