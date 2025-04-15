@@ -21,11 +21,15 @@ local function open(title, command, path)
     vim.fn.jobstart(command, {
             term = true,
             on_exit = function(_, exit_code, _)
+
                 if exit_code == 0 then
                     local lines = vim.api.nvim_buf_get_lines(buf, 0, 1, false)
                     vim.cmd("close")
                     vim.cmd("e " .. path .. lines[1])
+                else
+                    vim.cmd("close")
                 end
+
             end
         }
     )

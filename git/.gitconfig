@@ -7,9 +7,11 @@
     editor = nvim
     autocrlf = input
     safecrlf = true
-[diff]
-    tool = nvim
+    pager = delta
 [difftool]
     prompt = false
-[difftool "nvim"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[delta]
+    syntax-theme = gruvbox-dark
+    side-by-side = true
+    line-numbers = false
+    dark = true
