@@ -35,7 +35,8 @@ end
 vim.keymap.set("n", "<leader>fd", function()
     open("  File Search  ",
     [[
-        gfind -type f -printf '%P\n' | \
+        gfind \( -path '*/.git' -o -path '*/node_modules' \) -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
+
         fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], vim.fn.getcwd() .. "/")
@@ -82,8 +83,8 @@ vim.keymap.set("n", "<leader>fg", function()
             file=$(echo {} | cut -d":" -f1)
             line=$(echo {} | cut -d":" -f2)
 
-            start=$(( line - 50 )); [ $start -lt 1 ] && start=1
-            end=$(( line + 50 ))
+            start=$(( line - 20 )); [ $start -lt 1 ] && start=1
+            end=$(( line + 20 ))
 
             bat --color=always --style=changes \
                 --line-range "$start:$end" \

@@ -5,6 +5,8 @@
     email = j7nj1.t41@gmail.com
 [core]
     editor = nvim
+    autocrlf = input
+    safecrlf = true
 [diff]
     tool = nvim
 [difftool]
