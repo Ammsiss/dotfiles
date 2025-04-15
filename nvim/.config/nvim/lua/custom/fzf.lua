@@ -13,6 +13,7 @@ local function open(title, command, path)
         col = (vim.o.columns - width) / 2,
         title = title,
         title_pos = "center",
+        border = "rounded",
     }
 
     vim.api.nvim_open_win(buf, true, design)
@@ -41,6 +42,13 @@ vim.keymap.set("n", "<leader>fd", function()
 end, { silent = true })
 
 vim.keymap.set("n", "<leader>fs", function()
+    local handle = io.popen("git rev-parse --show-toplevel 2> /dev/null")
+    local git_root
+    if handle then
+        git_root = handle:read("*a"):gsub("%s+$", "")
+        handle:close()
+    end
+
     open("  Git Changes  ",
     [[
         git diff --name-only --diff-filter=ACMRT | \
@@ -50,42 +58,47 @@ vim.keymap.set("n", "<leader>fs", function()
         bat --style=changes --color=always "$repo"/{}
         ' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
-    ]], "")
+    ]], git_root .. "/")
 end, { silent = true })
 
 vim.keymap.set("n", "<leader>en", function()
-    open(" :-D Edit Neovim :-D ",
+    open(" Edit Dotfiles ",
     [[
-        gfind /Users/ammsiss/dotfiles -type f | \
-        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
-        --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
+        gfind /Users/ammsiss/dotfiles \( -path '*/.git' -o -path '*/node_modules' \) -prune -false -o -type f ! -name .DS_Store -print | \
+
+        fzf --color=pointer:#006c7a,prompt:#FFA500 \
+            --prompt="> " \
+            --layout=reverse \
+            --preview 'bat --style=changes --color=always {}' \
+            --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], "")
 end, { silent = true })
 
-vim.api.nvim_create_user_command("Fg", function(args)
-
-    if args.fargs[1] == "" or args.fargs[1] == nil then
-        print("Invalid search term")
-        return
-    end
-
-    open(" :-D Grep :-D ",
+vim.keymap.set("n", "<leader>fg", function()
+    open(" Live Grep ",
     [[
-        grep -rn --color=always ]] .. args.fargs[1] .. [[ . | sed 's|^\./||' | \
-        fzf --ansi --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " \
-            --preview='
-                file=$(echo {} | cut -d":" -f1)
-                line=$(echo {} | cut -d":" -f2)
+        RG_CMD='grep -rn --color=always'
+        BAT_CMD='
+            file=$(echo {} | cut -d":" -f1)
+            line=$(echo {} | cut -d":" -f2)
 
-                # 15‑line window, clamped to the top of the file
-                start=$(( line - 15 )); [ $start -lt 1 ] && start=1
-                end=$(( line + 15 ))
+            start=$(( line - 50 )); [ $start -lt 1 ] && start=1
+            end=$(( line + 50 ))
 
-                bat --color=always --style=changes \
-                    --line-range "$start:$end" \
-                    --highlight-line "$line" "$file"
-            ' \
+            bat --color=always --style=changes \
+                --line-range "$start:$end" \
+                --highlight-line "$line" "$file"
+        ' \
+
+        fzf --ansi \
             --layout=reverse \
-            --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
+            --disabled \
+            --phony \
+            --color=pointer:#006c7a,prompt:#FFA500 \
+            --prompt '> ' \
+            --delimiter : \
+            --preview $BAT_CMD \
+            --bind "start:reload:echo" \
+            --bind "change:reload:(test -n '{q}' && $RG_CMD '{q}') || true"
     ]])
-end, { nargs = "?" })
+end, { silent = true })

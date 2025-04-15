@@ -1,15 +1,13 @@
 local root_files = {
-  '.luarc.json',
-  '.luarc.jsonc',
-  '.luacheckrc',
-  '.stylua.toml',
-  'stylua.toml',
-  'selene.toml',
-  'selene.yml',
+    "tsconfig.json",
+    "jsconfig.json",
+    "package.json",
+    ".git",
 }
 
 local set = vim.keymap.set
-local on_attach = function(_, bufnr) -- client
+local on_attach = function(_, bufnr)
+
     local opts = { noremap = true, silent = true, buffer = bufnr }
 
     set("n", "gd", vim.lsp.buf.definition, opts)
@@ -32,8 +30,11 @@ local on_attach = function(_, bufnr) -- client
 end
 
 return {
-  cmd = { 'lua-language-server' },
-  filetypes = {'lua'},
-  root_markers = root_files,
-  on_attach = on_attach
+    cmd = {
+        "typescript-language-server",
+        "--stdio",
+    },
+    filetypes = { "javascript", "javascriptreact", "js", "jsx" },
+    root_markers = root_files,
+    on_attach = on_attach
 }
