@@ -36,6 +36,40 @@ local function open(title, command, path)
     vim.api.nvim_feedkeys("i", "n", false)
 end
 
+vim.keymap.set("n", "<leader>fh", function()
+    open("  File Search  ",
+    [[
+        NVIM_HELP_FILES=$(
+        nvim --headless -u NONE \
+            -c 'lua io.write(table.concat(vim.api.nvim_get_runtime_file("doc/*.txt", true), " "))' \
+            -c qa
+        )
+
+        RELOAD="reload:(test -n '{q}' && grep -Hn --color=always '{q}' $NVIM_HELP_FILES) || :"
+
+        BAT_CMD='
+        file=$(echo {} | cut -d":" -f1)
+        line=$(echo {} | cut -d":" -f2)
+
+        start=$(( line - 20 )); [ $start -lt 1 ] && start=1
+        end=$(( line + 20 ))
+
+        bat --color=always --style=changes \
+            --line-range "$start:$end" \
+            --highlight-line "$line" "$file"
+        '
+
+        fzf --ansi \
+            --layout=reverse \
+            --disabled --phony \
+            --prompt '> ' \
+            --delimiter ':' \
+            --preview "$BAT_CMD" \
+            --bind "start:$RELOAD" \
+            --bind "change:$RELOAD"
+    ]], "")
+end, { silent = true })
+
 vim.keymap.set("n", "<leader>fd", function()
     open("  File Search  ",
     [[
