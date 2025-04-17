@@ -23,10 +23,10 @@ function M.config()
         invert_tabline = false,
         invert_intend_guides = false,
         inverse = true,    -- invert background for search, diffs, statuslines and errors
-        contrast = "hard", -- can be "hard", "soft" or empty string
+        contrast = "soft", -- can be "hard", "soft" or empty string
         palette_overrides = {},
         overrides = {
-            Visual = { bg = "#66B2B2" },
+            Visual = { bg = "#1d6d6e" },
             Search = { fg = "#6A9E9E" },
             IncSearch = { fg = "#E67E22" },
             MatchParen = { bg = "#6A9E9E" },

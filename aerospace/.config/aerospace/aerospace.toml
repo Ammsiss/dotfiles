@@ -1,11 +1,14 @@
 after-login-command = []
-after-startup-command = []
+after-startup-command = [
+    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=8.0 blacklist="ChatGPT"'
+]
 start-at-login = true
 
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 accordion-padding = 30
+
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
@@ -14,12 +17,12 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [gaps]
-    inner.horizontal = 0
-    inner.vertical =   0
-    outer.left =       0
-    outer.bottom =     0
-    outer.top =        0
-    outer.right =      0
+    inner.horizontal = 10
+    inner.vertical =   10
+    outer.left =       10
+    outer.bottom =     10
+    outer.top =        10
+    outer.right =      10
 
 [mode.main.binding]
 
@@ -90,7 +93,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
     if.app-id = 'org.mozilla.firefox'
-    run = ['layout tiling', 'move-node-to-workspace 10']
+    run = ['layout tiling', 'move-node-to-workspace 11']
 
 [[on-window-detected]]
     if.app-id = 'com.googlecode.iterm2'
@@ -98,4 +101,8 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
     if.app-id = 'com.openai.chat'
-    run = ['layout tiling', 'move-node-to-workspace 8']
+    run = ['layout floating', 'move-node-to-workspace 8']
+
+[[on-window-detected]]
+    if.window-title-regex-substring = 'Settings'
+    run = ['layout floating']

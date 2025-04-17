@@ -35,9 +35,9 @@ vim.api.nvim_set_hl(0, "PmenuSbar", { fg = "NONE", bg = "NONE" })        -- Scro
 vim.api.nvim_set_hl(0, "PmenuThumb", { fg = "#E67E22", bg = "#E67E22" }) -- Scrollbar thumb
 
 -- Status bar
-vim.api.nvim_set_hl(0, "StatusLine", { fg = "#E67E22", bg = "#3c3836" })
-vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#E67E22", bg = "#3c3836" })
-vim.api.nvim_set_hl(0, "StatusLineFilename", { fg = "#bdae93", bg = "#3c3836" })
+vim.api.nvim_set_hl(0, "StatusLine", { fg = "#ebdbb2", bg = "NONE", bold = true })
+vim.api.nvim_set_hl(0, "StatusLineFilename", { fg = "#E67E22", bg = "NONE" })
+vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#bdae93", bg = "NONE" })
 
 -- Tab Line
 vim.api.nvim_set_hl(0, "TabLine", { fg = "#bdae93", bg = "NONE" })

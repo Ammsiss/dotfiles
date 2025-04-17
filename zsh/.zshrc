@@ -35,3 +35,7 @@ export MANPATH="$HOME/.cppman:$MANPATH"
 alias cat='bat'
 
 alias nvim-dev='NVIM_APPNAME=nvim-dev nvim'
+
+fd() {
+    aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {2}")+abort'
+}

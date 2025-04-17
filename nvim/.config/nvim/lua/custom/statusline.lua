@@ -22,4 +22,4 @@ function G_CURRENT_FT()
     return (icon .. " " .. ft) or ""
 end
 
-vim.opt.statusline = "%<%{v:lua.G_CURRENT_MODE()} %#StatusLineFilename#%f%m%=%{v:lua.G_CURRENT_FT()} %l/%L %v/%c"
+vim.opt.statusline = "%#StatusLineFilename#%<%{v:lua.G_CURRENT_MODE()}%* %f%m%=%{v:lua.G_CURRENT_FT()} %l/%L %v/%c"

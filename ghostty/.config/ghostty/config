@@ -1,0 +1,14 @@
+background-opacity = 0.55
+theme = "GruvboxDark"
+
+font-family = "FiraCode Nerd Font"
+font-size = 20
+
+mouse-hide-while-typing = true
+
+macos-titlebar-style = hidden
+
+cursor-color = 1d6d6e
+cursor-text = ebdbb2
+cursor-style = block
+cursor-style-blink = false
