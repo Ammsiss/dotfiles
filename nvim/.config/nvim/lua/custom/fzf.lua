@@ -24,12 +24,22 @@ local function open(title, command, path)
 
                 if exit_code == 0 then
                     local lines = vim.api.nvim_buf_get_lines(buf, 0, 1, false)
-                    vim.cmd("close")
-                    vim.cmd("e " .. path .. lines[1])
+
+                    if lines[1]:find("/opt") then
+                        vim.cmd("close")
+                        local help_path = lines[1]:match("[^:]+")
+                        vim.cmd("help " .. vim.fn.fnamemodify(help_path, ":t"))
+                        vim.cmd(lines[1]:match(":(.-):"))
+                    elseif lines[1]:find(":") then
+                        vim.cmd("close")
+                        vim.cmd("e " .. lines[1]:match("[^:]+"))
+                    else
+                        vim.cmd("close")
+                        vim.cmd("e " .. path .. lines[1])
+                    end
                 else
                     vim.cmd("close")
                 end
-
             end
         }
     )
@@ -56,7 +66,8 @@ vim.keymap.set("n", "<leader>fh", function()
 
         bat --color=always --style=changes \
             --line-range "$start:$end" \
-            --highlight-line "$line" "$file"
+            --highlight-line "$line" "$file" \
+            -l man
         '
 
         fzf --ansi \
@@ -73,7 +84,8 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>fd", function()
     open("  File Search  ",
     [[
-        gfind \( -path '*/.git' -o -path '*/node_modules' \) -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
+        gfind \( -path '*/.git' -o -path '*/node_modules' -o -path '*/libs' -o -path '*/build' -o -path '*/assets' -o -path '*/.cache' -o -path '*/bin' \) \
+        -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
 
         fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
@@ -116,7 +128,7 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>fg", function()
     open(" Live Grep ",
     [[
-        RG_CMD='grep -rn --color=always'
+        RG_CMD='grep -rni --color=always --exclude-dir={.git,libs,build,assets,.cache,bin} --exclude=compile_commands.json'
         BAT_CMD='
             file=$(echo {} | cut -d":" -f1)
             line=$(echo {} | cut -d":" -f2)
@@ -139,5 +151,5 @@ vim.keymap.set("n", "<leader>fg", function()
             --preview $BAT_CMD \
             --bind "start:reload:echo" \
             --bind "change:reload:(test -n '{q}' && $RG_CMD '{q}') || true"
-    ]])
+    ]], "")
 end, { silent = true })
