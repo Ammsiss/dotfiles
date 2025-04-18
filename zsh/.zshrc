@@ -8,6 +8,7 @@ export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 alias tree="eza --tree --icons"
 alias ls='eza --icons'
 alias cat='bat'
+alias cl='clear'
 
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 
