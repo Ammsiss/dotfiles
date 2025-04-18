@@ -1,8 +1,9 @@
 # Init starship
 eval "$(starship init zsh)"
 
-# Use brew llvm
+# Brew path exports
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 
 alias tree="eza --tree --icons"
 alias ls='eza --icons'
