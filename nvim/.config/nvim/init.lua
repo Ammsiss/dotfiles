@@ -26,7 +26,7 @@ vim.lsp.enable({ "ts_ls" })
 
 -- Global Vim Color Highlights (#E67E22 = Orange)
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = "NONE", bg = "NONE" })
-vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#E67E22", bg = "NONE" })
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#60898a", bg = "NONE" })
 
 -- Command mode completion popup highlights
 vim.api.nvim_set_hl(0, "Pmenu", { fg = "NONE", bg = "NONE" })

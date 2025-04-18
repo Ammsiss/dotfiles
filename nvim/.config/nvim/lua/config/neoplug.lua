@@ -220,7 +220,7 @@ function M.setup(spec, opts)
         --vim.cmd("highlight NeoplugHeader gui=bold guifg=#6FB3B8")
         vim.cmd("highlight NeoplugPluginName guifg=#E67E22")
         vim.cmd("highlight NeoplugDependency guifg=#b8bb26")
-        vim.cmd("highlight NeoplugBanner gui=bold guifg=#E67E22")
+        vim.cmd("highlight NeoplugBanner gui=bold guifg=#b8bb26")
         vim.cmd("highlight NeoplugLayer guifg=#bdae93")
 
         local output = {}

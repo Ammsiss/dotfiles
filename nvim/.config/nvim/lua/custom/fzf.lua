@@ -71,6 +71,7 @@ vim.keymap.set("n", "<leader>fh", function()
         '
 
         fzf --ansi \
+            --color=pointer:#e67e22,prompt:#e67e22 \
             --layout=reverse \
             --disabled --phony \
             --prompt '> ' \
@@ -87,7 +88,7 @@ vim.keymap.set("n", "<leader>fd", function()
         gfind \( -path '*/.git' -o -path '*/node_modules' -o -path '*/libs' -o -path '*/build' -o -path '*/assets' -o -path '*/.cache' -o -path '*/bin' \) \
         -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
 
-        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
+        fzf --color=pointer:#E67E22,prompt:#E67E22 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
         --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
     ]], vim.fn.getcwd() .. "/")
 end, { silent = true })
@@ -103,7 +104,7 @@ vim.keymap.set("n", "<leader>fs", function()
     open("  Git Changes  ",
     [[
         git diff --name-only --diff-filter=ACMRT | \
-        fzf --color=pointer:#006c7a,prompt:#FFA500 --prompt="> " --layout=reverse \
+        fzf --color=pointer:#E67E22,prompt:#E67E22 --prompt="> " --layout=reverse \
         --preview='
         repo=$(git rev-parse --show-toplevel)
         bat --style=changes --color=always "$repo"/{}
@@ -117,7 +118,7 @@ vim.keymap.set("n", "<leader>en", function()
     [[
         gfind /Users/ammsiss/dotfiles \( -path '*/.git' -o -path '*/node_modules' \) -prune -false -o -type f ! -name .DS_Store -print | \
 
-        fzf --color=pointer:#006c7a,prompt:#FFA500 \
+        fzf --color=pointer:#E67E22,prompt:#E67E22 \
             --prompt="> " \
             --layout=reverse \
             --preview 'bat --style=changes --color=always {}' \
@@ -145,7 +146,7 @@ vim.keymap.set("n", "<leader>fg", function()
             --layout=reverse \
             --disabled \
             --phony \
-            --color=pointer:#006c7a,prompt:#FFA500 \
+            --color=pointer:#E67E22,prompt:#E67E22 \
             --prompt '> ' \
             --delimiter : \
             --preview $BAT_CMD \
