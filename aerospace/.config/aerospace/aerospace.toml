@@ -1,6 +1,6 @@
 after-login-command = []
 after-startup-command = [
-    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=8.0 blacklist="ChatGPT"'
+    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=6.0 blacklist="ChatGPT"'
 ]
 start-at-login = true
 
@@ -92,16 +92,16 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     run = ['layout floating']
 
 [[on-window-detected]]
-    if.app-id = 'org.mozilla.firefox'
+    if.app-id = 'com.apple.Safari'
     run = ['layout tiling', 'move-node-to-workspace 11']
 
 [[on-window-detected]]
-    if.app-id = 'com.googlecode.iterm2'
+    if.app-id = 'com.github.wez.wezterm'
     run = ['layout tiling', 'move-node-to-workspace 1']
 
 [[on-window-detected]]
     if.app-id = 'com.openai.chat'
-    run = ['layout floating', 'move-node-to-workspace 8']
+    run = ['layout floating']
 
 [[on-window-detected]]
     if.window-title-regex-substring = 'Settings'
