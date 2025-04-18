@@ -44,7 +44,7 @@ function M.config()
     }
 
     vim.api.nvim_set_hl(0, "CmpNormal", { fg = "NONE", bg = "NONE" })
-    vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#E67E22", bg = "NONE" })
+    vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#60898a", bg = "NONE" })
 end
 
 return M
