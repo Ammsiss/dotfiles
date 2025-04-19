@@ -16,6 +16,14 @@ fd() {
     aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {2}")+abort'
 }
 
+doc() {
+    if [[ "$1" =~ ^[1-9]$ ]]; then
+        man "$1" "$2" | col -bx | nvim -c "setlocal buftype=nofile bufhidden=hide noswapfile | set filetype=man nomodifiable" -
+    else
+        man "$1" | col -bx | nvim -c "setlocal buftype=nofile bufhidden=hide noswapfile | set filetype=man" -
+    fi
+}
+
 #########################################################################################
 # Plugins
 #########################################################################################

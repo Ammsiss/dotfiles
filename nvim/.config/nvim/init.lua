@@ -29,9 +29,9 @@ vim.api.nvim_set_hl(0, "NormalFloat", { fg = "NONE", bg = "NONE" })
 vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#60898a", bg = "NONE" })
 
 -- Command mode completion popup highlights
-vim.api.nvim_set_hl(0, "Pmenu", { fg = "NONE", bg = "NONE" })
+-- vim.api.nvim_set_hl(0, "Pmenu", { fg = "NONE", bg = "NONE" })
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = "#b8bb26", bg = "NONE" })      -- Highlight selected item
-vim.api.nvim_set_hl(0, "PmenuSbar", { fg = "NONE", bg = "NONE" })        -- Scrollbar background
+-- vim.api.nvim_set_hl(0, "PmenuSbar", { fg = "NONE", bg = "NONE" })        -- Scrollbar background
 vim.api.nvim_set_hl(0, "PmenuThumb", { fg = "#b8bb26", bg = "#b8bb26" }) -- Scrollbar thumb
 
 -- Status bar

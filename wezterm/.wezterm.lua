@@ -11,7 +11,7 @@ return {
     hide_tab_bar_if_only_one_tab = true,
     default_cursor_style = "SteadyBar",
     colors = {
-        cursor_bg = "#1d6d6e",
+        cursor_bg = "#E67E22",
         cursor_fg = "#ebdbb2",
         cursor_border = "#ebdbb2",
     },

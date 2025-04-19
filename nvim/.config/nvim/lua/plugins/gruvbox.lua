@@ -29,7 +29,7 @@ function M.config()
             Visual = { bg = "#1d6d6e" },
             Search = { fg = "#6A9E9E" },
             IncSearch = { fg = "#E67E22" },
-            MatchParen = { bg = "#6A9E9E" },
+            MatchParen = { bg = "#1d6d6e" },
         },
         dim_inactive = false,
         transparent_mode = true,
