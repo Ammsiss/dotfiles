@@ -1,9 +1,11 @@
 local wez = require("wezterm")
 
 local function getFontSize()
-    if wez.hostname() == "Junjis-MacBook-Air.local" then
+    local hostname = wez.hostname()
+
+    if hostname == "Junjis-MacBook-Air.local" then
         return 17
-    else
+    elseif hostname == "Junjis-Mac-mini.local" then
         return 20
     end
 end
