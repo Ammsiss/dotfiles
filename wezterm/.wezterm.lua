@@ -9,6 +9,7 @@ local function getFontSize()
 end
 
 return {
+    audible_bell = "Disabled",
     color_scheme = "GruvboxDark",
     font = wez.font("FiraCode Nerd Font"),
     font_size = getFontSize(),

@@ -52,6 +52,7 @@ local function add_icon_data(output)
     local highlights = {
         [""] = "TreeDirectoryIcon",
         [""] = "TreeCppLuaIcon",
+        [""] = "TreeCfileIcon",
         [""] = "TreeCppLuaIcon",
         [""] = "TreeCppLuaIcon",
         [""] = "TreeGitIcon",
@@ -485,6 +486,7 @@ vim.api.nvim_create_user_command("Filetree", function()
     end
 
     vim.cmd("highlight TreeDirectoryIcon guifg=#83a598")
+    vim.cmd("highlight TreeCFileIcon guifg=#51a0cf")
     vim.cmd("highlight TreeCppLuaIcon guifg=#51a0cf")
     vim.cmd("highlight TreeHeaderIcon guifg=#a9a1e1")
     vim.cmd("highlight TreeGitIcon guifg=#e24329")
