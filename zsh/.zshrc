@@ -10,6 +10,11 @@ alias ls='eza --icons'
 alias cat='bat'
 alias cl='clear'
 
+alias gc="git commit -m"
+alias gs="git status"
+alias gg="git pull"
+alias gp="git push"
+
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 
 fd() {
