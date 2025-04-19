@@ -26,6 +26,11 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
 
+    cmd-ctrl-h = 'join-with left'
+    cmd-ctrl-j = 'join-with down'
+    cmd-ctrl-k = 'join-with up'
+    cmd-ctrl-l = 'join-with right'
+
     cmd-x = 'close'
 
     #cmd-slash = 'layout tiles horizontal vertical'

@@ -112,7 +112,8 @@ local function print_to_buffer(output)
         if line.git_status ~= nil then
             vim.hl.range(
                 buf.num, ns, line.git_status,
-                { (i + 1) - 1, vim.str_byteindex(line.text, 3) },
+                ---@diagnostic disable-next-line: param-type-mismatch
+                { (i + 1) - 1, vim.str_byteindex(line.text, 3, false) },
                 { (i + 1) - 1, -1 }
             )
         end
@@ -121,6 +122,7 @@ end
 
 
 local function get_dir_content(dir)
+    ---@diagnostic disable-next-line: undefined-field
     local scandir = vim.uv.fs_scandir(dir)
     if not scandir then
         print("Unable to read directory")
@@ -138,6 +140,7 @@ local function get_dir_content(dir)
     local files = {}
 
     while true do
+        ---@diagnostic disable-next-line: undefined-field
         local name, type = vim.uv.fs_scandir_next(scandir)
         if not name then break end
 
@@ -203,7 +206,8 @@ local function define_mappings()
 
     vim.keymap.set("n", "<C-]>", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
 
         if line:match("") then
             vim.cmd("lcd " .. target)
@@ -224,7 +228,8 @@ local function define_mappings()
 
     vim.keymap.set("n", "<Tab>", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
 
         if not line:match("") and line:sub(1, 1) == " " then
             local wd = vim.fn.getcwd()
@@ -236,7 +241,8 @@ local function define_mappings()
 
     vim.keymap.set("n", "d", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
 
         local function delete(path, flag)
             local return_code
@@ -247,9 +253,9 @@ local function define_mappings()
             end
 
             if return_code == -1 then
-                vim.api.nvim_out_write("Failed to delete!\n")
+                vim.api.nvim_echo({ { "Failed to delete!" } }, false, {})
             else
-                vim.api.nvim_out_write(path .. " successfully deleted!\n")
+                vim.api.nvim_echo({ { path .. " successfully deleted!" } }, false, {})
             end
         end
 
@@ -260,7 +266,7 @@ local function define_mappings()
                         vim.ui.input({ prompt = "Directory has contents (y/N): " }, function(input2)
                             if input2 == "y" then
                                 delete(target, "rf")
-                                vim.api.nvim_out_write(target .. " successfully deleted\n")
+                                vim.api.nvim_echo({ { target .. " successfully deleted" } }, false, {})
                                 refresh()
                             end
                         end)
@@ -280,7 +286,8 @@ local function define_mappings()
 
     vim.keymap.set("n", "a", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
         local cwd
 
         if line:match("") then
@@ -292,29 +299,29 @@ local function define_mappings()
         vim.ui.input({ prompt = "Create file ", default = cwd }, function(input)
 
             if input == "" or input == nil then
-                vim.api.nvim_out_write("Aborted!\n")
+                vim.api.nvim_echo({ { "Aborted!" } }, false, {})
                 return
             end
 
             if input:sub(-1) == "/" then
                 if vim.fn.isdirectory(input) == 0 then
                     if vim.fn.mkdir(input, "p") == 0 then
-                        vim.api.nvim_out_write("Failed to make directory!\n")
+                        vim.api.nvim_echo({ { "Failed to make directory!" } }, false, {})
                     else
-                        vim.api.nvim_out_write("Successfully created directory!\n")
+                        vim.api.nvim_echo({ { "Successfully created directory!" } }, false, {})
                     end
                 else
-                    vim.api.nvim_out_write("Directory/file already exists!\n")
+                    vim.api.nvim_echo({ { "Directory/file already exists!" } }, false, {})
                 end
             else
                 if vim.fn.filereadable(input) == 0 then
                     if vim.fn.writefile({}, input) == -1 then
-                        vim.api.nvim_out_write("Failed to create file!\n")
+                        vim.api.nvim_echo({ { "Failed to create file!" } }, false, {})
                     else
-                        vim.api.nvim_out_write("Successfully created file!\n")
+                        vim.api.nvim_echo({ { "Successfully created file!" } }, false, {})
                     end
                 else
-                    vim.api.nvim_out_write("Directory/file already exists!\n")
+                    vim.api.nvim_echo({ { "Directory/file already exists!" } }, false, {})
                 end
             end
 
@@ -324,25 +331,26 @@ local function define_mappings()
 
     vim.keymap.set("n", "r", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
 
         if line:sub(1, 1) == " " then
             vim.ui.input({ prompt = "Rename to: " }, function(input)
 
                 if input == nil then
-                    vim.api.nvim_out_write("Aborted!\n")
+                    vim.api.nvim_echo({ { "Aborted!" } }, false, {})
                     return
                 end
 
                 if vim.fn.filereadable(input) == 0 and vim.fn.isdirectory(input) == 0 then
                     if vim.fn.rename(target, input) == 0 then
-                        vim.api.nvim_out_write("Success!\n")
+                        vim.api.nvim_echo({ { "Success!" } }, false, {})
                         refresh()
                     else
-                        vim.api.nvim_out_write("Failed to rename!\n")
+                        vim.api.nvim_echo({ { "Failed to rename!" } }, false, {})
                     end
                 else
-                    vim.api.nvim_out_write("That already exists!\n")
+                    vim.api.nvim_echo({ { "That already exists!" } }, false, {})
                 end
             end)
         end
@@ -354,13 +362,14 @@ local function define_mappings()
         local line = vim.api.nvim_get_current_line()
 
         if line:sub(1, 1) == " " then
-            local file_name = line:sub(vim.str_byteindex(line, 4))
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local file_name = line:sub(vim.str_byteindex(line, 4, false))
             local path = vim.fn.getcwd() .. "/" .. file_name
 
             copy.name = file_name
             copy.from = path
             copy.type = "copy"
-            vim.api.nvim_out_write("Copied " .. copy.from .. "\n")
+            vim.api.nvim_echo({ { "Copied " .. copy.from } }, false, {})
         end
     end, { buffer = buf.num })
 
@@ -368,19 +377,21 @@ local function define_mappings()
         local line = vim.api.nvim_get_current_line()
 
         if line:sub(1, 1) == " " then
-            local file_name = line:sub(vim.str_byteindex(line, 4))
+            ---@diagnostic disable-next-line: param-type-mismatch
+            local file_name = line:sub(vim.str_byteindex(line, 4, false))
             local path = vim.fn.getcwd() .. "/" .. file_name
 
             copy.name = file_name
             copy.from = path
             copy.type = "cut"
-            vim.api.nvim_out_write("Cut " .. copy.from .. "\n")
+            vim.api.nvim_echo({ { "Cut " .. copy.from } }, false, {})
         end
     end, { buffer = buf.num })
 
     vim.keymap.set("n", "p", function()
         local line = vim.api.nvim_get_current_line()
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
 
         local dest
         if line:match("") then
@@ -393,9 +404,9 @@ local function define_mappings()
             vim.fn.system({ "cp", "-R", copy.from, dest })
         elseif copy.type == "cut" then
             if vim.fn.rename(copy.from, dest) == 0 then
-                vim.api.nvim_out_write("Successfully moved!\n")
+                vim.api.nvim_echo({ {"Successfully moved!" } }, false, {})
             else
-                vim.api.nvim_out_write("Move failed!\n")
+                vim.api.nvim_echo({ { "Move failed!" } }, false, {})
             end
         end
 
@@ -420,7 +431,8 @@ local function define_mappings()
             return
         end
 
-        local target = line:sub(vim.str_byteindex(line, 4))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local target = line:sub(vim.str_byteindex(line, 4, false))
         local path = vim.fn.getcwd() .. "/" .. target
 
         local open_cmd
