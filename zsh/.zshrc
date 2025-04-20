@@ -9,6 +9,7 @@ alias tree="eza --tree --icons"
 alias ls='eza --icons'
 alias cat='bat'
 alias cl='clear'
+alias mr='make && make run'
 
 alias gc="git commit -m"
 alias gs="git status"
@@ -27,6 +28,10 @@ doc() {
     else
         man "$1" | col -bx | nvim -c "setlocal buftype=nofile bufhidden=hide noswapfile | set filetype=man" -
     fi
+}
+
+getid() {
+    osascript -e "id of app \"$1\""
 }
 
 #########################################################################################
