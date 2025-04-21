@@ -15,8 +15,8 @@ local on_attach = function(_, bufnr) -- client
     set("n", "gd", vim.lsp.buf.definition, opts)
     set("n", "gD", vim.lsp.buf.declaration, opts)
     set("n", "gr", vim.lsp.buf.references, opts)
-    set("n", "ca", vim.lsp.buf.code_action, opts)
-    set("n", "rn", vim.lsp.buf.rename, opts)
+    set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    set("n", "<leader>rn", vim.lsp.buf.rename, opts)
 
     set("n", "]d", function()
         vim.diagnostic.jump({ count = 1, wrap = true })

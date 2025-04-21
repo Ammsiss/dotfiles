@@ -8,6 +8,7 @@ function M.config()
     signs.setup()
 
     vim.keymap.set('n', '<leader>hr', signs.reset_hunk)
+    vim.keymap.set('n', '<leader>ts', function() vim.cmd("Gitsigns toggle_signs") end)
 
     vim.keymap.set("n", "<leader>gi", ":Gitsigns preview_hunk<CR>", { noremap = true, silent = true })
 

@@ -11,7 +11,8 @@ vim.opt.cindent = true
 vim.opt.autoindent = true
 vim.opt.shiftround = true
 --- Search
-vim.opt.scrolloff = 3
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true

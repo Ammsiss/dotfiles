@@ -25,7 +25,7 @@ local function open(title, command, path)
                 if exit_code == 0 then
                     local lines = vim.api.nvim_buf_get_lines(buf, 0, 1, false)
 
-                    if lines[1]:find("/opt") then
+                    if lines[1]:find("/opt%f[%A]") then
                         vim.cmd("close")
                         local help_path = lines[1]:match("[^:]+")
                         vim.cmd("help " .. vim.fn.fnamemodify(help_path, ":t"))
