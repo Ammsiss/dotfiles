@@ -1,61 +1,28 @@
 # Init starship
 eval "$(starship init zsh)"
 
-# Enable VI mode #######################################
-# cursor_mode() {
-#     cursor_block='\e[2 q'
-#     cursor_beam='\e[6 q'
-#
-#     function zle-keymap-select {
-#         if [[ ${KEYMAP} == vicmd ]] ||
-#             [[ $1 = 'block' ]]; then
-#             echo -ne $cursor_block
-#         elif [[ ${KEYMAP} == main ]] ||
-#             [[ ${KEYMAP} == viins ]] ||
-#             [[ ${KEYMAP} = '' ]] ||
-#             [[ $1 = 'beam' ]]; then
-#             echo -ne $cursor_beam
-#         fi
-#     }
-#
-#     zle-line-init() {
-#         echo -ne $cursor_beam
-#     }
-#
-#     zle -N zle-keymap-select
-#     zle -N zle-line-init
-# }
-#
-# cursor_mode
-#
-# bindkey -v
-# export KEYTIMEOUT=1
-# #######################################################
-
+# Load autocomplete
 autoload -Uz compinit
 compinit
 _comp_options+=(globdots)
+setopt MENU_COMPLETE
+zstyle ':completion:*' menu select
 
 # Brew path exports
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 
+# Aliases
 alias tree="eza --tree --icons"
 alias ls='eza --icons'
 alias cat='bat'
 alias cl='clear'
 alias mr='make && make run'
-
+alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 alias gc="git commit -m"
 alias gs="git status"
 alias gg="git pull"
 alias gp="git push"
-
-alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
-
-fd() {
-    aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {2}")+abort'
-}
 
 doc() {
     if [[ "$1" =~ ^[1-9]$ ]]; then
@@ -76,7 +43,7 @@ getid() {
 PLUG_DIR="$HOME/.local/share/zsh"
 
 # Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
+# source <(fzf --zsh)
 
 # Auto suggestion
 if [ ! -d "$PLUG_DIR/zsh-autosuggestions" ]; then
@@ -89,3 +56,42 @@ if [ ! -d "$PLUG_DIR/syntax-highlighting" ]; then
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$PLUG_DIR/syntax-highlighting"
 fi
 source "$PLUG_DIR/syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# Enable VI mode
+cursor_mode() {
+    cursor_block='\e[2 q'
+    cursor_beam='\e[6 q'
+
+    function zle-keymap-select {
+        if [[ ${KEYMAP} == vicmd ]] ||
+            [[ $1 = 'block' ]]; then
+            echo -ne $cursor_block
+        elif [[ ${KEYMAP} == main ]] ||
+            [[ ${KEYMAP} == viins ]] ||
+            [[ ${KEYMAP} = '' ]] ||
+            [[ $1 = 'beam' ]]; then
+            echo -ne $cursor_beam
+        fi
+    }
+
+    zle-line-init() {
+        echo -ne $cursor_beam
+    }
+
+    zle -N zle-keymap-select
+    zle -N zle-line-init
+}
+
+cursor_mode
+
+# Check available widgets: zle -la
+# Check whats bound: bindkey -M viins '^U'
+bindkey -v
+export KEYTIMEOUT=1
+# Rebind useful stuff
+bindkey "^H" backward-delete-char
+bindkey "^?" backward-delete-char
+bindkey -M viins '^E' autosuggest-accept
+bindkey -M viins '^U' backward-kill-line
+bindkey -M viins '^B' end-of-line
+bindkey -M viins '^A' beginning-of-line

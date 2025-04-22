@@ -98,7 +98,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari'
-    run = ['layout tiling', 'move-node-to-workspace 11']
+    run = ['layout tiling', 'move-node-to-workspace 10']
 
 [[on-window-detected]]
     if.app-id = 'com.github.wez.wezterm'
