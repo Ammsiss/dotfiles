@@ -93,7 +93,7 @@ vim.keymap.set("n", "<leader>fd", function()
     ]], vim.fn.getcwd() .. "/")
 end, { silent = true })
 
-vim.keymap.set("n", "<leader>fs", function()
+vim.keymap.set("n", "<leader>gs", function()
     local handle = io.popen("git rev-parse --show-toplevel 2> /dev/null")
     local git_root
     if handle then

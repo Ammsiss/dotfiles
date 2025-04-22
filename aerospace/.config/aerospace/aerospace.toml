@@ -26,15 +26,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
 
-    cmd-ctrl-h = 'join-with left'
-    cmd-ctrl-j = 'join-with down'
-    cmd-ctrl-k = 'join-with up'
-    cmd-ctrl-l = 'join-with right'
-
-    cmd-x = 'close'
-
     #cmd-slash = 'layout tiles horizontal vertical'
     #cmd-comma = 'layout accordion horizontal vertical'
+
+    cmd-x = 'close'
 
     cmd-h = 'focus left'
     cmd-j = 'focus down'
@@ -75,7 +70,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
     cmd-tab = 'workspace-back-and-forth'
 
-    cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+    #cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
     cmd-shift-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
@@ -87,10 +82,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     f = ['layout floating tiling', 'mode main']
     backspace = ['close-all-windows-but-current', 'mode main']
 
-    alt-shift-h = ['join-with left', 'mode main']
-    alt-shift-j = ['join-with down', 'mode main']
-    alt-shift-k = ['join-with up', 'mode main']
-    alt-shift-l = ['join-with right', 'mode main']
+    cmd-shift-h = ['join-with left', 'mode main']
+    cmd-shift-j = ['join-with down', 'mode main']
+    cmd-shift-k = ['join-with up', 'mode main']
+    cmd-shift-l = ['join-with right', 'mode main']
 
 [[on-window-detected]]
     if.app-id = 'com.apple.finder'
@@ -98,7 +93,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
     if.app-id = 'com.apple.Safari'
-    run = ['layout tiling', 'move-node-to-workspace 10']
+    run = ['layout tiling', 'move-node-to-workspace 11']
 
 [[on-window-detected]]
     if.app-id = 'com.github.wez.wezterm'

@@ -13,17 +13,29 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 
 # Aliases
-alias cl='clear'
+alias cl='command clear'
+alias clear='echo "Use cl instead!"'
+
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 
 alias -g tree="eza --tree --icons"
 alias -g ls='eza --icons'
 alias -g cat='bat'
-alias -g gs="git status"
-alias -g gg="git pull"
-alias -g gp="git push"
-alias -g gc="git commit"
+
+alias -g gs="command git status"
+alias -g gpu="command git pull"
+alias -g gp="command git push"
+alias -g gc="command git commit"
+alias -g gca="command git commit -a"
+
+git() {
+    if [[ "$1" == "commit" || "$1" == "status" || "$1" == "push" || "$1" == "pull" ]]; then
+        echo "Use aliases"
+    else
+        command git "$@"
+    fi
+}
 
 doc() {
     if [[ "$1" =~ ^[1-9]$ ]]; then
