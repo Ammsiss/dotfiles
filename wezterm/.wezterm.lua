@@ -22,8 +22,8 @@ return {
     hide_tab_bar_if_only_one_tab = true,
     default_cursor_style = "SteadyBar",
     colors = {
-        cursor_bg = "#d65d0e",
-        cursor_fg = "#29a2f1",
+        cursor_bg = "#E67E22",
+        cursor_fg = "#1d6d6e",
         cursor_border = "#ebdbb2",
     },
 }

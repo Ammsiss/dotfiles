@@ -88,7 +88,7 @@ cursor_mode
 # Check available widgets: zle -la
 # Check whats bound: bindkey -M viins '^U'
 bindkey -v
-export KEYTIMEOUT=1
+export KEYTIMEOUT=3
 # Rebind useful stuff
 bindkey "^H" backward-delete-char
 bindkey "^?" backward-delete-char
