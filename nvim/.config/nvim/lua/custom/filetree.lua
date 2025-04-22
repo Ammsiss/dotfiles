@@ -123,7 +123,6 @@ end
 
 
 local function get_dir_content(dir)
-    ---@diagnostic disable-next-line: undefined-field
     local scandir = vim.uv.fs_scandir(dir)
     if not scandir then
         print("Unable to read directory")
@@ -141,7 +140,6 @@ local function get_dir_content(dir)
     local files = {}
 
     while true do
-        ---@diagnostic disable-next-line: undefined-field
         local name, type = vim.uv.fs_scandir_next(scandir)
         if not name then break end
 
