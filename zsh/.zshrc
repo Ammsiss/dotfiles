@@ -13,16 +13,17 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 
 # Aliases
-alias tree="eza --tree --icons"
-alias ls='eza --icons'
-alias cat='bat'
 alias cl='clear'
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
-alias gc="git commit -m"
-alias gs="git status"
-alias gg="git pull"
-alias gp="git push"
+
+alias -g tree="eza --tree --icons"
+alias -g ls='eza --icons'
+alias -g cat='bat'
+alias -g gs="git status"
+alias -g gg="git pull"
+alias -g gp="git push"
+alias -g gc="git commit"
 
 doc() {
     if [[ "$1" =~ ^[1-9]$ ]]; then
