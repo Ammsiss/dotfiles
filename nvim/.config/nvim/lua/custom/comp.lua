@@ -226,7 +226,7 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 })
 
 -- debug
-vim.keymap.set("n", "<leader>rb", function()
+vim.keymap.set("n", "rb", function()
     local buf = vim.api.nvim_get_current_buf()
 
     if vim.api.nvim_buf_get_option(buf, "buflisted") then
@@ -234,7 +234,7 @@ vim.keymap.set("n", "<leader>rb", function()
     end
 end)
 
-vim.keymap.set("n", "<leader>rr", function()
+vim.keymap.set("n", "rr", function()
 
     local message = {}
     for _, line in ipairs(files[vim.api.nvim_get_current_buf()]) do

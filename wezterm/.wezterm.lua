@@ -15,6 +15,7 @@ return {
     color_scheme = "GruvboxDark",
     font = wez.font("FiraCode Nerd Font"),
     font_size = getFontSize(),
+    -- cell_width = 1.5,
     window_background_opacity = 0.55,
     cursor_blink_rate = 0,
     window_decorations = "RESIZE",

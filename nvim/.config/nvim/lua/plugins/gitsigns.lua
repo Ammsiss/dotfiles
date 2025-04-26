@@ -5,7 +5,24 @@ M.enabled = true
 
 function M.config()
     local signs = require("gitsigns")
-    signs.setup()
+    signs.setup({
+        signs = {
+            add          = { text = '+' },
+            change       = { text = '+' },
+            delete       = { text = '_' },
+            topdelete    = { text = '‾' },
+            changedelete = { text = '~' },
+            untracked    = { text = '┆' },
+        },
+        signs_staged = {
+            add          = { text = '+' },
+            change       = { text = '+' },
+            delete       = { text = '_' },
+            topdelete    = { text = '‾' },
+            changedelete = { text = '~' },
+            untracked    = { text = '┆' },
+        }
+    })
 
     vim.keymap.set('n', '<leader>hr', signs.reset_hunk)
     vim.keymap.set('n', '<leader>ts', function() vim.cmd("Gitsigns toggle_signs") end)

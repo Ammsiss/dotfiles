@@ -1,3 +1,5 @@
+-- On file deletion; auto delete associated buffer
+
 local buf = { open = false }
 local hidden = false
 local ignored = true
