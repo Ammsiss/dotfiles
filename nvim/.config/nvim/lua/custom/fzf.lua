@@ -33,6 +33,7 @@ local function open(title, command, path)
                     elseif lines[1]:find(":") then
                         vim.cmd("close")
                         vim.cmd("e " .. lines[1]:match("[^:]+"))
+                        vim.cmd(lines[1]:match(":(%d+)"))
                     else
                         vim.cmd("close")
                         vim.cmd("e " .. path .. lines[1])
