@@ -34,6 +34,7 @@ local function open(title, command, path)
                         vim.cmd("close")
                         vim.cmd("e " .. lines[1]:match("[^:]+"))
                         vim.cmd(lines[1]:match(":(%d+)"))
+                        vim.cmd("normal! zz")
                     else
                         vim.cmd("close")
                         vim.cmd("e " .. path .. lines[1])
