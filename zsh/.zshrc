@@ -18,6 +18,7 @@ alias clear='echo "Use cl instead!"'
 
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
+alias openbitch='xattr -cr'
 
 alias -g tree="lsd --tree"
 alias -g ls='lsd'

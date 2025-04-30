@@ -89,6 +89,18 @@ set("n", "<leader>sf", function()
     end
 end)
 
+-- jump to man page
+vim.keymap.set('n', 'gK', function()
+  local word = vim.fn.expand('<cword>')
+  -- Check if man page exists
+  local man_output = vim.fn.systemlist('man -w ' .. word)
+  if #man_output > 0 and not man_output[1]:match('No manual entry for') then
+    vim.cmd('Man ' .. word)
+  else
+    print('No man entry for ' .. word)
+  end
+end)
+
 -- set("n", "<leader>br", function()
 --     local filename = vim.fn.input("Enter filename: ")
 --     local path = vim.fn.systemlist("find . -type f -iname " .. vim.fn.shellescape(filename))
