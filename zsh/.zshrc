@@ -19,8 +19,8 @@ alias clear='echo "Use cl instead!"'
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 
-alias -g tree="eza --tree --icons"
-alias -g ls='eza --icons'
+alias -g tree="lsd --tree"
+alias -g ls='lsd'
 alias -g cat='bat'
 
 alias -g gs="command git status"

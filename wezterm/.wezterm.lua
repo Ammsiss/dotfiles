@@ -1,12 +1,23 @@
 local wez = require("wezterm")
+local hostname = wez.hostname()
 
 local function getFontSize()
-    local hostname = wez.hostname()
-
     if hostname == "Junjis-MacBook-Air.local" then
         return 17
     elseif hostname == "Junjis-Mac-mini.local" then
         return 20
+    elseif hostname == "fedora" then
+        return 16
+    end
+end
+
+local function getDecoration()
+    if hostname == "Junjis-MacBook-Air.local" then
+        return "RESIZE"
+    elseif hostname == "Junjis-Mac-mini.local" then
+        return "RESIZE"
+    elseif hostname == "fedora" then
+        return "NONE"
     end
 end
 
@@ -18,7 +29,7 @@ return {
     -- cell_width = 1.5,
     window_background_opacity = 0.55,
     cursor_blink_rate = 0,
-    window_decorations = "RESIZE",
+    window_decorations = getDecoration(),
     use_fancy_tab_bar = false,
     hide_tab_bar_if_only_one_tab = true,
     default_cursor_style = "SteadyBar",
