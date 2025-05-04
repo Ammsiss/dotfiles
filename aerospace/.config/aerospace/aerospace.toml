@@ -1,6 +1,6 @@
 after-login-command = []
 after-startup-command = [
-    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=6.0 blacklist="ChatGPT"'
+    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=6.0 blacklist="ChatGPT,Finder,Steam"'
 ]
 start-at-login = true
 
@@ -101,6 +101,10 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
     if.app-id = 'com.openai.chat'
+    run = ['layout floating']
+
+[[on-window-detected]]
+    if.app-id = 'com.valvesoftware.steam'
     run = ['layout floating']
 
 [[on-window-detected]]
