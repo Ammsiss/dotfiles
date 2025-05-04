@@ -87,7 +87,7 @@ end, { silent = true })
 vim.keymap.set("n", "<leader>fd", function()
     open("  File Search  ",
     [[
-        gfind \( -path '*/.git' -o -path '*/node_modules' -o -path '*/libs' -o -path '*/build' -o -path '*/assets' -o -path '*/.cache' -o -path '*/bin' \) \
+        gfind \( -path '*/.git' -o -path '*/node_modules' -o -path '*/sprites' -o -path '*/libs' -o -path '*/build' -o -path '*/assets' -o -path '*/.cache' -o -path '*/bin' \) \
         -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
 
         fzf --color=pointer:#E67E22,prompt:#E67E22 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
