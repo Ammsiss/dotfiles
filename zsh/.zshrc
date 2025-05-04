@@ -11,6 +11,7 @@ zstyle ':completion:*' menu select
 # Brew path exports
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+export MallocNanoZone=0
 
 # Aliases
 alias cl='command clear'
