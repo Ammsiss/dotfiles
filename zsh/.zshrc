@@ -8,6 +8,9 @@ _comp_options+=(globdots)
 setopt MENU_COMPLETE
 zstyle ':completion:*' menu select
 
+autoload -U colors
+colors
+
 # Brew path exports
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
@@ -102,7 +105,7 @@ cursor_mode
 # Check available widgets: zle -la
 # Check whats bound: bindkey -M viins '^U'
 bindkey -v
-export KEYTIMEOUT=1
+export KEYTIMEOUT=3
 # Rebind useful stuff
 bindkey "^H" backward-delete-char
 bindkey "^?" backward-delete-char

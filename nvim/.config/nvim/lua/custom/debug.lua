@@ -27,8 +27,8 @@ local function open(title, command)
         style = "minimal",
         relative = "editor",
         width = width,
-        height = height - 3,
-        row = 1,
+        height = height - 4,
+        row = 0,
         col = 0,
         title = title,
         title_pos = "center",
@@ -58,27 +58,11 @@ vim.api.nvim_create_user_command("DB", function(args)
 
     args.fargs[2] = args.fargs[2] or "b main"
 
-    local break_points = {}
-    if args.fargs[2] ~= "b main" then
-        local i = 2
-        while args.fargs[i] ~= nil do
-            table.insert(break_points, args.fargs[i])
-        end
-    end
-
     open("LLDB", "lldb " .. binary .. "\n")
 
     local job_id = vim.b.terminal_job_id
     vim.api.nvim_feedkeys("i", "n", false)
     vim.api.nvim_chan_send(job_id, args.fargs[2] .. "\n")
     vim.api.nvim_chan_send(job_id, "r\n")
-
-    for _, bp in ipairs(break_points) do
-        vim.api.nvim_chan_send(job_id, bp)
-    end
-
-    vim.defer_fn(function()
-        vim.api.nvim_chan_send(job_id, "gui\n")
-    end, 1000)
 
 end, { nargs = "*" })
