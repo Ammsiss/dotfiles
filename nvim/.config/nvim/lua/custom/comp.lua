@@ -1,14 +1,35 @@
+
 -----------------------------------------------------------------------
 --- UI
 ----------------------------------------------------------------------
-local _ = vim.api.nvim_create_namespace("CompletionHighlights")
+local ns = vim.api.nvim_create_namespace("CompletionHighlights")
+vim.cmd("highlight Selection guifg=#00FFFF")
+--[[
+wilber
+willow
+wigger
+widd
+w
+]]
+local window = { open = false, option = -1 }
 
-vim.cmd("highlight SelectedMatch guifg=#83a598")
-
-local window = { open = false, option = 0 }
+local function get_win_id()
+    if vim.api.nvim_buf_is_valid(window.buf) then
+        local win_list = vim.api.nvim_list_wins()
+        for _, win in ipairs(win_list) do
+            if vim.api.nvim_win_get_buf(win) == window.buf then
+                return win
+            end
+        end
+    end
+    return nil
+end
 
 local function close()
     if window.open == true then
+
+        window.option = -1
+
         local current_win = vim.api.nvim_get_current_win()
 
         if vim.api.nvim_buf_is_valid(window.buf) then
@@ -25,14 +46,74 @@ local function close()
     end
 end
 
+local function set_hl()
+
+    vim.api.nvim_buf_clear_namespace(
+        window.buf, ns, 0, -1
+    )
+
+    vim.hl.range(
+        window.buf, ns, "Selection",
+        { window.option, 0 },
+        { window.option, -1 }
+    )
+end
+
 local function open(completions)
     if #completions == 0 then
         return
     end
 
-    -- CREATE BUFFER + SET COMPLETIONS
+    vim.keymap.set("i", "<C-n>", function()
+        if window.open == true then
+            if window.option < #completions - 1 then
+                window.option = window.option + 1
+                set_hl()
+
+                print("Option selection: " .. window.option)
+            end
+        end
+
+        if window.option % 10 == 0 and window.option ~= 0 then
+            local win_id = get_win_id()
+            if win_id then
+                vim.api.nvim_win_call(win_id, function()
+                    for _ = 1, 10, 1 do
+                        vim.cmd('execute "normal! \\<C-e>"')
+                    end
+                end)
+            end
+        end
+    end)
+
+    vim.keymap.set("i", "<C-p>", function()
+        if window.option % 10 == 0 and window.option ~= 0 then
+            local win_id = get_win_id()
+            if win_id then
+                vim.api.nvim_win_call(win_id, function()
+                    for _ = 1, 10, 1 do
+                        vim.cmd('execute "normal! \\<C-y>"')
+                    end
+                end)
+            end
+        end
+
+        if window.open == true then
+            if window.option > -1 then
+                window.option = window.option - 1
+                set_hl()
+
+                print("Option selection: " .. window.option)
+            end
+        end
+    end)
+
+    -- CREATE BUFFER
     window.buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(window.buf, 0, 0, false, completions)
+    if window.option ~= -1 then
+        set_hl()
+    end
 
     -- CREATE FLOATING WINDOW
     local width = 20
@@ -149,6 +230,14 @@ local function refresh_buffer(buf)
 
     return out
 end
+
+vim.api.nvim_create_autocmd("BufNewFile", {
+    callback = function(opts)
+        if vim.api.nvim_buf_get_option(opts.buf, "buflisted") then
+            files[opts.buf] = refresh_buffer(opts.buf)
+        end
+    end
+})
 
 vim.api.nvim_create_autocmd("BufReadPost", {
     callback = function(opts)

@@ -1,6 +1,6 @@
 after-login-command = []
 after-startup-command = [
-    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=6.0 blacklist="ChatGPT,Finder,Steam"'
+    'exec-and-forget borders active_color=0xff88bfc1 inactive_color=0xff494d64 width=3.0 blacklist="ChatGPT,Finder,Steam"'
 ]
 start-at-login = true
 
