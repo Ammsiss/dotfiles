@@ -116,12 +116,22 @@ local function open(completions)
     end
 
     -- CREATE FLOATING WINDOW
+
     local width = 20
     window.height = #completions <= 10 and #completions or 10
+
+    local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+    local bottom_line = vim.fn.line("w$")
+    local row = 1
+
+    if bottom_line - cursor_line <= 11 then
+        row = -(window.height + 2)
+    end
+
     local design = {
         relative = "cursor",
         col = -1,
-        row = 1,
+        row = row,
         width = width,
         height = window.height,
         style = "minimal",

@@ -1,7 +1,7 @@
 local M = {}
 
 M.name = "hrsh7th/nvim-cmp"
-M.enabled = true
+M.enabled = false
 
 M.expects = {
     "hrsh7th/cmp-nvim-lsp",
