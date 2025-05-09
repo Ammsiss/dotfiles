@@ -9,10 +9,10 @@ require("config.neoplug").setup({
     extra = {
         { name = "nvim-tree/nvim-web-devicons", priority = 999 },
         -- cmp sources
-        { name = "hrsh7th/cmp-nvim-lsp", enabled = false },
-        { name = "hrsh7th/cmp-path", enabled = false },
-        { name = "hrsh7th/cmp-buffer", enabled = false },
-        { name = "hrsh7th/cmp-nvim-lsp-signature-help", enabled = false },
+        { name = "hrsh7th/cmp-nvim-lsp", enabled = true },
+        { name = "hrsh7th/cmp-path", enabled = true },
+        { name = "hrsh7th/cmp-buffer", enabled = true },
+        { name = "hrsh7th/cmp-nvim-lsp-signature-help", enabled = true },
     }
 }, { auto_update = true, ui = { border = "rounded" }})
 

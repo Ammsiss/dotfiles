@@ -1,17 +1,11 @@
 
------------------------------------------------------------------------
---- UI
+----------------------------------------------------------------------
+--- UI - wilber wilson wigger watson wilber
 ----------------------------------------------------------------------
 local ns = vim.api.nvim_create_namespace("CompletionHighlights")
 vim.cmd("highlight Selection guifg=#00FFFF")
---[[
-wilber
-willow
-wigger
-widd
-w
-]]
-local window = { open = false, option = -1 }
+
+local window = { open = false, option = -1, original = "" }
 
 local function get_win_id()
     if vim.api.nvim_buf_is_valid(window.buf) then
@@ -59,10 +53,30 @@ local function set_hl()
     )
 end
 
+local function set_original_word()
+    local col = vim.api.nvim_win_get_cursor(0)[2]
+    local line = vim.api.nvim_get_current_line()
+
+    local char = line:sub(col, col)
+    local word = ""
+
+    local i = 1
+    while char ~= " " and char ~= "" do
+
+        word = word .. char
+
+        char = line:sub(col - i, col - i)
+        i = i + 1
+    end
+    window.original = word:reverse()
+end
+
 local function open(completions)
     if #completions == 0 then
         return
     end
+
+    set_original_word()
 
     vim.keymap.set("i", "<C-n>", function()
         if window.open == true then
@@ -72,16 +86,16 @@ local function open(completions)
 
                 print("Option selection: " .. window.option)
             end
-        end
 
-        if window.option % 10 == 0 and window.option ~= 0 then
-            local win_id = get_win_id()
-            if win_id then
-                vim.api.nvim_win_call(win_id, function()
-                    for _ = 1, 10, 1 do
-                        vim.cmd('execute "normal! \\<C-e>"')
-                    end
-                end)
+            if window.option % 10 == 0 and window.option ~= 0 then
+                local win_id = get_win_id()
+                if win_id then
+                    vim.api.nvim_win_call(win_id, function()
+                        for _ = 1, 10, 1 do
+                            vim.cmd('execute "normal! \\<C-e>"')
+                        end
+                    end)
+                end
             end
         end
     end)
@@ -106,6 +120,19 @@ local function open(completions)
                 print("Option selection: " .. window.option)
             end
         end
+    end)
+
+    vim.keymap.set("i", "<C-y>", function()
+        if window.option == -1 then
+            close()
+            return
+        end
+
+        for _ = 1, #window.original, 1 do
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<BS>", true, false, true), "m", false)
+        end
+
+        vim.api.nvim_feedkeys(completions[window.option + 1], "m", false)
     end)
 
     -- CREATE BUFFER
