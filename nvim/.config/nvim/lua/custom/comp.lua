@@ -1,3 +1,7 @@
+-- bugs
+--[[
+    - popup window inverted on new buffer/window?
+]]
 
 ----------------------------------------------------------------------
 --- UI - wilber wilson wigger watson wilber
@@ -83,8 +87,6 @@ local function open(completions)
             if window.option < #completions - 1 then
                 window.option = window.option + 1
                 set_hl()
-
-                print("Option selection: " .. window.option)
             end
 
             if window.option % 10 == 0 and window.option ~= 0 then
@@ -116,8 +118,6 @@ local function open(completions)
             if window.option > -1 then
                 window.option = window.option - 1
                 set_hl()
-
-                print("Option selection: " .. window.option)
             end
         end
     end)
@@ -163,6 +163,7 @@ local function open(completions)
         height = window.height,
         style = "minimal",
         border = "rounded",
+        focusable = false,
     }
 
     vim.api.nvim_open_win(window.buf, false, design)
@@ -170,7 +171,6 @@ local function open(completions)
     window.open = true
 end
 
--- ERROR: (CLICKING FLOAT WINDOW + LEAVING INSERT MODE)
 vim.api.nvim_create_autocmd("InsertLeave", {
     callback = close
 })
@@ -268,6 +268,29 @@ local function refresh_buffer(buf)
     return out
 end
 
+-----------------------------------------------------------------------
+--- SOURCES - LSP
+-----------------------------------------------------------------------
+
+local function get_completions_lsp(callback)
+    vim.lsp.buf_request(0, 'textDocument/completion', vim.lsp.util.make_position_params(0, 'utf-8'), function(err, result, _, _)
+        if err or not result then return end
+
+        local items = result.items or result
+
+        local completions = {}
+        for _, item in ipairs(items) do
+            table.insert(completions, item.label)
+        end
+
+        callback(completions)
+    end)
+end
+
+-----------------------------------------------------------------------
+--- AUTO COMMANDS AND BINDS
+-----------------------------------------------------------------------
+
 vim.api.nvim_create_autocmd("BufNewFile", {
     callback = function(opts)
         if vim.api.nvim_buf_get_option(opts.buf, "buflisted") then
@@ -347,6 +370,10 @@ vim.api.nvim_create_autocmd("TextChangedI", {
             end
         end
 
+        -- get_completions_lsp(function(completions)
+        --     open(completions)
+        -- end)
+
         open(get_completions())
     end
 })
@@ -377,3 +404,4 @@ vim.keymap.set("n", "rr", function()
 
     vim.api.nvim_echo(message, true, {})
 end)
+
