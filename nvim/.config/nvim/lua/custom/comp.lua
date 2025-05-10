@@ -1,8 +1,3 @@
--- bugs
---[[
-    - popup window inverted on new buffer/window?
-]]
-
 ----------------------------------------------------------------------
 --- UI - wilber wilson wigger watson wilber
 ----------------------------------------------------------------------
@@ -76,6 +71,8 @@ local function set_original_word()
 end
 
 local function open(completions)
+    close()
+
     if #completions == 0 then
         return
     end
@@ -144,14 +141,23 @@ local function open(completions)
 
     -- CREATE FLOATING WINDOW
 
-    local width = 20
+    local longest = 0
+    for _, comp in ipairs(completions) do
+        if #comp > longest then
+            longest = #comp
+        end
+    end
+
+    local width = longest
     window.height = #completions <= 10 and #completions or 10
 
     local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
-    local bottom_line = vim.fn.line("w$")
+    local top_line = vim.fn.line("w0")
+    local bottom = vim.api.nvim_win_get_height(0)
+
     local row = 1
 
-    if bottom_line - cursor_line <= 11 then
+    if (bottom + top_line) - cursor_line <= 12 then
         row = -(window.height + 2)
     end
 
@@ -291,6 +297,15 @@ end
 --- AUTO COMMANDS AND BINDS
 -----------------------------------------------------------------------
 
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    once = true,
+    callback = function(opts)
+        if vim.api.nvim_buf_get_option(opts.buf, "buflisted") then
+            files[opts.buf] = refresh_buffer(opts.buf)
+        end
+    end,
+})
+
 vim.api.nvim_create_autocmd("BufNewFile", {
     callback = function(opts)
         if vim.api.nvim_buf_get_option(opts.buf, "buflisted") then
@@ -317,8 +332,6 @@ vim.api.nvim_create_autocmd("TextChanged", {
 
 vim.api.nvim_create_autocmd("TextChangedI", {
     callback = function()
-        close()
-
         local buf = vim.api.nvim_get_current_buf()
         if not vim.api.nvim_buf_get_option(buf, "buflisted") then
             return
@@ -370,11 +383,26 @@ vim.api.nvim_create_autocmd("TextChangedI", {
             end
         end
 
-        -- get_completions_lsp(function(completions)
-        --     open(completions)
-        -- end)
+        close()
 
-        open(get_completions())
+        -- LSP BUGGY AS ALL HELL
+        local with_lsp = false
+
+        if with_lsp then
+            get_completions_lsp(function(results)
+                local completions = {}
+                local buf_comp = get_completions()
+                for _, comp in ipairs(results) do
+                    table.insert(completions, comp)
+                end
+                for _, comp in ipairs(buf_comp) do
+                    table.insert(completions, comp)
+                end
+                open(completions)
+            end)
+        else
+            open(get_completions())
+        end
     end
 })
 
@@ -404,4 +432,3 @@ vim.keymap.set("n", "rr", function()
 
     vim.api.nvim_echo(message, true, {})
 end)
-
