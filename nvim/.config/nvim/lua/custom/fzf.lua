@@ -46,6 +46,8 @@ local function open(title, command, path)
         }
     )
     vim.api.nvim_feedkeys("i", "n", false)
+
+    vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
 vim.keymap.set("n", "<leader>fh", function()
