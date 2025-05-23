@@ -19,7 +19,8 @@ require("config.neoplug").setup({
 -- CUSTOM
 require("custom")
 
--- LSP SETUP (see https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/configs)
+-- LSP SETUP
+-- (see https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/configs)
 vim.lsp.enable({ "lua_ls" })
 vim.lsp.enable({ "clangd" })
 vim.lsp.enable({ "ts_ls" })

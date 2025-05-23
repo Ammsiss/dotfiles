@@ -38,18 +38,17 @@ local function live_grep()
     --- Generate temp file for fzf selection ---
     local temp_file = get_temp()
 
-    local grep_picker = "rg --files"
-
     local fzf_extra = [[
+    --no-hscroll \
     --ansi --phony --disabled --delimiter=':' \
-    --bind "change:reload:rg --color=always --line-number --smart-case -- {q} || true" \
+    --bind "change:reload:rg --color=always --hidden --line-number --smart-case -- {q} || true" \
     --preview 'bat \
-      --paging=never --color=always --style=changes \
+      --paging=never --color=always --style=numbers,header,changes,grid \
       --highlight-line {2} --line-range {2}: {1}' \
     ]]
 
     --- Execute fzf ---
-    vim.fn.jobstart(grep_picker .. "|" .. fzf_default .. fzf_extra .. ">" .. temp_file, {
+    vim.fn.jobstart(fzf_default .. fzf_extra .. ">" .. temp_file, {
             term = true,
             on_exit = function(_, exit_code, _)
                 if exit_code == 0 then
