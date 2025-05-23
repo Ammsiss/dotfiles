@@ -7,7 +7,7 @@ local fzf_default =
         "--bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down "
 
 local float_width = vim.o.columns
-local float_height = vim.o.lines - 4 -- dont cover status bar
+local float_height = vim.o.lines - 2 -- dont cover status bar
 
 local float_design = {
     style = "minimal",
@@ -16,7 +16,7 @@ local float_design = {
     height = float_height,
     row = 0,
     col = 0,
-    border = "rounded",
+    border = "none",
 }
 
 local function get_temp()
@@ -65,8 +65,6 @@ local function live_grep()
                         vim.cmd("e " .. selected:match("[^:]+"))
                         vim.cmd(selected:match(":(%d+)"))
                         vim.cmd("normal! zz")
-
-                        -- vim.cmd("e " .. selected)
                     end
                 else
                     vim.cmd("close")
@@ -75,7 +73,6 @@ local function live_grep()
         }
     )
     vim.api.nvim_feedkeys("i", "n", false)
-
     vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
@@ -115,6 +112,7 @@ local function edit_dotfiles()
         }
     )
     vim.api.nvim_feedkeys("i", "n", false)
+    vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
 local function git_status()
@@ -170,6 +168,7 @@ local function git_status()
         }
     )
     vim.api.nvim_feedkeys("i", "n", false)
+    vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
 local function find_files()
@@ -183,7 +182,7 @@ local function find_files()
     -- Generate temp file for fzf selection
     local temp_file = get_temp()
 
-    local cd_picker = "rg --files"
+    local cd_picker = "rg --files --hidden"
 
     vim.fn.jobstart(cd_picker .. "|" .. fzf_default .. ">" .. temp_file, {
             term = true,
@@ -207,6 +206,7 @@ local function find_files()
         }
     )
     vim.api.nvim_feedkeys("i", "n", false)
+    vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
 vim.keymap.set("n", "<leader>fg", live_grep, {})
