@@ -1,43 +1,72 @@
-local function open(title, command, path)
+local fzf_default =
+    "fzf --color=pointer:#E67E22,prompt:#E67E22 " ..
+        "--prompt='> ' " ..
+        "--layout=reverse " ..
+        "--preview 'bat --style=changes --color=always {}' " ..
+        "--preview-window=right:70%:wrap:noinfo " ..
+        "--bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down "
 
+local float_width = vim.o.columns
+local float_height = vim.o.lines - 4 -- dont cover status bar
+
+local float_design = {
+    style = "minimal",
+    relative = "editor",
+    width = float_width,
+    height = float_height,
+    row = 0,
+    col = 0,
+    border = "rounded",
+}
+
+local function get_temp()
+    local temp_dir = vim.fn.stdpath("data") .. "/fzf_temp"
+    if vim.fn.isdirectory(temp_dir) == 0 then
+        vim.fn.mkdir(temp_dir, "p")
+    end
+
+    return temp_dir .. "/result-" .. vim.fn.getpid() .. ".txt"
+end
+
+local function live_grep()
+    --- Create scratch buf, open in floating win ---
     local buf = vim.api.nvim_create_buf(false, true)
+    float_design.title = " Live Grep "
+    float_design.title_pos = "center"
+    vim.api.nvim_open_win(buf, true, float_design)
 
-    local width = vim.o.columns - 20
-    local height = vim.o.lines - 6 - 3
-    local design = {
-        style = "minimal",
-        relative = "editor",
-        width = width,
-        height = height,
-        row = (vim.o.lines - height) / 2 - 2,
-        col = (vim.o.columns - width) / 2,
-        title = title,
-        title_pos = "center",
-        border = "rounded",
-    }
+    --- Generate temp file for fzf selection ---
+    local temp_file = get_temp()
 
-    vim.api.nvim_open_win(buf, true, design)
+    local grep_picker = "rg --files"
 
-    vim.fn.jobstart(command, {
+    local fzf_extra = [[
+    --ansi --phony --disabled --delimiter=':' \
+    --bind "change:reload:rg --color=always --line-number --smart-case -- {q} || true" \
+    --preview 'bat \
+      --paging=never --color=always --style=changes \
+      --highlight-line {2} --line-range {2}: {1}' \
+    ]]
+
+    --- Execute fzf ---
+    vim.fn.jobstart(grep_picker .. "|" .. fzf_default .. fzf_extra .. ">" .. temp_file, {
             term = true,
             on_exit = function(_, exit_code, _)
-
                 if exit_code == 0 then
-                    local lines = vim.api.nvim_buf_get_lines(buf, 0, 1, false)
+                    local fd = io.open(temp_file, "r")
+                    if fd then
 
-                    if lines[1]:find("/opt%f[%A]") then
+                        local selected = fd:read("*l")
+                        fd:close()
+                        vim.fn.delete(temp_file)
+
                         vim.cmd("close")
-                        local help_path = lines[1]:match("[^:]+")
-                        vim.cmd("help " .. vim.fn.fnamemodify(help_path, ":t"))
-                        vim.cmd(lines[1]:match(":(.-):"))
-                    elseif lines[1]:find(":") then
-                        vim.cmd("close")
-                        vim.cmd("e " .. lines[1]:match("[^:]+"))
-                        vim.cmd(lines[1]:match(":(%d+)"))
+
+                        vim.cmd("e " .. selected:match("[^:]+"))
+                        vim.cmd(selected:match(":(%d+)"))
                         vim.cmd("normal! zz")
-                    else
-                        vim.cmd("close")
-                        vim.cmd("e " .. path .. lines[1])
+
+                        -- vim.cmd("e " .. selected)
                     end
                 else
                     vim.cmd("close")
@@ -48,111 +77,137 @@ local function open(title, command, path)
     vim.api.nvim_feedkeys("i", "n", false)
 end
 
-vim.keymap.set("n", "<leader>fh", function()
-    open("  File Search  ",
-    [[
-        NVIM_HELP_FILES=$(
-        nvim --headless -u NONE \
-            -c 'lua io.write(table.concat(vim.api.nvim_get_runtime_file("doc/*.txt", true), " "))' \
-            -c qa
-        )
+local function edit_dotfiles()
+    --- Create scratch buf, open in floating win ---
+    local buf = vim.api.nvim_create_buf(false, true)
+    float_design.title = " Dotfiles "
+    float_design.title_pos = "center"
+    vim.api.nvim_open_win(buf, true, float_design)
 
-        RELOAD="reload:(test -n '{q}' && grep -Hn --color=always '{q}' $NVIM_HELP_FILES) || :"
+    --- Generate temp file for fzf selection ---
+    local temp_file = get_temp()
 
-        BAT_CMD='
-        file=$(echo {} | cut -d":" -f1)
-        line=$(echo {} | cut -d":" -f2)
+    local dot_picker =
+        "rg --hidden --files /Users/ammsiss/dotfiles"
 
-        start=$(( line - 20 )); [ $start -lt 1 ] && start=1
-        end=$(( line + 20 ))
+    --- Execute fzf ---
+    vim.fn.jobstart(dot_picker .. "|" .. fzf_default .. ">" .. temp_file, {
+            term = true,
+            on_exit = function(_, exit_code, _)
+                if exit_code == 0 then
+                    local fd = io.open(temp_file, "r")
+                    if fd then
 
-        bat --color=always --style=changes \
-            --line-range "$start:$end" \
-            --highlight-line "$line" "$file" \
-            -l man
-        '
+                        local selected = fd:read("*l")
+                        fd:close()
+                        vim.fn.delete(temp_file)
 
-        fzf --ansi \
-            --color=pointer:#e67e22,prompt:#e67e22 \
-            --layout=reverse \
-            --disabled --phony \
-            --prompt '> ' \
-            --delimiter ':' \
-            --preview "$BAT_CMD" \
-            --bind "start:$RELOAD" \
-            --bind "change:$RELOAD"
-    ]], "")
-end, { silent = true })
+                        vim.cmd("close")
 
-vim.keymap.set("n", "<leader>fd", function()
-    open("  File Search  ",
-    [[
-        gfind \( -path '*/.git' -o -path '*/node_modules' -o -path '*/sprites' -o -path '*/libs' -o -path '*/build' -o -path '*/assets' -o -path '*/.cache' -o -path '*/bin' \) \
-        -prune -false -o -type f ! -name .DS_Store -printf '%P\n' | \
+                        vim.cmd("e " .. selected)
+                    end
+                else
+                    vim.cmd("close")
+                end
+            end
+        }
+    )
+    vim.api.nvim_feedkeys("i", "n", false)
+end
 
-        fzf --color=pointer:#E67E22,prompt:#E67E22 --prompt="> " --layout=reverse --preview 'bat --style=changes --color=always {}' \
-        --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
-    ]], vim.fn.getcwd() .. "/")
-end, { silent = true })
+local function git_status()
+    --- Create scratch buf, open in floating win ---
+    local buf = vim.api.nvim_create_buf(false, true)
+    float_design.title = " Git Status "
+    float_design.title_pos = "center"
+    vim.api.nvim_open_win(buf, true, float_design)
 
-vim.keymap.set("n", "<leader>gs", function()
-    local handle = io.popen("git rev-parse --show-toplevel 2> /dev/null")
-    local git_root
-    if handle then
-        git_root = handle:read("*a"):gsub("%s+$", "")
-        handle:close()
+    --- Generate temp file for fzf selection ---
+    local temp_file = get_temp()
+
+    --- Get git root if exists ---
+    local result = vim.system(
+        { "git", "rev-parse", "--show-toplevel" },
+        { text = true }
+    ):wait()
+
+    if result.code ~= 0 then
+        print(result.stderr)
+        return
     end
 
-    open("  Git Changes  ",
-    [[
-        git diff --name-only --diff-filter=ACMRT | \
-        fzf --color=pointer:#E67E22,prompt:#E67E22 --prompt="> " --layout=reverse \
-        --preview='
-        repo=$(git rev-parse --show-toplevel)
-        bat --style=changes --color=always "$repo"/{}
-        ' \
-        --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
-    ]], git_root .. "/")
-end, { silent = true })
+    local git_root = result.stdout:sub(1, -2) -- trim newline
 
-vim.keymap.set("n", "<leader>en", function()
-    open(" Edit Dotfiles ",
-    [[
-        gfind /Users/ammsiss/dotfiles \( -path '*/.git' -o -path '*/node_modules' \) -prune -false -o -type f ! -name .DS_Store -print | \
+    local gs_picker =
+        "git diff --name-only --diff-filter=ACMRT HEAD"
 
-        fzf --color=pointer:#E67E22,prompt:#E67E22 \
-            --prompt="> " \
-            --layout=reverse \
-            --preview 'bat --style=changes --color=always {}' \
-            --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
-    ]], "")
-end, { silent = true })
+    local fzf_extra =
+        "--preview='repo=" .. git_root ..
+       [[; bat --style=changes --color=always "$repo"/{}' ]]
 
-vim.keymap.set("n", "<leader>fg", function()
-    open(" Live Grep ",
-    [[
-        RG_CMD='grep -rni --color=always --exclude-dir={.git,libs,build,assets,.cache,bin} --exclude=compile_commands.json'
-        BAT_CMD='
-            file=$(echo {} | cut -d":" -f1)
-            line=$(echo {} | cut -d":" -f2)
+    --- Execute fzf ---
+    vim.fn.jobstart(gs_picker .. "|" .. fzf_default .. fzf_extra .. ">" .. temp_file, {
+            term = true,
+            on_exit = function(_, exit_code, _)
+                if exit_code == 0 then
+                    local fd = io.open(temp_file, "r")
+                    if fd then
 
-            start=$(( line - 20 )); [ $start -lt 1 ] && start=1
-            end=$(( line + 20 ))
+                        local selected = fd:read("*l")
+                        fd:close()
+                        vim.fn.delete(temp_file)
 
-            bat --color=always --style=changes \
-                --line-range "$start:$end" \
-                --highlight-line "$line" "$file"
-        ' \
+                        vim.cmd("close")
 
-        fzf --ansi \
-            --layout=reverse \
-            --disabled \
-            --phony \
-            --color=pointer:#E67E22,prompt:#E67E22 \
-            --prompt '> ' \
-            --delimiter : \
-            --preview $BAT_CMD \
-            --bind "start:reload:echo" \
-            --bind "change:reload:(test -n '{q}' && $RG_CMD '{q}') || true"
-    ]], "")
-end, { silent = true })
+                        vim.cmd("e " .. git_root .. "/" .. selected)
+                    end
+                else
+                    vim.cmd("close")
+                end
+            end
+        }
+    )
+    vim.api.nvim_feedkeys("i", "n", false)
+end
+
+local function find_files()
+
+    -- Create scratch buf, open in floating win
+    local buf = vim.api.nvim_create_buf(false, true)
+    float_design.title = " Find Files "
+    float_design.title_pos = "center"
+    vim.api.nvim_open_win(buf, true, float_design)
+
+    -- Generate temp file for fzf selection
+    local temp_file = get_temp()
+
+    local cd_picker = "rg --files"
+
+    vim.fn.jobstart(cd_picker .. "|" .. fzf_default .. ">" .. temp_file, {
+            term = true,
+            on_exit = function(_, exit_code, _)
+                if exit_code == 0 then
+                    local fd = io.open(temp_file, "r")
+                    if fd then
+
+                        local selected = fd:read("*l")
+                        fd:close()
+                        vim.fn.delete(temp_file)
+
+                        vim.cmd("close")
+
+                        vim.cmd("e " .. selected)
+                    end
+                else
+                    vim.cmd("close")
+                end
+            end
+        }
+    )
+    vim.api.nvim_feedkeys("i", "n", false)
+end
+
+vim.keymap.set("n", "<leader>fg", live_grep, {})
+vim.keymap.set("n", "<leader>fd", find_files, {})
+vim.keymap.set("n", "<leader>gs", git_status, {})
+vim.keymap.set("n", "<leader>en", edit_dotfiles, {})
