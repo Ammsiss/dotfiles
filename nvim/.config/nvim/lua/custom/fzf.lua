@@ -85,8 +85,14 @@ local function edit_dotfiles()
     --- Generate temp file for fzf selection ---
     local temp_file = get_temp()
 
-    local dot_picker =
-        "rg --hidden --files /Users/ammsiss/dotfiles"
+    local hostname = vim.fn.hostname()
+
+    local dot_picker
+    if hostname == "fedora" then
+        dot_picker = "rg --hidden --files /home/ammsiss/dotfiles"
+    else
+        dot_picker = "rg --hidden --files /Users/ammsiss/dotfiles"
+    end
 
     --- Execute fzf ---
     vim.fn.jobstart(dot_picker .. "|" .. fzf_default .. ">" .. temp_file, {
