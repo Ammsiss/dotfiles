@@ -1,5 +1,3 @@
--- On file deletion; auto delete associated buffer
-
 local buf = { open = false }
 local hidden = false
 local ignored = true
@@ -503,7 +501,7 @@ vim.api.nvim_create_user_command("Filetree", function()
 
     buf.num = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_win_set_buf(0, buf.num)
-    vim.api.nvim_win_set_option(0, 'bufhidden', 'wipe')
+    vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = 0 })
 
     vim.bo[buf.num].modifiable = false
     vim.wo.wrap = false
