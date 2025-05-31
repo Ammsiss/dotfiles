@@ -1,3 +1,5 @@
+local utils = require("config.utils")
+
 local fzf_default =
     "fzf --color=pointer:#E67E22,prompt:#E67E22 " ..
         "--prompt='> ' " ..
@@ -241,6 +243,8 @@ local function find_files_split()
                         vim.cmd("close")
 
                         vim.cmd("vsp")
+                        utils.c_cmd("<C-w>L")
+
                         vim.cmd("e " .. selected)
                     end
                 else

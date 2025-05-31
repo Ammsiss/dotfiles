@@ -1,3 +1,5 @@
+local utils = require("config.utils")
+
 local default_opts = { noremap = true, silent = true }
 
 local function set(lhs, rhs, mode, opts)
@@ -21,44 +23,14 @@ set("<Esc>", ":nohlsearch<CR>")
 --- Splits
 set("<leader>x", ":close<CR>")
 
-set("<M-l>", function()
-    vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes(
-            "<C-w>4>", true, false, true
-        ),
-        "n",
-        true
-    )
-end)
+set("<M-l>", function() utils.c_cmd("<C-w>4>") end)
+set("<M-h>", function() utils.c_cmd("<C-w>4<") end)
+set("<M-k>", function() utils.c_cmd("<C-w>2-") end)
+set("<M-j>", function() utils.c_cmd("<C-w>2+") end)
 
-set("<M-j>", function()
-    vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes(
-            "<C-w>2+", true, false, true
-        ),
-        "n",
-        true
-    )
-end)
-
-set("<M-k>", function()
-    vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes(
-            "<C-w>2-", true, false, true
-        ),
-        "n",
-        true
-    )
-end)
-
-set("<M-h>", function()
-    vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes(
-            "<C-w>4<", true, false, true
-        ),
-        "n",
-        true
-    )
+set("<leader>v", function()
+    vim.cmd("vsp")
+    utils.c_cmd("<C-w>L")
 end)
 
 set("<c-j>", "<c-w><c-j>")
