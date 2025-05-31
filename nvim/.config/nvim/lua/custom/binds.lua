@@ -1,72 +1,125 @@
-local set = vim.keymap.set
-local opts = { noremap = true, silent = true }
+local default_opts = { noremap = true, silent = true }
+
+local function set(lhs, rhs, mode, opts)
+    mode = mode or "n"
+    opts = vim.tbl_extend("force", default_opts, opts or {})
+
+    vim.keymap.set(mode, lhs, rhs, opts)
+end
 
 --- Clear highlight
-set("n", "<CR>", function()
+set("<CR>", function()
     if vim.v.hlsearch == 1 then
         vim.cmd.nohl()
         return ""
     else
         return vim.keycode("<CR>")
     end
-end, { expr = true })
-set("n", "<Esc>", ":nohlsearch<CR>", opts)
+end, "n", { expr = true })
+set("<Esc>", ":nohlsearch<CR>")
 
---- Export lsp diagnostic to qflist
-set("n", "<leader>qf", ":lua vim.diagnostic.setqflist()<CR>", opts)
+--- Splits
+set("<leader>x", ":close<CR>")
 
---- Split
-set("n", "<M-,>", "<c-w>5<", opts)
-set("n", "<M-.>", "<c-w>5>", opts)
-set("n", "<M-d>", "<C-W>+", opts)
-set("n", "<M-s>", "<C-W>-", opts)
+set("<M-l>", function()
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(
+            "<C-w>4>", true, false, true
+        ),
+        "n",
+        true
+    )
+end)
 
-set("n", "<c-j>", "<c-w><c-j>", opts)
-set("n", "<c-k>", "<c-w><c-k>", opts)
-set("n", "<c-l>", "<c-w><c-l>", opts)
-set("n", "<c-h>", "<c-w><c-h>", opts)
+set("<M-j>", function()
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(
+            "<C-w>2+", true, false, true
+        ),
+        "n",
+        true
+    )
+end)
+
+set("<M-k>", function()
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(
+            "<C-w>2-", true, false, true
+        ),
+        "n",
+        true
+    )
+end)
+
+set("<M-h>", function()
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(
+            "<C-w>4<", true, false, true
+        ),
+        "n",
+        true
+    )
+end)
+
+set("<c-j>", "<c-w><c-j>")
+set("<c-k>", "<c-w><c-k>")
+set("<c-l>", "<c-w><c-l>")
+set("<c-h>", "<c-w><c-h>")
 
 --- QF list
-set("n", "<M-]>", ":cnext<CR>", opts)
-set("n", "<M-[>", ":cprev<CR>", opts)
+set("<M-]>", ":cnext<CR>")
+set("<M-[>", ":cprev<CR>")
+set("<leader>qf", ":lua vim.diagnostic.setqflist()<CR>")
 
 --- Source
-set("n", "<leader><leader>x", "<cmd>source %<CR>", { desc = "Execute the current file" })
+set("<leader><leader>x", "<cmd>source %<CR>")
 
 --- Format
-set("n", "<leader>qq", function()
+set("<leader>qq", function()
     vim.lsp.buf.format({ async = false })
-end, opts)
+end)
 
---- Tabs
-set("n", "<M-t>", ":tabnew<CR>", opts)
-set("n", "<M-1>", "1gt", opts)
-set("n", "<M-2>", "2gt", opts)
-set("n", "<M-3>", "3gt", opts)
-set("n", "<M-4>", "4gt", opts)
-set("n", "<M-5>", "5gt", opts)
+--- Navigation
+set("<C-e>", "j<C-e>")
+set("<C-y>", "k<C-y>")
 
+set("<M-e>", "3j3<C-e>")
+set("<M-y>", "3k3<C-y>")
 
---- Misc
-set("n", "<C-e>", "j<C-e>", opts)
-set("n", "<C-y>", "k<C-y>", opts)
+--- jump to man page
+set("gK", function()
+  local word = vim.fn.expand("<cword>")
+  --- Check if man page exists
+  local man_output = vim.fn.systemlist("man -w " .. word)
+  if #man_output > 0 and not man_output[1]:match("No manual entry for") then
+    vim.cmd("Man " .. word)
+  else
+    print("No man entry for " .. word)
+  end
+end)
 
-set("n", "<M-e>", "3j3<C-e>", opts)
-set("n", "<M-y>", "3k3<C-y>", opts)
+--- C/C++
+set("<leader>b", function()
+    vim.cmd("silent! make")
 
-set("n", "<leader>x", ":close<CR>", opts)
+    local qflist = vim.fn.getqflist({ title = 0, items = 1})
+    if #qflist.items == 0 then
+        vim.cmd("silent! !make run")
+    else
+        print("Errors in build.\n")
+    end
+end)
 
--- Jump to matching class file
-set("n", "<leader>sf", function()
+set("<leader>sf", function()
     local function find_file(dir, filename)
         local path = dir .. "/**/" .. filename
         local found = vim.fn.glob(path, true, false)
 
         if found ~= "" then
-            return found -- Returns full path
+            return found --- Returns full path
         end
 
-        return "" -- Returns empty string if not found
+        return "" --- Returns empty string if not found
     end
 
     local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
@@ -88,35 +141,3 @@ set("n", "<leader>sf", function()
         print("Not a valid class file")
     end
 end)
-
--- jump to man page
-vim.keymap.set('n', 'gK', function()
-  local word = vim.fn.expand('<cword>')
-  -- Check if man page exists
-  local man_output = vim.fn.systemlist('man -w ' .. word)
-  if #man_output > 0 and not man_output[1]:match('No manual entry for') then
-    vim.cmd('Man ' .. word)
-  else
-    print('No man entry for ' .. word)
-  end
-end)
-
--- set("n", "<leader>br", function()
---     local filename = vim.fn.input("Enter filename: ")
---     local path = vim.fn.systemlist("find . -type f -iname " .. vim.fn.shellescape(filename))
---     if #path == 0 then
---         print("File not found")
---         return
---     end
---     vim.cmd("belowright split " .. path[1])
--- end, opts)
---
--- set("n", "<leader>rv", function()
---     local filename = vim.fn.input("Enter filename: ")
---     local path = vim.fn.systemlist("find . -type f -iname " .. vim.fn.shellescape(filename))
---     if #path == 0 then
---         print("File not found")
---         return
---     end
---     vim.cmd("belowright vsplit " .. path[1])
--- end, opts)
