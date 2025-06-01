@@ -4,10 +4,10 @@ M.name = "hrsh7th/nvim-cmp"
 M.enabled = true
 
 M.expects = {
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-buffer",
-    "nvim_lsp_signature_help",
+    { name = "hrsh7th/cmp-nvim-lsp", enabled = true },
+    { name = "hrsh7th/cmp-path", enabled = true },
+    { name = "hrsh7th/cmp-buffer", enabled = true },
+    { name = "hrsh7th/cmp-nvim-lsp-signature-help", enabled = true },
 }
 
 function M.config()

@@ -28,6 +28,14 @@ function M.setup(spec, opts)
         end
     end
 
+    for _, plugin in ipairs(plugins) do
+        if plugin.expects ~= nil and plugin.enabled then
+            for _, expect in ipairs(plugin.expects) do
+                table.insert(plugins, expect)
+            end
+        end
+    end
+
     if spec.extra then
         for _, plug in ipairs(spec.extra) do
             table.insert(plugins, plug)
@@ -161,7 +169,7 @@ function M.setup(spec, opts)
         for p, plugin in ipairs(layers[l]) do
             if plugin.expects then
                 for _, dependent in ipairs(plugin.expects) do
-                    local layer = move_down(dependent, l)
+                    local layer = move_down(dependent.name, l)
                     if layer then
                         if layers[layer] then
                             table.insert(layers[layer], plugin)
@@ -268,7 +276,7 @@ function M.setup(spec, opts)
                         plugin_lines[#output] = plugin.p_name
                         if plugin.expects then
                             for _, dependency in ipairs(plugin.expects) do
-                                table.insert(output, "     " .. dependency)
+                                table.insert(output, "     " .. dependency.p_name)
                             end
                         end
                     end
