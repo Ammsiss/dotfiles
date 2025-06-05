@@ -257,8 +257,57 @@ local function find_files_split()
     vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
 end
 
+-- local buffers = vim.api.nvim_list_bufs()
+-- for _, buf in ipairs(buffers) do
+--     if vim.api.nvim_buf_is_loaded(buf) then
+--         print(vim.api.nvim_buf_get_name(buf))
+--     end
+-- end
+--
+-- local function find_files_buf()
+--
+--     -- Create scratch buf, open in floating win
+--     local buf = vim.api.nvim_create_buf(false, true)
+--     float_design.title = " Find Files "
+--     float_design.title_pos = "center"
+--     vim.api.nvim_open_win(buf, true, float_design)
+--
+--     -- Generate temp file for fzf selection
+--     local temp_file = get_temp()
+--
+--     local cd_picker = "rg --files --hidden"
+--
+--     vim.fn.jobstart(cd_picker .. "|" .. fzf_default .. ">" .. temp_file, {
+--             term = true,
+--             on_exit = function(_, exit_code, _)
+--                 if exit_code == 0 then
+--                     local fd = io.open(temp_file, "r")
+--                     if fd then
+--
+--                         local selected = fd:read("*l")
+--                         fd:close()
+--                         vim.fn.delete(temp_file)
+--
+--                         vim.cmd("close")
+--
+--                         vim.cmd("vsp")
+--                         utils.c_cmd("<C-w>L")
+--
+--                         vim.cmd("e " .. selected)
+--                     end
+--                 else
+--                     vim.cmd("close")
+--                 end
+--             end
+--         }
+--     )
+--     vim.api.nvim_feedkeys("i", "n", false)
+--     vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
+-- end
+
 vim.keymap.set("n", "<leader>fg", live_grep, {})
 vim.keymap.set("n", "<leader>fd", find_files, {})
 vim.keymap.set("n", "<leader>os", find_files_split, {})
+-- vim.keymap.set("n", "<leader>os", find_files_buf, {})
 vim.keymap.set("n", "<leader>gs", git_status, {})
 vim.keymap.set("n", "<leader>en", edit_dotfiles, {})
