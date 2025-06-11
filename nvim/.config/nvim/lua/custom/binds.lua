@@ -44,7 +44,7 @@ set("<M-[>", ":cprev<CR>")
 set("<leader>qf", ":lua vim.diagnostic.setqflist()<CR>")
 
 --- Source
-set("<leader><leader>x", "<cmd>source %<CR>")
+set("<leader>l", "<cmd>source %<CR>")
 
 --- Format
 set("<leader>qq", function()
@@ -57,6 +57,8 @@ set("<C-y>", "k<C-y>")
 
 set("<M-e>", "3j3<C-e>")
 set("<M-y>", "3k3<C-y>")
+
+set("<leader><leader>", "ci(")
 
 --- jump to man page
 set("gK", function()
