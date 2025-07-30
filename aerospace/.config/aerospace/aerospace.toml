@@ -26,9 +26,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
 
-    #cmd-slash = 'layout tiles horizontal vertical'
-    #cmd-comma = 'layout accordion horizontal vertical'
-
     cmd-x = 'close'
 
     cmd-h = 'focus left'
@@ -68,9 +65,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     cmd-shift-1 = 'move-node-to-workspace 10'
     cmd-shift-m = 'move-node-to-workspace 11'
 
-    # cmd-tab = 'workspace-back-and-forth'
-    #cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
     cmd-shift-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
@@ -90,10 +84,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [[on-window-detected]]
     if.app-id = 'com.apple.finder'
     run = ['layout floating']
-
-[[on-window-detected]]
-    if.app-id = 'com.apple.Safari'
-    run = ['layout tiling', 'move-node-to-workspace 11']
 
 [[on-window-detected]]
     if.app-id = 'com.github.wez.wezterm'
