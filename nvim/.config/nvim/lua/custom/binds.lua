@@ -39,8 +39,8 @@ set("<c-l>", "<c-w><c-l>")
 set("<c-h>", "<c-w><c-h>")
 
 --- QF list
-set("<M-]>", ":cnext<CR>")
-set("<M-[>", ":cprev<CR>")
+set("<leader>i", ":cnext<CR>")
+set("<leader>o", ":cprev<CR>")
 set("<leader>qf", ":lua vim.diagnostic.setqflist()<CR>")
 
 --- Source
@@ -59,6 +59,14 @@ set("<M-e>", "3j3<C-e>")
 set("<M-y>", "3k3<C-y>")
 
 set("<leader><leader>", "ci(")
+
+set("<Tab>", function()
+    vim.cmd("tabnext")
+end)
+
+set("<S-Tab>", function()
+    vim.cmd("tabprev")
+end)
 
 --- jump to man page
 set("gK", function()

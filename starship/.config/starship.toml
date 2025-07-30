@@ -25,6 +25,7 @@ format = "[$branch]($style)"
 style = "bright-black"
 
 [git_status]
+# disabled = true
 format = "[[($conflicted$modified$untracked$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
 style = "cyan"
 conflicted = " "

@@ -8,6 +8,11 @@
     autocrlf = input
     safecrlf = true
     pager = delta
+    excludesfile = ~/dotfiles/git/.gitignore_global
+[push]
+    default = simple
+[diff]
+    tool = nvimdiff
 [difftool]
     prompt = false
 [delta]
@@ -15,3 +20,16 @@
     side-by-side = true
     line-numbers = false
     dark = true
+[commit]
+    template = ~/dotfiles/git/.gitmessage.txt
+[alias]
+    c = commit
+    ch = checkout
+    s = status -s
+    ch = checkout
+    br = branch
+    p = push
+    track = status -sb
+    unstage = restore --staged
+    last = log -1 HEAD
+    t = log --oneline --decorate --graph --all

@@ -2,9 +2,10 @@
 eval "$(starship init zsh)"
 
 # Load autocomplete
-autoload -Uz compinit
-compinit
-_comp_options+=(globdots)
+autoload -Uz bashcompinit && bashcompinit
+
+autoload -Uz compinit && compinit
+_comp_options+=(globdots) # enable dot files
 setopt MENU_COMPLETE
 zstyle ':completion:*' menu select
 
@@ -24,31 +25,11 @@ alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 alias openbitch='xattr -cr'
 
-alias -g tree="lsd --tree"
+alias -g tree='lsd --tree'
 alias -g ls='lsd'
 alias -g cat='bat'
 
-alias -g gs="command git status"
-alias -g gpu="command git pull"
-alias -g gp="command git push"
-alias -g gc="command git commit"
-alias -g gca="command git commit -a"
-
-git() {
-    if [[ "$1" == "commit" || "$1" == "status" || "$1" == "push" || "$1" == "pull" ]]; then
-        echo "Use aliases"
-    else
-        command git "$@"
-    fi
-}
-
-doc() {
-    if [[ "$1" =~ ^[1-9]$ ]]; then
-        man "$1" "$2" | col -bx | nvim -c "setlocal buftype=nofile bufhidden=hide noswapfile | set filetype=man nomodifiable" -
-    else
-        man "$1" | col -bx | nvim -c "setlocal buftype=nofile bufhidden=hide noswapfile | set filetype=man" -
-    fi
-}
+alias g='git'
 
 getid() {
     osascript -e "id of app \"$1\""
