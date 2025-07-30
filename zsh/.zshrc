@@ -11,14 +11,25 @@ zstyle ':completion:*' menu select
 autoload -U colors
 colors
 
-# Brew path exports
+# Path exports
+# TODO: move to ~/.zprofile ?
+
+# MacOS
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export MallocNanoZone=0
 
+# Fedora
+export PATH="$HOME/.local/bin:$PATH"
+
+# for portability always include the colon.
+alias ctime='TZ=":Canada/Pacific" ./show_time'
+
 # Aliases
 alias cl='command clear'
 alias clear='echo "Use cl instead!"'
+
+alias grep='rg'
 
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
@@ -26,21 +37,6 @@ alias openbitch='xattr -cr'
 
 alias -g tree="lsd --tree"
 alias -g ls='lsd'
-alias -g cat='bat'
-
-alias -g gs="command git status"
-alias -g gpu="command git pull"
-alias -g gp="command git push"
-alias -g gc="command git commit"
-alias -g gca="command git commit -a"
-
-git() {
-    if [[ "$1" == "commit" || "$1" == "status" || "$1" == "push" || "$1" == "pull" ]]; then
-        echo "Use aliases"
-    else
-        command git "$@"
-    fi
-}
 
 doc() {
     if [[ "$1" =~ ^[1-9]$ ]]; then

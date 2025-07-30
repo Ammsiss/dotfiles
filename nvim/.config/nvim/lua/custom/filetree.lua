@@ -196,14 +196,13 @@ local function refresh()
     vim.bo[buf.num].modifiable = false
 end
 
-
 local function define_mappings()
 
     vim.keymap.set("n", "q", function()
         vim.cmd("close")
     end, { buffer = buf.num })
 
-    vim.keymap.set("n", "<C-]>", function()
+    vim.keymap.set("n", "<C-i>", function()
         local line = vim.api.nvim_get_current_line()
         ---@diagnostic disable-next-line: param-type-mismatch
         local target = line:sub(vim.str_byteindex(line, 4, false))
