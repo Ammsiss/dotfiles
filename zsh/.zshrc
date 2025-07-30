@@ -12,14 +12,25 @@ zstyle ':completion:*' menu select
 autoload -U colors
 colors
 
-# Brew path exports
+# Path exports
+# TODO: move to ~/.zprofile ?
+
+# MacOS
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export MallocNanoZone=0
 
+# Fedora
+export PATH="$HOME/.local/bin:$PATH"
+
+# for portability always include the colon.
+alias ctime='TZ=":Canada/Pacific" ./show_time'
+
 # Aliases
 alias cl='command clear'
 alias clear='echo "Use cl instead!"'
+
+alias grep='rg'
 
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'

@@ -196,7 +196,6 @@ local function refresh()
     vim.bo[buf.num].modifiable = false
 end
 
-
 local function define_mappings()
 
     vim.keymap.set("n", "q", function()
