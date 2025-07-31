@@ -68,38 +68,41 @@ set("<S-Tab>", function()
     vim.cmd("tabprev")
 end)
 
---- jump to man page
+--- jump to man/help page
+set("gH", function()
+    local word = vim.fn.expand("<cword>")
+    local ok, err = pcall(function()
+        vim.cmd("help " .. word)
+    end)
+
+    if not ok then
+        print("No help page for " .. word)
+    end
+end)
+
+local function open_section(word)
+    local man_output = vim.fn.systemlist("man -w " .. word)
+    if not man_output[1]:match("No manual entry for") then
+        vim.cmd("Man " .. word)
+    else
+        print("No man entry for '" .. word .. "'")
+    end
+end
+
+
 set("gK", function()
-  local word = vim.fn.expand("<cword>")
-  --- Check if man page exists
-  local man_output = vim.fn.systemlist("man -w " .. word)
-  if #man_output > 0 and not man_output[1]:match("No manual entry for") then
-    vim.cmd("Man " .. word)
-  else
-    print("No man entry for " .. word)
-  end
+    local word = vim.fn.expand("<cword>")
+    open_section(word)
 end)
 
 set("2gK", function()
-  local word = vim.fn.expand("<cword>") .. "(2)"
-  --- Check if man page exists
-  local man_output = vim.fn.systemlist("man -w " .. word)
-  if #man_output > 0 and not man_output[1]:match("No manual entry for") then
-    vim.cmd("Man " .. word)
-  else
-    print("No man entry for " .. word)
-  end
+    local word = "2 " .. vim.fn.expand("<cword>")
+    open_section(word)
 end)
 
 set("3gK", function()
-  local word = vim.fn.expand("<cword>") .. "(3)"
-  --- Check if man page exists
-  local man_output = vim.fn.systemlist("man -w " .. word)
-  if #man_output > 0 and not man_output[1]:match("No manual entry for") then
-    vim.cmd("Man " .. word)
-  else
-    print("No man entry for " .. word)
-  end
+    local word = "3 " .. vim.fn.expand("<cword>")
+    open_section(word)
 end)
 
 --- C/C++

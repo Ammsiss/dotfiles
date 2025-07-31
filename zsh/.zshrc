@@ -20,6 +20,8 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export MallocNanoZone=0
 
+export MANPAGER='nvim +Man!'
+
 # Fedora
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -36,9 +38,9 @@ alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 alias openbitch='xattr -cr'
 
-alias -g tree='lsd --tree'
-alias -g ls='lsd'
-alias -g cat='bat'
+alias tree='lsd --tree'
+alias ls='lsd'
+alias cat='bat'
 
 alias g='git'
 
