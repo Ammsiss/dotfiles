@@ -52,6 +52,8 @@ set("<leader>qq", function()
 end)
 
 --- Navigation
+set("<C-p>", "<C-]>")
+
 set("<C-e>", "j<C-e>")
 set("<C-y>", "k<C-y>")
 
@@ -60,18 +62,19 @@ set("<M-y>", "3k3<C-y>")
 
 set("<leader><leader>", "ci(")
 
-set("<Tab>", function()
-    vim.cmd("tabnext")
-end)
-
-set("<S-Tab>", function()
-    vim.cmd("tabprev")
-end)
+--- Mapping tab breaks <C-I> behaviour!
+-- set("<Tab>", function()
+--     vim.cmd("tabnext")
+-- end)
+--
+-- set("<S-Tab>", function()
+--     vim.cmd("tabprev")
+-- end)
 
 --- jump to man/help page
 set("gH", function()
     local word = vim.fn.expand("<cword>")
-    local ok, err = pcall(function()
+    local ok, _ = pcall(function()
         vim.cmd("help " .. word)
     end)
 
