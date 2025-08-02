@@ -1,4 +1,4 @@
-local utils = require("config.utils")
+local utils = require("custom.utils")
 
 local default_opts = { noremap = true, silent = true }
 
@@ -39,8 +39,8 @@ set("<c-l>", "<c-w><c-l>")
 set("<c-h>", "<c-w><c-h>")
 
 --- QF list
-set("<leader>i", ":cnext<CR>")
-set("<leader>o", ":cprev<CR>")
+set("<M-i>", ":cnext<CR>")
+set("<M-o>", ":cprev<CR>")
 set("<leader>qf", ":lua vim.diagnostic.setqflist()<CR>")
 
 --- Source

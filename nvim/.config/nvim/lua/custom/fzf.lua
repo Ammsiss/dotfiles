@@ -1,4 +1,4 @@
-local utils = require("config.utils")
+local utils = require("custom.utils")
 
 local fzf_default =
     "fzf --color=pointer:#E67E22,prompt:#E67E22 " ..
