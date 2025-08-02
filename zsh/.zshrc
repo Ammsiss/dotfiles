@@ -30,18 +30,15 @@ alias ctime='TZ=":Canada/Pacific" ./show_time'
 
 # Aliases
 alias cl='clear'
-
 alias grep='rg'
-
 alias mr='make && make run'
 alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 alias openbitch='xattr -cr'
-
 alias tree='lsd --tree'
 alias ls='lsd'
 alias cat='bat'
-
 alias g='git'
+alias gs='git status -s'
 
 getid() {
     osascript -e "id of app \"$1\""

@@ -25,7 +25,7 @@
 [alias]
     c = commit
     ch = checkout
-    s = status -s
+    s = status
     ch = checkout
     br = branch
     p = push
