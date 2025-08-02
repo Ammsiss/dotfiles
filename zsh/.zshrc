@@ -29,8 +29,7 @@ export PATH="$HOME/.local/bin:$PATH"
 alias ctime='TZ=":Canada/Pacific" ./show_time'
 
 # Aliases
-alias cl='command clear'
-alias clear='echo "Use cl instead!"'
+alias cl='clear'
 
 alias grep='rg'
 
