@@ -14,3 +14,7 @@
 ### Starship
 
 - Stop using starship - configure your own prompt
+
+### General
+
+- Add config file for 'stat' command

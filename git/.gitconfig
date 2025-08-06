@@ -33,3 +33,5 @@
     unstage = restore --staged
     last = log -1 HEAD
     t = log --oneline --decorate --graph --all
+    d = diff
+    ds = diff --staged
