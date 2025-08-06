@@ -48,7 +48,7 @@ alias ls='lsd'
 alias cat='bat'
 alias g='git'
 alias gs='git status -s'
-alias fd='fzf --multi | xargs -r nvim'
+alias fd='rg --files --hidden | fzf --multi | xargs -r nvim'
 alias en='rg --hidden --files /home/ammsiss/dotfiles | fzf --multi | xargs -r nvim'
 
 getid() {
