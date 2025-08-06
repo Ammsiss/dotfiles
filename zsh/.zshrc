@@ -15,6 +15,15 @@ colors
 # Path exports
 # TODO: move to ~/.zprofile ?
 
+export FZF_DEFAULT_OPTS="
+    --color=pointer:#E67E22,prompt:#E67E22
+    --prompt='> ' 
+    --layout=reverse 
+    --preview 'bat --style=changes --color=always {}'
+    --preview-window=right:70%:wrap:noinfo
+    --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
+"
+
 # MacOS
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
@@ -39,6 +48,8 @@ alias ls='lsd'
 alias cat='bat'
 alias g='git'
 alias gs='git status -s'
+alias fd='fzf --multi | xargs -r nvim'
+alias en='rg --hidden --files /home/ammsiss/dotfiles | fzf --multi | xargs -r nvim'
 
 getid() {
     osascript -e "id of app \"$1\""
