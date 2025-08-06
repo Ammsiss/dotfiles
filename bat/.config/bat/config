@@ -1,3 +1,4 @@
 # Change color scheme to be consistent with neovim theme as
 # I use bat for my fzf utility.
 --theme="gruvbox-dark"
+--style="numbers,changes"
