@@ -19,7 +19,7 @@ size:
   medium: 216
   large: 172
 inode:
-  valid: 13
+  valid: dark_yellow
   invalid: 245
 links:
   valid: 13
