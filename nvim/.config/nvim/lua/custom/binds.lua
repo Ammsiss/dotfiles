@@ -92,9 +92,13 @@ local function open_section(word)
     end
 end
 
-
 set("gK", function()
     local word = vim.fn.expand("<cword>")
+    open_section(word)
+end)
+
+set("1gK", function()
+    local word = "1 " .. vim.fn.expand("<cword>")
     open_section(word)
 end)
 
