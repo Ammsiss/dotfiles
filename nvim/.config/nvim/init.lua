@@ -16,9 +16,8 @@ require("custom")
 
 -- LSP SETUP
 -- (see https://github.com/neovim/nvim-lspconfig/tree/master/lua/lspconfig/configs)
-vim.lsp.enable({ "lua_ls" })
-vim.lsp.enable({ "clangd" })
-vim.lsp.enable({ "ts_ls" })
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("clangd")
 
 -- Global Vim Color Highlights (#E67E22 = Orange)
 vim.api.nvim_set_hl(0, "NormalFloat", { fg = "NONE", bg = "NONE" })
