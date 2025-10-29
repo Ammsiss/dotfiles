@@ -28,3 +28,4 @@ stack traceback:
 - Add tree view to *filetree.lua* and visual mode selection commands.
 - Add max line limit and auto wrapping. (80 chars?)
 - Clean up and minimilize neoplug.lua
+- Add markdown plugin/config
