@@ -42,13 +42,13 @@ output * bg /usr/share/backgrounds/default.jxl fill
 
 output DP-2 {
     pos 0 0
-    resolution 1920x1080@144Hz
-    bg /home/ammsiss/Pictures/Wallpapers/simon-sad-guy.jpeg fill
+    resolution 2560x1440@180Hz
+    bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
 }
 output DP-1 {
     pos 1920 0
     resolution 2560x1440@170Hz
-    bg /home/ammsiss/Pictures/Wallpapers/simon-sad-guy.jpeg fill
+    bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
 }
 
 
