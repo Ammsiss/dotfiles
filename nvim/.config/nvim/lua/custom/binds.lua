@@ -9,6 +9,15 @@ local function set(lhs, rhs, mode, opts)
     vim.keymap.set(mode, lhs, rhs, opts)
 end
 
+set("<F1>", "", "i")
+
+set("<leader>er", "i<Tab><Tab>errExit(\"\");<Esc>hhi")
+set("<leader>ii", "i#include \"../lib/tlpi_hdr.h\" // IWYU pragma: export<Esc>\"")
+
+--- Man page macro
+set("<leader>;", "/RETURN VALUE<CR>")
+set("<leader>p", "/ERROR<CR>")
+
 --- Clear highlight
 set("<CR>", function()
     if vim.v.hlsearch == 1 then
@@ -139,19 +148,19 @@ set("<leader>sf", function()
     local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
     local match
 
-    if filename:match("%.cpp$") then
-        match = filename:gsub("%.cpp$", ".h")
+    if filename:match("%.c$") then
+        match = filename:gsub("%.c$", ".h")
     elseif filename:match("%.h$") then
-        match = filename:gsub("%.h$", ".cpp")
+        match = filename:gsub("%.h$", ".c")
     else
-        print("Not a cpp file")
+        print("Not a c file")
         return
     end
-
-    local matchPath = find_file(vim.fn.getcwd(), match)
+    local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
+    local matchPath = find_file(dir, match)
     if matchPath ~= "" then
         vim.cmd("e " .. matchPath)
     else
-        print("Not a valid class file")
+        print("No matching header/source")
     end
 end)

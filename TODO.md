@@ -10,6 +10,12 @@
   apply copy mode from zsh based on that. See Shell Integration
   section of the wezterm manual.
 - Play around with wezterm multiplexing server
+- Make a plugin that creates a nvim buffer that you can write a zsh 
+command in that is half way between simple and script.
+- Make a plugin that lets you just type a filename and it opens it 
+without having to put the path in. It should only search directories 
+you list in the settings of the plugin. If there are multiple files 
+with the same name it should prompt you to pick what you want.
 
 ### Starship
 
@@ -18,3 +24,6 @@
 ### General
 
 - Add config file for 'stat' command
+- Add a better git manager. Start with something small like a more
+dynamic diff view.
+- Add custom man pages for make especially ref section in pinfo

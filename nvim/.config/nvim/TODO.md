@@ -28,4 +28,11 @@ stack traceback:
 - Add tree view to *filetree.lua* and visual mode selection commands.
 - Add max line limit and auto wrapping. (80 chars?)
 - Clean up and minimilize neoplug.lua
-- Add markdown plugin/config
+- Add man page plugin/config
+- Add a fuzzy find menu for man pages ()
+- Markdown stuff: Add a custom header renderer for markdown, add a way 
+to auto indent bullet and numbered lists, as well as auto numbering 
+(vim does have a way to do this), and also add a way to add word 
+breaking with the '-' character so that paragraphs look more uniform.
+- Figure out how to add treesitter parsing to inline markdown code 
+blocks.
