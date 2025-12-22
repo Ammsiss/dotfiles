@@ -72,6 +72,8 @@ function M.setup(spec, opts)
         end
     end
 
+    -- Call update_one from update_plugins - DUH!
+
     local function update_one(to_update)
         local plugin_path = neo_path .. "/pack/packages/opt/" .. to_update
 

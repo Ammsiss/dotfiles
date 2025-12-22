@@ -60,7 +60,7 @@ alias cat='bat'
 alias g='git'
 alias gs='git status -s'
 alias fd='rg --files --hidden | fzf --multi | xargs -r nvim'
-alias en='rg --hidden --files /home/ammsiss/dotfiles | fzf --multi | xargs -r nvim'
+alias en='rg --hidden --files ~/dotfiles | fzf --multi | xargs -r nvim'
 
 getid() {
     osascript -e "id of app \"$1\""

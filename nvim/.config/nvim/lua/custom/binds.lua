@@ -80,24 +80,23 @@ set("<leader><leader>", "ci(")
 --     vim.cmd("tabprev")
 -- end)
 
---- jump to man/help page
-set("gH", function()
-    local word = vim.fn.expand("<cword>")
-    local ok, _ = pcall(function()
-        vim.cmd("help " .. word)
-    end)
-
-    if not ok then
-        print("No help page for " .. word)
-    end
-end)
-
 local function open_section(word)
-    local man_output = vim.fn.systemlist("man -w " .. word)
-    if not man_output[1]:match("No manual entry for") then
-        vim.cmd("Man " .. word)
+    if vim.bo.filetype == "lua" then
+        local ok, _ = pcall(function()
+            vim.cmd("h " .. word)
+        end)
+        if not ok then
+            print("No help page for " .. word)
+        end
+    elseif vim.bo.filetype == "c" then
+        local man_output = vim.fn.systemlist("man -w " .. word)
+        if not man_output[1]:match("No manual entry for") then
+            vim.cmd("Man " .. word)
+        else
+            print("No man entry for '" .. word .. "'")
+        end
     else
-        print("No man entry for '" .. word .. "'")
+        print("No information available")
     end
 end
 
