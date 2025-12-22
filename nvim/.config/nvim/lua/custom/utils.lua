@@ -19,4 +19,13 @@ function M.get_temp()
     return temp_dir .. "/temp-" .. vim.fn.getpid() .. ".txt"
 end
 
+function M.set(lhs, rhs, mode, opts)
+    local default_opts = { noremap = true, silent = true }
+
+    mode = mode or "n"
+    opts = vim.tbl_extend("force", default_opts, opts or {})
+
+    vim.keymap.set(mode, lhs, rhs, opts)
+end
+
 return M

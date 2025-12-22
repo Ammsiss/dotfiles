@@ -1,24 +1,10 @@
 local utils = require("custom.utils")
+local set = utils.set
 
-local default_opts = { noremap = true, silent = true }
-
-local function set(lhs, rhs, mode, opts)
-    mode = mode or "n"
-    opts = vim.tbl_extend("force", default_opts, opts or {})
-
-    vim.keymap.set(mode, lhs, rhs, opts)
-end
-
+-- fat finger this with moonlander
 set("<F1>", "", "i")
 
-set("<leader>er", "i<Tab><Tab>errExit(\"\");<Esc>hhi")
-set("<leader>ii", "i#include \"../lib/tlpi_hdr.h\" // IWYU pragma: export<Esc>\"")
-
---- Man page macro
-set("<leader>;", "/RETURN VALUE<CR>")
-set("<leader>p", "/ERROR<CR>")
-
---- Clear highlight
+-- Return clears hl if its on
 set("<CR>", function()
     if vim.v.hlsearch == 1 then
         vim.cmd.nohl()
@@ -29,98 +15,93 @@ set("<CR>", function()
 end, "n", { expr = true })
 set("<Esc>", ":nohlsearch<CR>")
 
---- Splits
-set("<leader>x", ":close<CR>")
+-- 'q' closes splits, help, man. This also has the added
+-- bonus of making 'q:' hard to mistype.
+set("q", ":close<CR>")
+set("<leader>q", "q", "n", { noremap = true })
 
-set("<M-l>", function() utils.c_cmd("<C-w>4>") end)
-set("<M-h>", function() utils.c_cmd("<C-w>4<") end)
-set("<M-k>", function() utils.c_cmd("<C-w>2-") end)
-set("<M-j>", function() utils.c_cmd("<C-w>2+") end)
+-- No option key use. Yay!
+local function make_split_num(num, cmd)
+    return function()
+        if num == 0 then
+            num = ""
+        end
+        utils.c_cmd("<C-w>" .. num .. cmd)
+    end
+end
+for num = 0, 9 do
+    local lhs = "<leader>"
+    if num ~= 0 then
+        lhs = lhs .. num
+    end
+    set(lhs .. "h", make_split_num(num * 2, "<"))
+    set(lhs .. "j", make_split_num(num * 2, "-"))
+    set(lhs .. "k", make_split_num(num * 2, "+"))
+    set(lhs .. "l", make_split_num(num * 2, ">"))
+end
 
-set("<leader>v", function()
-    vim.cmd("vsp")
-    utils.c_cmd("<C-w>L")
-end)
-
+-- Easier split naviagtion
 set("<c-j>", "<c-w><c-j>")
 set("<c-k>", "<c-w><c-k>")
 set("<c-l>", "<c-w><c-l>")
 set("<c-h>", "<c-w><c-h>")
 
---- QF list
+-- QF list
 set("<M-i>", ":cnext<CR>")
 set("<M-o>", ":cprev<CR>")
-set("<leader>qf", ":lua vim.diagnostic.setqflist()<CR>")
+set("<leader>fq", ":lua vim.diagnostic.setqflist()<CR>")
 
---- Source
-set("<leader>l", "<cmd>source %<CR>")
-
---- Format
-set("<leader>qq", function()
-    vim.lsp.buf.format({ async = false })
-end)
-
---- Navigation
+-- Because ']' on moonlander is awkward
 set("<C-p>", "<C-]>")
 
+-- So cursor is not left behind
 set("<C-e>", "j<C-e>")
 set("<C-y>", "k<C-y>")
 
-set("<M-e>", "3j3<C-e>")
-set("<M-y>", "3k3<C-y>")
-
-set("<leader><leader>", "ci(")
-
---- Mapping tab breaks <C-I> behaviour!
--- set("<Tab>", function()
---     vim.cmd("tabnext")
--- end)
---
--- set("<S-Tab>", function()
---     vim.cmd("tabprev")
--- end)
-
-local function open_section(word)
+-- Detects filetype and opens appropriate doc page
+local function open_docs(word)
     if vim.bo.filetype == "lua" then
         local ok, _ = pcall(function()
             vim.cmd("h " .. word)
         end)
         if not ok then
-            print("No help page for " .. word)
+            vim.notify("No help page for " .. word,
+                vim.log.levels.INFO)
         end
     elseif vim.bo.filetype == "c" then
-        local man_output = vim.fn.systemlist("man -w " .. word)
-        if not man_output[1]:match("No manual entry for") then
+        local ok, _ = pcall(function()
             vim.cmd("Man " .. word)
-        else
-            print("No man entry for '" .. word .. "'")
+        end)
+        if not ok then
+            vim.notify("No manual entry for " .. word,
+                vim.log.levels.INFO)
         end
     else
-        print("No information available")
+        vim.notify("No information available",
+            vim.log.levels.INFO)
     end
 end
 
-set("gK", function()
-    local word = vim.fn.expand("<cword>")
-    open_section(word)
-end)
+-- Binds for opening specific man page sections
+local function make_open_sect(sect)
+    return function()
+        local word = vim.fn.expand("<cword>")
+        if sect then
+            word = sect .. " " .. word
+        end
+        open_docs(word)
+    end
+end
+set("gK", make_open_sect())
+for sect = 1, 9 do
+    set(sect .. "gK", make_open_sect(sect))
+end
 
-set("1gK", function()
-    local word = "1 " .. vim.fn.expand("<cword>")
-    open_section(word)
-end)
+-- Jump to important sections
+set("<leader>;", "/RETURN VALUE<CR>")
+set("<leader>p", "/ERROR<CR>")
 
-set("2gK", function()
-    local word = "2 " .. vim.fn.expand("<cword>")
-    open_section(word)
-end)
-
-set("3gK", function()
-    local word = "3 " .. vim.fn.expand("<cword>")
-    open_section(word)
-end)
-
---- C/C++
+-- Bind for running Makefile
 set("<leader>b", function()
     vim.cmd("silent! make")
 
@@ -132,7 +113,7 @@ set("<leader>b", function()
     end
 end)
 
--- Potentially create a root directory marker scanner
+-- Switch between header and source files
 set("<leader>sf", function()
     local filename = utils.get_cur_file()
 
@@ -145,11 +126,12 @@ set("<leader>sf", function()
         return
     end
 
+    -- Potentially create a root directory marker scanner
     local match = vim.fs.find(filename, {
         limit = 1, type = "file", path = vim.fn.getcwd()
     })
 
-    if match[1] ~= nil then
+    if match[1] then
         vim.cmd("e " .. match[1])
     else
         vim.notify("No match found", vim.log.levels.INFO)

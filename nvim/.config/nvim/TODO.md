@@ -29,7 +29,7 @@ stack traceback:
 - Add max line limit and auto wrapping. (80 chars?)
 - Clean up and minimilize neoplug.lua
 - Add man page plugin/config
-- Add a fuzzy find menu for man pages ()
+- Add a fuzzy find menu for man pages and nvim help ()
 - Markdown stuff: Add a custom header renderer for markdown, add a way 
 to auto indent bullet and numbered lists, as well as auto numbering 
 (vim does have a way to do this), and also add a way to add word 
