@@ -1,4 +1,3 @@
--- Some sort of prompt when plugin needs update
 -- Refactor plugin updating to not rely on 'plugins' state
 -- Replace vim.fn.system with vim.system
 
@@ -100,11 +99,10 @@ function M.setup(spec, opts)
                                     end
                                     if plugins[index].build then
                                         vim.cmd(plugins[index].build)
+                                        print("BUILD " .. plugins[index].build)
                                     end
                                 end
                             })
-                        else
-                            print(to_update .. " already up to date")
                         end
                     end
                 })
@@ -115,36 +113,8 @@ function M.setup(spec, opts)
     local function update_plugins()
         -- Async auto update plugins
         for i = 1, #plugin_names, 1 do
-
-            local plugin_path = neo_path .. "/pack/packages/opt/" .. plugin_names[i]
             local plugin_name = plugin_names[i]
-
-            vim.fn.jobstart({ "git", "-C", plugin_path, "fetch" }, {
-                on_exit = function()
-                    local result = {}
-                    vim.fn.jobstart({ "git", "-C", plugin_path, "status" }, {
-                        on_stdout = function(_, data)
-                            for _, line in ipairs(data) do
-                                table.insert(result, line)
-                            end
-                        end,
-                        on_exit = function()
-                            local total_data = table.concat(result, "\n")
-                            if not string.find(total_data, "Your branch is up to date") then
-                                vim.fn.jobstart({ "git", "-C", plugin_path, "pull" }, {
-                                    on_exit = function()
-                                        print(plugin_name .. " updated.")
-                                        if plugins[i].build then
-                                            vim.cmd(plugins[i].build)
-                                            print("BUILD " .. plugins[i].build)
-                                        end
-                                    end
-                                })
-                            end
-                        end
-                    })
-                end
-            })
+            update_one(plugin_name)
         end
     end
     if opts.auto_update or opts.auto_update == nil then
@@ -162,7 +132,6 @@ function M.setup(spec, opts)
                 end
             end
         end
-
         return false
     end
 
@@ -312,31 +281,33 @@ function M.setup(spec, opts)
 
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
 
+        local ns = vim.api.nvim_create_namespace("neoplug")
+
         for i, line in ipairs(output) do
             if line:find("Installed Plugins") then
-                vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugHeader", i - 1, 0, -1)
+                vim.hl.range(buf, ns, "NeoplugHeader", { i - 1, 0 }, { i - 1, -1 })
             elseif line:match("^%s● ") then
                 local start_col, end_col = line:find("●")
                 if start_col then
-                    vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugPluginName", i - 1, start_col - 1, end_col)
+                    vim.hl.range(buf, ns, "NeoplugPluginName", { i - 1, start_col - 1 }, { i - 1, end_col })
                 end
             elseif line:match("^%s○ ") then
                 local start_col, end_col = line:find("○")
                 if start_col then
-                    vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugPluginName", i - 1, start_col - 1, end_col)
+                    vim.hl.range(buf, ns, "NeoplugPluginName", { i - 1, start_col - 1 }, { i - 1, end_col })
                 end
             elseif line:match("^%s+") then
-                vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugLayer", i - 1, 0, -1)
+                vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
                 local start_col, end_col = line:find("")
                 if start_col then
-                    vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugDependency", i - 1, start_col - 1, end_col)
+                    vim.hl.range(buf, ns, "NeoplugDependency", { i - 1, start_col - 1 }, { i - 1, end_col })
                 end
             elseif line:match("| |") or line:match("|_|") then
-                vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugBanner", i - 1, 0, -1)
+                vim.hl.range(buf, ns, "NeoplugBanner", { i - 1, 0 }, { i - 1, -1 })
             elseif line:match("Layer") then
-                vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugLayer", i - 1, 0, -1)
+                vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
             elseif line:match("Disabled") then
-                vim.api.nvim_buf_add_highlight(buf, -1, "NeoplugLayer", i - 1, 0, -1)
+                vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
             end
         end
 
@@ -364,7 +335,7 @@ function M.setup(spec, opts)
         end
 
         -- non modifiable
-        vim.api.nvim_buf_set_option(buf, "modifiable", false)
+        vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
 
         -- open the floating window
         vim.api.nvim_open_win(buf, true, design)
