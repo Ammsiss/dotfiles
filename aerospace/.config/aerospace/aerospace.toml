@@ -86,10 +86,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     run = ['layout floating']
 
 [[on-window-detected]]
-    if.app-id = 'com.github.wez.wezterm'
-    run = ['layout tiling', 'move-node-to-workspace 1']
-
-[[on-window-detected]]
     if.app-id = 'com.openai.chat'
     run = ['layout floating']
 
