@@ -9,6 +9,13 @@ _comp_options+=(globdots) # enable dot files
 setopt MENU_COMPLETE
 zstyle ':completion:*' menu select
 
+# This makes zsh actually evaluate target rules for autocompletion
+# with make. So $(EXE) expands dynamically.
+zstyle ':completion:*:make:*:targets' call-command true
+# This gives targets priority in the auto complete over variables
+# and shit
+zstyle ':completion:*:*:make:*' tag-order 'targets' 
+
 autoload -U colors
 colors
 
@@ -33,6 +40,11 @@ export MANPAGER='nvim +Man!'
 
 # Fedora
 export PATH="$HOME/.local/bin:$PATH"
+alias gd="git status --porcelain | awk '{ print substr($0, 4) }' | fzf | xargs git diff"
+
+cca() {
+    echo -n "$1" | hexdump -c
+}
 
 # for portability always include the colon.
 alias ctime='TZ=":Canada/Pacific" ./show_time'
@@ -41,7 +53,6 @@ alias ctime='TZ=":Canada/Pacific" ./show_time'
 alias cl='clear'
 alias grep='rg'
 alias mr='make && make run'
-alias en='cd ~/dotfiles/nvim/.config/nvim/; nvim'
 alias openbitch='xattr -cr'
 alias tree='lsd --tree'
 alias ls='lsd'
@@ -114,3 +125,7 @@ bindkey -M viins '^E' autosuggest-accept
 bindkey -M viins '^U' backward-kill-line
 bindkey -M viins '^B' end-of-line
 bindkey -M viins '^A' beginning-of-line
+
+zmodload -i zsh/complist
+# 3. Bind Enter in menu-selection mode to accept the completion and execute:
+bindkey -M menuselect '^M' .accept-line

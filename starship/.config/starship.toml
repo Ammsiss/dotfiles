@@ -11,6 +11,15 @@ $character"""
 
 add_newline = false
 
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[container]
+disabled = true
+
 [directory]
 truncation_length = 1
 style = "blue"

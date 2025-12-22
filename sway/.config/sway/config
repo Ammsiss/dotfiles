@@ -51,8 +51,6 @@ output DP-1 {
     bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
 }
 
-
-
 # Set Primary Display Workspaces
 workspace 1 output DP-1
 workspace 2 output DP-1
@@ -102,8 +100,9 @@ workspace m output DP-2
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
-input "type:mouse" {
+input "1133:49288:Logitech_G_Pro_Wireless_Gaming_Mouse" {
     accel_profile "flat"
+    pointer_accel 0.9
 }
 
 input "type:keyboard" {
@@ -132,7 +131,7 @@ input "type:keyboard" {
     floating_modifier $mod normal
 
     # Reload the configuration file
-    bindsym $mod+Shift+c reload
+    bindsym $mod+Shift+r reload
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
@@ -188,8 +187,8 @@ input "type:keyboard" {
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+b splith
-    bindsym $mod+v splitv
+    # bindsym $mod+b splith
+    # bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
