@@ -132,34 +132,26 @@ set("<leader>b", function()
     end
 end)
 
+-- Potentially create a root directory marker scanner
 set("<leader>sf", function()
-    local function find_file(dir, filename)
-        local path = dir .. "/**/" .. filename
-        local found = vim.fn.glob(path, true, false)
+    local filename = utils.get_cur_file()
 
-        if found ~= "" then
-            return found --- Returns full path
-        end
-
-        return "" --- Returns empty string if not found
-    end
-
-    local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-    local match
-
-    if filename:match("%.c$") then
-        match = filename:gsub("%.c$", ".h")
-    elseif filename:match("%.h$") then
-        match = filename:gsub("%.h$", ".c")
+    if string.match(filename, "%.c$") then
+        filename = string.gsub(filename, "%.c$", ".h")
+    elseif string.match(filename, "%.h$") then
+        filename = string.gsub(filename, "%.h$", ".c")
     else
-        print("Not a c file")
+        vim.notify("Not a C file", vim.log.levels.WARN)
         return
     end
-    local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
-    local matchPath = find_file(dir, match)
-    if matchPath ~= "" then
-        vim.cmd("e " .. matchPath)
+
+    local match = vim.fs.find(filename, {
+        limit = 1, type = "file", path = vim.fn.getcwd()
+    })
+
+    if match[1] ~= nil then
+        vim.cmd("e " .. match[1])
     else
-        print("No matching header/source")
+        vim.notify("No match found", vim.log.levels.INFO)
     end
 end)

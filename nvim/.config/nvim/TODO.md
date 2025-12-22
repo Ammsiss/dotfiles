@@ -36,3 +36,4 @@ to auto indent bullet and numbered lists, as well as auto numbering
 breaking with the '-' character so that paragraphs look more uniform.
 - Figure out how to add treesitter parsing to inline markdown code 
 blocks.
+- Make a plugin for having a neovim buffer for command mode commands
