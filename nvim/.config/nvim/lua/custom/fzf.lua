@@ -90,9 +90,9 @@ local function edit_dotfiles()
     local hostname = vim.fn.hostname()
 
     local dot_picker
-    if hostname == "fedora" then
+    if vim.loop.os_uname().sysname == "Linux" then
         dot_picker = "rg --hidden --files /home/ammsiss/dotfiles"
-    else
+    else -- macos ?
         dot_picker = "rg --hidden --files /Users/ammsiss/dotfiles"
     end
 
