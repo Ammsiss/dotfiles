@@ -15,10 +15,10 @@ vim.cmd("highlight @markup.strikethrough.markdown_inline cterm=italic,strikethro
 vim.cmd("highlight @markup.raw.markdown_inline cterm=bold gui=bold guifg=#83a598 guibg=#302F2F")
 vim.cmd("highlight @markup.raw.block.markdown guifg=#b8bb26")
 
-vim.cmd("highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=#fabd2f")
-vim.cmd("highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=#b8bb26")
-vim.cmd("highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=#d3869b")
-vim.cmd("highlight @markup.heading.4.markdown cterm=bold gui=bold guifg=#83a598")
+vim.cmd("highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=#fabd2f guibg=#333105")
+vim.cmd("highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=#b8bb26 guibg=#12450D")
+vim.cmd("highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=#d3869b guibg=#450D3B")
+vim.cmd("highlight @markup.heading.4.markdown cterm=bold gui=bold guifg=#83a598 guibg=#0D3E45")
 
 -- Set up header rendering
 
@@ -49,22 +49,22 @@ local function refresh_header()
 
     for _, node, _ in h1_query:iter_captures(tree:root(), 0) do
             -- sc er ec
-        local sr, _, _, _ = node:range()
+        local sr, sc, _, ec = node:range()
 
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            hl_group = "MyMarkdownH1", end_col = 1, conceal = "①",
-            sign_text = ">", sign_hl_group = "MyMarkdownH1"
+        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
+            hl_group = "MyMarkdownH1", end_col = ec, conceal = "①",
+            sign_text = "⇒", sign_hl_group = "MyMarkdownH1"
         }))
         -- local type = node:type()
         -- local text = vim.treesitter.get_node_text(node, 0)
     end
 
     for _, node, _ in h2_query:iter_captures(tree:root(), 0) do
-        local sr, _, _, _ = node:range()
+        local sr, sc, _, ec = node:range()
 
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            hl_group = "MyMarkdownH2", end_col = 2, conceal = "②",
-            sign_text = ">", sign_hl_group = "MyMarkdownH2"
+        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
+            hl_group = "MyMarkdownH2", end_col = ec, conceal = "②",
+            sign_text = "⇒", sign_hl_group = "MyMarkdownH2"
         }))
         table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
             virt_text = { { " ", "MyMarkdownH2" } },
@@ -73,11 +73,11 @@ local function refresh_header()
     end
 
     for _, node, _ in h3_query:iter_captures(tree:root(), 0) do
-        local sr, _, _, _ = node:range()
+        local sr, sc, _, ec = node:range()
 
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            hl_group = "MyMarkdownH3", end_col = 3, conceal = "③",
-            sign_text = ">", sign_hl_group = "MyMarkdownH3"
+        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
+            hl_group = "MyMarkdownH3", end_col = ec, conceal = "③",
+            sign_text = "⇒", sign_hl_group = "MyMarkdownH3"
         }))
         table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
             virt_text = { { "  ", "MyMarkdownH3" } },
@@ -86,11 +86,11 @@ local function refresh_header()
     end
 
     for _, node, _ in h4_query:iter_captures(tree:root(), 0) do
-        local sr, _, _, _ = node:range()
+        local sr, sc, _, ec = node:range()
 
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            hl_group = "MyMarkdownH4", end_col = 4, conceal = "④",
-            sign_text = ">", sign_hl_group = "MyMarkdownH4"
+        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
+            hl_group = "MyMarkdownH4", end_col = ec, conceal = "④",
+            sign_text = "⇒", sign_hl_group = "MyMarkdownH4"
         }))
         table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
             virt_text = { { "   ", "MyMarkdownH4" } },
