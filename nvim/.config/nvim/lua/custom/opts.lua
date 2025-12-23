@@ -7,7 +7,6 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 --- Indent
-vim.opt.cindent = true
 vim.opt.autoindent = true
 vim.opt.shiftround = true
 --- Search
@@ -18,10 +17,6 @@ vim.opt.smartcase = true
 vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.wrapscan = false
---- Folding
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldlevel = 999
 --- Misc
 vim.opt.list = true
 vim.opt.listchars = { tab = ">-", trail = "-" }

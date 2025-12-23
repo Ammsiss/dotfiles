@@ -60,7 +60,8 @@ set("<C-y>", "k<C-y>")
 
 -- Detects filetype and opens appropriate doc page
 local function open_docs(word)
-    if vim.bo.filetype == "lua" then
+    local ft = vim.bo.filetype
+    if ft == "lua" or ft == "help" then
         local ok, _ = pcall(function()
             vim.cmd("h " .. word)
         end)
@@ -68,7 +69,7 @@ local function open_docs(word)
             vim.notify("No help page for " .. word,
                 vim.log.levels.INFO)
         end
-    elseif vim.bo.filetype == "c" then
+    elseif ft == "c" then
         local ok, _ = pcall(function()
             vim.cmd("Man " .. word)
         end)
