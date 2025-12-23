@@ -135,29 +135,3 @@ set("<leader>sf", function()
         vim.notify("No match found", vim.log.levels.INFO)
     end
 end)
-
--- open a photo in default app
-    -- Relies on the file name being under the cwd as well as
-    -- it being enclosed in [].
-set("<leader>op", function()
-    vim.cmd.normal({ args = { "\"pyi[" }, bang = true })
-
-    local file = vim.fn.getreg('p')   -- unnamed register
-
-    local open_cmd
-    if vim.fn.has("macunix") == 1 then
-        open_cmd = "open"
-    elseif vim.fn.has("unix") == 1 then
-        open_cmd = "xdg-open"
-    end
-
-    local match = vim.fs.find(file, {
-        limit = 1, type = "file", path = vim.fn.getcwd()
-    })
-
-    if match[1] then
-        vim.system({ open_cmd, match[1] }, { detach = true })
-    else
-        vim.notify("No match found", vim.log.levels.INFO)
-    end
-end)
