@@ -62,6 +62,7 @@ alias gs='git status -s'
 alias fd='rg --files --hidden | fzf --multi | xargs -r nvim'
 alias en='rg --hidden --files ~/dotfiles | fzf --multi | xargs -r nvim'
 alias eo='rg --hidden --files ~/Nexus | fzf --multi | xargs -r nvim'
+alias pp='~/.pull_script.sh'
 
 getid() {
     osascript -e "id of app \"$1\""
