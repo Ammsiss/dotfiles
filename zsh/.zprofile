@@ -6,3 +6,7 @@
 # Wezterm always launches new shells (tabs or windows) as login
 # shells in order to ensure consistency with ssh sessions or mux
 # sessions
+#
+
+# grimshot uses this
+export XDG_SCREENSHOTS_DIR="$HOME/Nexus/resources"

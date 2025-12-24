@@ -13,6 +13,9 @@ local plugin_names = {}
 local layers = {}
 
 function M.setup(spec, opts)
+
+    vim.cmd("helptags ALL");
+
     -- Load plugins in specified path
     local plug_path = vim.fn.stdpath("config") .. "/lua/" .. spec.path
     local scandir = vim.loop.fs_scandir(plug_path)

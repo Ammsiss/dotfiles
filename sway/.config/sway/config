@@ -150,6 +150,12 @@ input "type:keyboard" {
     bindsym $mod+Shift+$up move up
     bindsym $mod+Shift+$right move right
 #
+# Screenshots
+#
+    # Save and add the file name to the clipboard
+    bindsym $mod+Shift+p exec grimshot save area | xargs basename | \
+        tr -d '\n' | wl-copy
+#
 # Workspaces:
 #
     # Switch to workspace
