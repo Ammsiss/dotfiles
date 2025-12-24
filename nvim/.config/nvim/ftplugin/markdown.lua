@@ -20,101 +20,69 @@ vim.cmd("highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=#b8bb26 
 vim.cmd("highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=#d3869b guibg=#450D3B")
 vim.cmd("highlight @markup.heading.4.markdown cterm=bold gui=bold guifg=#83a598 guibg=#0D3E45")
 
--- Set up header rendering
+-- SET UP HEADER RENDERING
+--
+-- TODO
+--     1. use parser:register_cbs
+--         - parser:register_cbs({ on_changedtree = ... })
+--         - register once per buffer (guard with vim.b[bufnr].something = true)
+--     2. add a debounce
+--         - use vim.uv.new_timer() per buffer
+--         - on each TextChanged, stop/start timer; on fire, schedule refresh
+
+local node_names = { "atx_h1_marker", "atx_h2_marker", "atx_h3_marker", "atx_h4_marker" }
+local conceal_chars = { "①", "②", "③", "④" }
+local highlights = { "MyMarkdownH1", "MyMarkdownH2", "MyMarkdownH3", "MyMarkdownH4" }
+
+for i, hl in ipairs(highlights) do
+    local link = "@markup.heading." .. i .. ".markdown"
+    vim.api.nvim_set_hl(0, hl, { link = link, })
+end
 
 local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
 
-vim.api.nvim_set_hl(0, "MyMarkdownH1", { link = "@markup.heading.1.markdown", })
-vim.api.nvim_set_hl(0, "MyMarkdownH2", { link = "@markup.heading.2.markdown", })
-vim.api.nvim_set_hl(0, "MyMarkdownH3", { link = "@markup.heading.3.markdown", })
-vim.api.nvim_set_hl(0, "MyMarkdownH4", { link = "@markup.heading.4.markdown", })
+local queries = {}
+for _, name in ipairs(node_names) do
+    local query_str = "((" .. name .. ") @str)"
+    table.insert(queries, vim.treesitter.query.parse('markdown', query_str))
+end
 
-local mark_list = {}
+local function refresh_header(bufnr)
+    bufnr = bufnr or 0
 
-local function refresh_header()
-    local h1_query = vim.treesitter.query.parse('markdown', [[
-        ((atx_h1_marker) @str)
-    ]])
-    local h2_query = vim.treesitter.query.parse('markdown', [[
-        ((atx_h2_marker) @str)
-    ]])
-    local h3_query = vim.treesitter.query.parse('markdown', [[
-        ((atx_h3_marker) @str)
-    ]])
-    local h4_query = vim.treesitter.query.parse('markdown', [[
-        ((atx_h4_marker) @str)
-    ]])
+    -- Nuke all previous extmarks
+    vim.api.nvim_buf_clear_namespace(bufnr, mark_ns, 0, -1)
 
-    local tree = vim.treesitter.get_parser():parse()[1]
-
-    for _, node, _ in h1_query:iter_captures(tree:root(), 0) do
-            -- sc er ec
-        local sr, sc, _, ec = node:range()
-
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
-            hl_group = "MyMarkdownH1", end_col = ec, conceal = "①",
-            sign_text = "⇒", sign_hl_group = "MyMarkdownH1"
-        }))
-        -- local type = node:type()
-        -- local text = vim.treesitter.get_node_text(node, 0)
+    local parser = vim.treesitter.get_parser(bufnr, "markdown")
+    if not parser then
+        vim.notify("Error: get_parser", vim.log.levels.ERROR)
+        return
     end
 
-    for _, node, _ in h2_query:iter_captures(tree:root(), 0) do
-        local sr, sc, _, ec = node:range()
+    local tree = parser:parse()[1]
 
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
-            hl_group = "MyMarkdownH2", end_col = ec, conceal = "②",
-            sign_text = "⇒", sign_hl_group = "MyMarkdownH2"
-        }))
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            virt_text = { { " ", "MyMarkdownH2" } },
-            virt_text_pos = "inline",
-        }))
-    end
+    for i, query in ipairs(queries) do
+        -- Gather captures for each query
+        for _, node, _, _ in query:iter_captures(tree:root(), bufnr) do
+            local sl, sc, _, ec = node:range()
 
-    for _, node, _ in h3_query:iter_captures(tree:root(), 0) do
-        local sr, sc, _, ec = node:range()
-
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
-            hl_group = "MyMarkdownH3", end_col = ec, conceal = "③",
-            sign_text = "⇒", sign_hl_group = "MyMarkdownH3"
-        }))
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            virt_text = { { "  ", "MyMarkdownH3" } },
-            virt_text_pos = "inline",
-        }))
-    end
-
-    for _, node, _ in h4_query:iter_captures(tree:root(), 0) do
-        local sr, sc, _, ec = node:range()
-
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, sc, {
-            hl_group = "MyMarkdownH4", end_col = ec, conceal = "④",
-            sign_text = "⇒", sign_hl_group = "MyMarkdownH4"
-        }))
-        table.insert(mark_list, vim.api.nvim_buf_set_extmark(0, mark_ns, sr, 0, {
-            virt_text = { { "   ", "MyMarkdownH4" } },
-            virt_text_pos = "inline",
-        }))
+            vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc, {
+                hl_group = highlights[i], end_col = ec, conceal = conceal_chars[i],
+                sign_text = "⇒", sign_hl_group = highlights[i]
+            })
+        end
     end
 end
 refresh_header()
 
-local function delete_marks()
-    for _, mark in ipairs(mark_list) do
-        vim.api.nvim_buf_del_extmark(0, mark_ns, mark)
-    end
-end
-
 vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP"  }, {
-  buffer = 0,
-  callback = function()
-      delete_marks()
-      refresh_header()
-  end,
+    buffer = 0,
+    callback = function(args)
+        vim.schedule(function()
+            refresh_header(args.buf) -- Maybe use vim.schedule
+        end)
+    end,
 })
-
--- vim.print(vim.api.nvim_buf_get_extmarks(0, MARK_NS, 0, -1, {}))
 
 -- Useful binds:
 --     gO    - Open up a table of contents with usable links
