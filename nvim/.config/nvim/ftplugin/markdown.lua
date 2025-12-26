@@ -15,6 +15,8 @@ vim.cmd("highlight @markup.strikethrough.markdown_inline cterm=italic,strikethro
 vim.cmd("highlight @markup.raw.markdown_inline cterm=bold gui=bold guifg=#83a598 guibg=#302F2F")
 vim.cmd("highlight @markup.raw.block.markdown guifg=#b8bb26")
 
+vim.cmd("highlight @markup.link.label.markdown_inline cterm=underline gui=underline guifg=#83a598")
+
 vim.cmd("highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=#fabd2f guibg=#333105")
 vim.cmd("highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=#b8bb26 guibg=#12450D")
 vim.cmd("highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=#d3869b guibg=#450D3B")
