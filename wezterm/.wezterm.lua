@@ -6,8 +6,10 @@ local function getFontSize()
         return 17
     elseif hostname == "Junjis-Mac-mini.local" then
         return 20
-    elseif hostname == "fedora" then
-        return 16
+    elseif hostname == "fedora" then -- bug, hostname not fedora
+        return 20
+    else
+        return 18
     end
 end
 

@@ -9,7 +9,7 @@ vim.opt.foldlevel = 999 -- So shits not foldy at start
 vim.opt.conceallevel = 2
 vim.opt.textwidth = 64 -- Width of macos screen with vsp
 
-vim.cmd("highlight @markup.strong.markdown_inline cterm=bold gui=bold guifg=#fe8019")
+vim.cmd("highlight @markup.strong.markdown_inline cterm=bold gui=bold guifg=#26A69F")
 vim.cmd("highlight @markup.italic.markdown_inline cterm=italic gui=italic guifg=#689d6a")
 vim.cmd("highlight @markup.strikethrough.markdown_inline cterm=italic,strikethrough gui=italic,strikethrough guifg=#928374")
 vim.cmd("highlight @markup.raw.markdown_inline cterm=bold gui=bold guifg=#83a598 guibg=#302F2F")
