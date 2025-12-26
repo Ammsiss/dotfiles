@@ -9,7 +9,7 @@ require("config.neoplug").setup({
     extra = {
         { name = "nvim-tree/nvim-web-devicons", priority = 999 },
     }
-}, { auto_update = true, ui = { border = "rounded" }})
+}, { auto_update = true })
 
 -- CUSTOM
 require("custom")

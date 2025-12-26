@@ -1,7 +1,8 @@
-local M = {}
-
-M.name = "hrsh7th/nvim-cmp"
-M.enabled = true
+---@type plugin_spec
+local M = {
+    name = "hrsh7th/nvim-cmp",
+    enabled = true
+}
 
 M.expects = {
     { name = "hrsh7th/cmp-nvim-lsp", enabled = true },

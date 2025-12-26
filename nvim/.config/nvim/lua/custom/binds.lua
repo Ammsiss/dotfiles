@@ -113,7 +113,7 @@ end)
 
 -- Switch between header and source files
 set("<leader>sf", function()
-    local filename = utils.get_cur_file()
+    local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
 
     if string.match(filename, "%.c$") then
         filename = string.gsub(filename, "%.c$", ".h")
@@ -124,14 +124,33 @@ set("<leader>sf", function()
         return
     end
 
-    -- Potentially create a root directory marker scanner
-    local match = vim.fs.find(filename, {
-        limit = 1, type = "file", path = vim.fn.getcwd()
-    })
+    -- Look for root dir markers first
+    local marker = vim.fs.find("common.mk", {
+        upward = true, limit = 1, type = "file"
+    })[1]
 
-    if match[1] then
-        vim.cmd("e " .. match[1])
+    local match = vim.fs.find(filename, {
+        limit = 1, type = "file",
+        path = marker and vim.fs.dirname(marker) or vim.fn.getcwd()
+    })[1]
+
+    if match then
+        vim.cmd("e " .. match)
     else
         vim.notify("No match found", vim.log.levels.INFO)
+    end
+end)
+
+-- Search tlpi-dist repo for a file
+set("<leader>tl", function()
+    local file = vim.fn.expand("<cfile>")
+
+    local match = vim.fs.find(file, {
+        limit = 1, type = "file",
+        path = "~/Projects/TLPI_Exercises"
+    })[1]
+
+    if match then
+        vim.cmd("e " .. match)
     end
 end)

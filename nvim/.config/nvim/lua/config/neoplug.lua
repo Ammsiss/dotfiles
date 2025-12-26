@@ -1,5 +1,19 @@
--- Refactor plugin updating to not rely on 'plugins' state
--- Replace vim.fn.system with vim.system
+---@class plugin_spec
+---@field name string -- Repo slug for plugin
+---@field enabled boolean
+---@field expects? table<integer, plugin_spec> -- Repo slugs of dependencies
+---@field config? function -- Set up function for plugin
+---@field build? string -- Build command
+---@field priority? integer -- Load priority: 1 - 1000
+
+---@class neoplug_opts
+---@field auto_update? boolean
+---@field height? integer -- Floating window height
+
+---@class neoplug_spec
+---@field path string -- Path to plugin directory in runtime path
+---@field extra? table<integer, plugin_spec>
+    -- Inline plugin additions
 
 local M = {}
 
@@ -12,9 +26,9 @@ local plugins = {}
 local plugin_names = {}
 local layers = {}
 
+---@param spec neoplug_spec
+---@param opts neoplug_opts
 function M.setup(spec, opts)
-
-    vim.cmd("helptags ALL");
 
     -- Load plugins in specified path
     local plug_path = vim.fn.stdpath("config") .. "/lua/" .. spec.path
@@ -195,6 +209,8 @@ function M.setup(spec, opts)
         end
     end
 
+    vim.cmd("helptags ALL");
+
     -- Neoplug commands
     vim.api.nvim_create_user_command("Neoplug", function()
         local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer
@@ -226,7 +242,7 @@ function M.setup(spec, opts)
                 plugin_lines[#output] = plugin.p_name
                 if plugin.expects then
                     for _, dependency in ipairs(plugin.expects) do
-                        table.insert(output, "     " .. dependency)
+                        table.insert(output, "     " .. vim.fs.basename(dependency.p_name))
                     end
                 end
             end
@@ -250,7 +266,7 @@ function M.setup(spec, opts)
                         plugin_lines[#output] = plugin.p_name
                         if plugin.expects then
                             for _, dependency in ipairs(plugin.expects) do
-                                table.insert(output, "     " .. dependency.p_name)
+                                table.insert(output, "     " .. vim.fs.basename(dependency.name))
                             end
                         end
                     end
@@ -273,13 +289,13 @@ function M.setup(spec, opts)
                         plugin_lines[#output] = plugin.p_name
                         if plugin.expects then
                             for _, dependency in ipairs(plugin.expects) do
-                                table.insert(output, "     " .. dependency)
+                                table.insert(output, "     " .. vim.fs.basename(dependency.name))
                             end
                         end
                     end
                 end
-                table.insert(output, "")
             end
+            table.insert(output, "")
         end
 
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
@@ -331,11 +347,6 @@ function M.setup(spec, opts)
             col = (vim.o.columns - width) / 2,
             border = "single",
         }
-        if opts then
-            if opts.ui then
-                design = vim.tbl_extend("force", design, opts.ui)
-            end
-        end
 
         -- non modifiable
         vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
