@@ -1,6 +1,4 @@
-local M = {}
-
-M.name = "neovim/nvim-lspconfig"
-M.enabled = true
+---@type plugin_spec
+local M = { slug = "neovim/nvim-lspconfig" }
 
 return M

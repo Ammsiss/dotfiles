@@ -1,14 +1,11 @@
 ---@type plugin_spec
-local M = {
-    name = "hrsh7th/nvim-cmp",
-    enabled = true
-}
+local M = { slug = "hrsh7th/nvim-cmp" }
 
 M.expects = {
-    { name = "hrsh7th/cmp-nvim-lsp", enabled = true },
-    { name = "hrsh7th/cmp-path", enabled = true },
-    { name = "hrsh7th/cmp-buffer", enabled = true },
-    { name = "hrsh7th/cmp-nvim-lsp-signature-help", enabled = true },
+    { slug = "hrsh7th/cmp-nvim-lsp", priority = 100 },
+    { slug = "hrsh7th/cmp-path", priority = 100 },
+    { slug = "hrsh7th/cmp-buffer", priority = 100 },
+    { slug = "hrsh7th/cmp-nvim-lsp-signature-help", priority = 100 },
 }
 
 function M.config()

@@ -1,13 +1,12 @@
-local M = {}
-
-M.name = "nvim-treesitter/nvim-treesitter"
-M.enabled = true
-M.build = "TSUpdate"
+---@type plugin_spec
+local M = {
+    slug = "nvim-treesitter/nvim-treesitter",
+    build = "TSUpdate"
+}
 
 function M.config()
     require("nvim-treesitter.configs").setup({
-        -- A list of parser names, or "all" (the listed parsers
-        -- MUST always be installed)
+        -- A list of parser names, or "all"
         ensure_installed = {
             "c", "lua", "vim", "vimdoc", "query", "markdown",
             "markdown_inline", "cpp", "bash", "make"
@@ -17,10 +16,6 @@ function M.config()
             enable = true,
             additional_vim_regex_highlighting = false,
         },
-        -- indent = {
-        --     enable = true,
-        --     disable = { "markdown", "markdown_inline" },
-        -- },
     })
 end
 

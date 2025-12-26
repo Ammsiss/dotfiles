@@ -1,7 +1,5 @@
-local M = {}
-
-M.name = "lewis6991/gitsigns.nvim"
-M.enabled = true
+---@type plugin_spec
+local M = { slug = "lewis6991/gitsigns.nvim" }
 
 function M.config()
     local signs = require("gitsigns")

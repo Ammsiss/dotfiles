@@ -1,8 +1,8 @@
-local M = {}
-
-M.name = "ellisonleao/gruvbox.nvim"
-M.enabled = true
-M.priority = 1000
+---@type plugin_spec
+local M = {
+    slug = "ellisonleao/gruvbox.nvim",
+    priority = 1000
+}
 
 function M.config()
     require("gruvbox").setup({

@@ -7,9 +7,9 @@ vim.keymap.set("n", " ", "", { noremap = true, silent = true })
 require("config.neoplug").setup({
     path = "plugins",
     extra = {
-        { name = "nvim-tree/nvim-web-devicons", priority = 999 },
+        { slug = "nvim-tree/nvim-web-devicons", priority = 999 },
     }
-}, { auto_update = true })
+})
 
 -- CUSTOM
 require("custom")
