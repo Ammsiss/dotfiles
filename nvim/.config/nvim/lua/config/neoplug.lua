@@ -130,6 +130,13 @@ function M.setup(spec, opts)
         end
     end
 
+    -- vim.api.nvim_create_user_command("Neoplug", function()
+    --
+    --     local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer
+    --
+    --
+    -- end, { desc = "Neoplug status display in a floating window" })
+
 --    -- Neoplug commands
 --     vim.api.nvim_create_user_command("Neoplug", function()
 --         local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer

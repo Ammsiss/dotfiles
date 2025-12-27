@@ -9,37 +9,112 @@ vim.opt.foldlevel = 999 -- So shits not foldy at start
 vim.opt.conceallevel = 2
 vim.opt.textwidth = 64 -- Width of macos screen with vsp
 
-vim.cmd("highlight @markup.strong.markdown_inline cterm=bold gui=bold guifg=#26A69F")
-vim.cmd("highlight @markup.italic.markdown_inline cterm=italic gui=italic guifg=#689d6a")
-vim.cmd("highlight @markup.strikethrough.markdown_inline cterm=italic,strikethrough gui=italic,strikethrough guifg=#928374")
-vim.cmd("highlight @markup.raw.markdown_inline cterm=bold gui=bold guifg=#83a598 guibg=#302F2F")
-vim.cmd("highlight @markup.raw.block.markdown guifg=#b8bb26")
+---@type table<string, string>
+local gb_col = {
+    dark0_hard = "#1d2021",
+    dark0 = "#282828",
+    dark0_soft = "#32302f",
+    dark1 = "#3c3836",
+    dark2 = "#504945",
+    dark3 = "#665c54",
+    dark4 = "#7c6f64",
+    light0_hard = "#f9f5d7",
+    light0 = "#fbf1c7",
+    light0_soft = "#f2e5bc",
+    light1 = "#ebdbb2",
+    light2 = "#d5c4a1",
+    light3 = "#bdae93",
+    light4 = "#a89984",
+    bright_red = "#fb4934",
+    bright_green = "#b8bb26",
+    bright_yellow = "#fabd2f",
+    bright_blue = "#83a598",
+    bright_purple = "#d3869b",
+    bright_aqua = "#8ec07c",
+    bright_orange = "#fe8019",
+    neutral_red = "#cc241d",
+    neutral_green = "#98971a",
+    neutral_yellow = "#d79921",
+    neutral_blue = "#458588",
+    neutral_purple = "#b16286",
+    neutral_aqua = "#689d6a",
+    neutral_orange = "#d65d0e",
+    faded_red = "#9d0006",
+    faded_green = "#79740e",
+    faded_yellow = "#b57614",
+    faded_blue = "#076678",
+    faded_purple = "#8f3f71",
+    faded_aqua = "#427b58",
+    faded_orange = "#af3a03",
+    dark_red_hard = "#792329",
+    dark_red = "#722529",
+    dark_red_soft = "#7b2c2f",
+    light_red_hard = "#fc9690",
+    light_red = "#fc9487",
+    light_red_soft = "#f78b7f",
+    dark_green_hard = "#5a633a",
+    dark_green = "#62693e",
+    dark_green_soft = "#686d43",
+    light_green_hard = "#d3d6a5",
+    light_green = "#d5d39b",
+    light_green_soft = "#cecb94",
+    dark_aqua_hard = "#3e4934",
+    dark_aqua = "#49503b",
+    dark_aqua_soft = "#525742",
+    light_aqua_hard = "#e6e9c1",
+    light_aqua = "#e8e5b5",
+    light_aqua_soft = "#e1dbac",
+    gray = "#928374",
+}
 
-vim.cmd("highlight @markup.link.label.markdown_inline cterm=underline gui=underline guifg=#83a598")
+-- Potentially have another table that stores 'val' tables
+-- so you can reuse colors without have to respecify
 
-vim.cmd("highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=#fabd2f guibg=#333105")
-vim.cmd("highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=#b8bb26 guibg=#12450D")
-vim.cmd("highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=#d3869b guibg=#450D3B")
-vim.cmd("highlight @markup.heading.4.markdown cterm=bold gui=bold guifg=#83a598 guibg=#0D3E45")
+local groups = {
+    MyMarkupYellow = { fg = gb_col.bright_yellow },
+    MyMarkupGreen =  { fg = gb_col.bright_green },
+    MyMarkupPurple = { fg = gb_col.bright_purple },
+    MyMarkupRed =    { fg = gb_col.bright_red },
+    MyMarkupOrange = { fg = gb_col.bright_orange },
+    MyMarkupBlue =    { fg = gb_col.bright_blue },
 
--- SET UP HEADER RENDERING
---
--- TODO
---     1. use parser:register_cbs
---         - parser:register_cbs({ on_changedtree = ... })
---         - register once per buffer (guard with vim.b[bufnr].something = true)
---     2. add a debounce
---         - use vim.uv.new_timer() per buffer
---         - on each TextChanged, stop/start timer; on fire, schedule refresh
+    MyMarkupBold = { bold = true, fg = gb_col.bright_aqua },
+    MyMarkupItalic = { italic = true, fg = gb_col.bright_aqua },
+    MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gb_col.light_red },
+    MyMarkupRaw = { bold = true, fg = "#83a598", bg = "#302F2F"},
+    MyMarkupRawBlock = { fg = "#83a598" },
+    MyMarkupLinkLabel = { underline = true, fg = "#83a598" },
+    MyMarkupHeading1 = { bold = true, underdouble = true, fg = gb_col.bright_yellow },
+    MyMarkupHeading2 = { bold = true, underdouble = true, fg = gb_col.bright_green },
+    MyMarkupHeading3 = { bold = true, underdouble = true,  fg = gb_col.bright_purple },
+    MyMarkupHeading4 = { bold = true, underdouble = true, fg = gb_col.bright_red },
+    MyMarkupHeading5 = { bold = true, underdouble = true, fg = gb_col.bright_orange },
+    MyMarkupHeading6 = { bold = true, underdouble = true,  fg = gb_col.bright_blue },
 
-local node_names = { "atx_h1_marker", "atx_h2_marker", "atx_h3_marker", "atx_h4_marker" }
-local conceal_chars = { "①", "②", "③", "④" }
-local highlights = { "MyMarkdownH1", "MyMarkdownH2", "MyMarkdownH3", "MyMarkdownH4" }
+    ["@markup.strong.markdown_inline"] = { link = "MyMarkupBold" },
+    ["@markup.italic.markdown_inline"] = { link = "MyMarkupItalic" },
+    ["@markup.strikethrough.markdown_inline"] = { link = "MyMarkupStrikethrough" },
+    ["@markup.raw.markdown_inline"] = { link = "MyMarkupRaw" },
+    ["@markup.raw.block.markdown_inline"] = { link = "MyMarkupRawBlock" },
+    ["@markup.link.label.markdown_inline"] = { link = "MyMarkupLinkLabel" },
+    ["@markup.heading.1.markdown"] = { link = "MyMarkupHeading1" },
+    ["@markup.heading.2.markdown"] = { link = "MyMarkupHeading2" },
+    ["@markup.heading.3.markdown"] = { link = "MyMarkupHeading3" },
+    ["@markup.heading.4.markdown"] = { link = "MyMarkupHeading4" },
+    ["@markup.heading.5.markdown"] = { link = "MyMarkupHeading5" },
+    ["@markup.heading.6.markdown"] = { link = "MyMarkupHeading6" },
+}
 
-for i, hl in ipairs(highlights) do
-    local link = "@markup.heading." .. i .. ".markdown"
-    vim.api.nvim_set_hl(0, hl, { link = link, })
+for name, val in pairs(groups) do
+    vim.api.nvim_set_hl(0, name, val)
 end
+
+local node_names = {
+    "atx_h1_marker", "atx_h2_marker", "atx_h3_marker", "atx_h4_marker",
+    "atx_h5_marker", "atx_h6_marker"
+}
+
+local conceal_chars = { "①", "②", "③", "④", "⑤", "⑥" }
 
 local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
 
@@ -63,14 +138,25 @@ local function refresh_header(bufnr)
 
     local tree = parser:parse()[1]
 
+    local sign_colors = {
+        "MyMarkupYellow",
+        "MyMarkupGreen",
+        "MyMarkupPurple",
+        "MyMarkupRed",
+        "MyMarkupOrange",
+        "MyMarkupBlue",
+    }
+
     for i, query in ipairs(queries) do
         -- Gather captures for each query
         for _, node, _, _ in query:iter_captures(tree:root(), bufnr) do
+
             local sl, sc, _, ec = node:range()
+            local hl = "MyMarkupHeading" .. i
 
             vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc, {
-                hl_group = highlights[i], end_col = ec, conceal = conceal_chars[i],
-                sign_text = "⇒", sign_hl_group = highlights[i]
+                hl_group = hl, end_col = ec, conceal = conceal_chars[i],
+                sign_text = "⇒", sign_hl_group = sign_colors[i]
             })
         end
     end
@@ -81,11 +167,7 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP"  }, 
     buffer = 0,
     callback = function(args)
         vim.schedule(function()
-            refresh_header(args.buf) -- Maybe use vim.schedule
+            refresh_header(args.buf)
         end)
     end,
 })
-
--- Useful binds:
---     gO    - Open up a table of contents with usable links
---     [[/]] - Go to the next or previous header
