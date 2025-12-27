@@ -105,11 +105,12 @@ local function refresh_blockquote(bufnr)
 end
 refresh_blockquote()
 
-
 -- CHECKBOX RENDERING
 
 local checked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_checked) @str)")
 local unchecked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_unchecked) @str)")
+local check_marker_query = vim.treesitter.query.parse("markdown",
+    "(list_item (list_marker_minus) @task_bullet [(task_list_marker_unchecked) (task_list_marker_checked)])")
 
 local function refresh_checkbox(bufnr)
     bufnr = bufnr or 0
@@ -136,40 +137,69 @@ local function refresh_checkbox(bufnr)
         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
             { hl_group = "MyMarkupPurple", end_col = ec, conceal = "☐" })
     end
+
+    for _, node, _, _ in check_marker_query:iter_captures(tree:root(), bufnr) do
+        local sl, sc, _, ec = node:range()
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+            { hl_group = "MyMarkupPurple", end_col = ec, conceal = "" })
+    end
 end
 refresh_checkbox()
 
--- LINK RENDERING
+-- LIST RENDERING
 
--- local bullet_query = vim.treesitter.query.parse("markdown", "((list_marker_minus) @str)")
--- local number_query = vim.treesitter.query.parse("markdown", "((list_marker_dot) @str)")
---
--- local function refresh_lists(bufnr)
---     bufnr = bufnr or 0
---
---     local parser = vim.treesitter.get_parser(bufnr, "markdown")
---     if not parser then
---         vim.notify("Error: get_parser", vim.log.levels.ERROR)
---         return
---     end
---
---     local tree = parser:parse()[1]
---
---     for _, node, _, _ in bullet_query:iter_captures(tree:root(), bufnr) do
---         local sl, sc, _, _ = node:range()
---
---         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
---             { hl_group = "MyMarkupPurple", end_col = sc + 1, conceal = "•" })
---     end
---
---     for _, node, _, _ in number_query:iter_captures(tree:root(), bufnr) do
---         local sl, sc, _, _ = node:range()
---
---         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
---             { virt_text = { { " ", "MyMarkupPurple" } }, virt_text_pos = "inline" })
---     end
--- end
--- refresh_lists()
+local bullet_query = vim.treesitter.query.parse("markdown", "((list_marker_minus) @minus)")
+local bulletn1_query = vim.treesitter.query.parse("markdown",
+    "(list (list_item (list (list_item (list_marker_minus) @nested_minus))))")
+local bulletn2_query = vim.treesitter.query.parse("markdown",
+    "(list (list_item (list (list_item (list (list_item (list_marker_minus) @nested_minus))))))")
+local number_query = vim.treesitter.query.parse("markdown", "((list_marker_dot) @str)")
+
+local function refresh_lists(bufnr)
+    bufnr = bufnr or 0
+
+    local parser = vim.treesitter.get_parser(bufnr, "markdown")
+    if not parser then
+        vim.notify("Error: get_parser", vim.log.levels.ERROR)
+        return
+    end
+
+    local tree = parser:parse()[1]
+
+    for _, node, _, _ in bullet_query:iter_captures(tree:root(), bufnr) do
+        local sl, _, _, ec = node:range()
+
+        local line = vim.api.nvim_buf_get_text(bufnr, sl, 0, sl, ec, {})[1]
+        local dash_index = string.find(line, "-")
+
+        if dash_index then
+            vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, dash_index - 1,
+                { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "●", priority = 0 })
+        end
+    end
+
+    for _, node, _, _ in bulletn1_query:iter_captures(tree:root(), bufnr) do
+        local sl, _, _, ec = node:range()
+
+        local line = vim.api.nvim_buf_get_text(bufnr, sl, 0, sl, ec, {})[1]
+        local dash_index = string.find(line, "-")
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, dash_index - 1,
+            { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "◐", priority = 10 })
+    end
+
+    for _, node, _, _ in bulletn2_query:iter_captures(tree:root(), bufnr) do
+        local sl, _, _, ec = node:range()
+
+        local line = vim.api.nvim_buf_get_text(bufnr, sl, 0, sl, ec, {})[1]
+        local dash_index = string.find(line, "-")
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, dash_index - 1,
+            { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "◑", priority = 20 })
+    end
+end
+refresh_lists()
 
 -- HEADER RENDERING
 
@@ -230,6 +260,7 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP"  }, 
             refresh_header(args.buf)
             refresh_checkbox(args.buf)
             refresh_blockquote(args.buf)
+            refresh_lists(args.buf)
         end)
     end,
 })
