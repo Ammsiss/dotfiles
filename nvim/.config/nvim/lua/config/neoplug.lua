@@ -130,172 +130,56 @@ function M.setup(spec, opts)
         end
     end
 
-    -- vim.api.nvim_create_user_command("Neoplug", function()
-    --
-    --     local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer
-    --
-    --
-    -- end, { desc = "Neoplug status display in a floating window" })
+    vim.api.nvim_create_user_command("Neoplug", function()
+        -- Set up highlights (Should be namespaced)
 
---    -- Neoplug commands
---     vim.api.nvim_create_user_command("Neoplug", function()
---         local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer
---
---         --vim.cmd("highlight NeoplugHeader gui=bold guifg=#6FB3B8")
---         vim.cmd("highlight NeoplugPluginName guifg=#E67E22")
---         vim.cmd("highlight NeoplugDependency guifg=#b8bb26")
---         vim.cmd("highlight NeoplugBanner gui=bold guifg=#b8bb26")
---         vim.cmd("highlight NeoplugLayer guifg=#bdae93")
---
---         local output = {}
---         table.insert(output, "   /\\  /\\___  ___  _ __ | |_   _  __ _")
---         table.insert(output, "  /  \\/ / _ \\/ _ \\| '_ \\| | | | |/ _` |")
---         table.insert(output, " / /\\  /  __/ (_) | |_) | | |_| | (_| |")
---         table.insert(output, " \\_\\ \\/ \\___|\\___/| .__/|_|\\__,_|\\__, |")
---         table.insert(output, "                  |_|            |___/")
---
---         table.insert(output, "")
---         table.insert(output, " ==== Installed Plugins" .. " (total " .. #plugin_names .. ") ====")
---         table.insert(output, "")
---         table.insert(output, " Layer 0" .. " (priority load)")
---         table.insert(output, "")
---
---         local plugin_lines = {}
---         for _, plugin in ipairs(priority_plug) do
---             if plugin.enabled or plugin.enabled == nil then
---                 local str = " ● " .. plugin.p_name .. " (priority " .. plugin.priority .. ")"
---                 table.insert(output, str)
---                 plugin_lines[#output] = plugin.p_name
---                 if plugin.expects then
---                     for _, dependency in ipairs(plugin.expects) do
---                         table.insert(output, "     " .. vim.fs.basename(dependency.p_name))
---                     end
---                 end
---             end
---         end
---         table.insert(output, "")
---
---         local none_disable = true
---         for i, layer in ipairs(layers) do
---             if i == 1 then
---                 table.insert(output, " Layer " .. i .. " (No dependencies)")
---                 table.insert(output, "")
---             else
---                 table.insert(output, " Layer " .. i)
---                 table.insert(output, "")
---             end
---             for _, plugin in ipairs(layer) do
---                 if plugin.enabled or plugin.enabled == nil then
---                     if not plugin.priority then
---                         local str = " ● " .. plugin.p_name
---                         table.insert(output, str)
---                         plugin_lines[#output] = plugin.p_name
---                         if plugin.expects then
---                             for _, dependency in ipairs(plugin.expects) do
---                                 table.insert(output, "     " .. vim.fs.basename(dependency.name))
---                             end
---                         end
---                     end
---                 end
---                 if plugin.enabled == false then
---                     none_disable = false
---                 end
---             end
---             table.insert(output, "")
---         end
---
---         if not none_disable then
---             table.insert(output, " Disabled")
---             table.insert(output, "")
---             for _, layer in ipairs(layers) do
---                 for _, plugin in ipairs(layer) do
---                     if plugin.enabled == false then
---                         local str = " ○ " .. plugin.p_name
---                         table.insert(output, str)
---                         plugin_lines[#output] = plugin.p_name
---                         if plugin.expects then
---                             for _, dependency in ipairs(plugin.expects) do
---                                 table.insert(output, "     " .. vim.fs.basename(dependency.name))
---                             end
---                         end
---                     end
---                 end
---             end
---             table.insert(output, "")
---         end
---
---         vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
---
---         local ns = vim.api.nvim_create_namespace("neoplug")
---
---         for i, line in ipairs(output) do
---             if line:find("Installed Plugins") then
---                 vim.hl.range(buf, ns, "NeoplugHeader", { i - 1, 0 }, { i - 1, -1 })
---             elseif line:match("^%s● ") then
---                 local start_col, end_col = line:find("●")
---                 if start_col then
---                     vim.hl.range(buf, ns, "NeoplugPluginName", { i - 1, start_col - 1 }, { i - 1, end_col })
---                 end
---             elseif line:match("^%s○ ") then
---                 local start_col, end_col = line:find("○")
---                 if start_col then
---                     vim.hl.range(buf, ns, "NeoplugPluginName", { i - 1, start_col - 1 }, { i - 1, end_col })
---                 end
---             elseif line:match("^%s+") then
---                 vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
---                 local start_col, end_col = line:find("")
---                 if start_col then
---                     vim.hl.range(buf, ns, "NeoplugDependency", { i - 1, start_col - 1 }, { i - 1, end_col })
---                 end
---             elseif line:match("| |") or line:match("|_|") then
---                 vim.hl.range(buf, ns, "NeoplugBanner", { i - 1, 0 }, { i - 1, -1 })
---             elseif line:match("Layer") then
---                 vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
---             elseif line:match("Disabled") then
---                 vim.hl.range(buf, ns, "NeoplugLayer", { i - 1, 0 }, { i - 1, -1 })
---             end
---         end
---
---         local width = 40
---         local view_port = math.floor(vim.o.lines * 0.7)
---         local height = view_port > #output and #output or view_port
---         if opts then
---             if opts.height then
---                 height = math.floor(vim.o.lines * opts.height)
---             end
---         end
---         local design = {
---             style = "minimal",
---             relative = "editor",
---             width = width,
---             height = height,
---             row = (vim.o.lines - height) / 2,
---             col = (vim.o.columns - width) / 2,
---             border = "single",
---         }
---
---         -- non modifiable
---         vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
---
---         -- open the floating window
---         vim.api.nvim_open_win(buf, true, design)
---
---         vim.api.nvim_buf_set_keymap(buf, 'n', 'u', '', {
---             noremap = true,
---             silent = true,
---             callback = function()
---                 local cursor = vim.api.nvim_win_get_cursor(0)
---                 local line_num = cursor[1]
---
---                 if plugin_lines[line_num] then
---                     update_one(plugin_lines[line_num])
---                 end
---             end
---         })
---
---
---         vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>bd!<CR>', { noremap = true, silent = true })
---     end, {})
+        local gruvbox = require("custom.color").gruvbox
+        local groups = { NeoplugGreen = { fg = gruvbox.bright_green }, }
+        for name, val in pairs(groups) do
+            vim.api.nvim_set_hl(0, name, val)
+        end
 
+        -- Creating buffer and initializing content
+
+        local buf = vim.api.nvim_create_buf(false, true)
+
+        local output = {}
+
+        table.insert(output, "")
+        table.insert(output, "# Total: " .. #plugins)
+        table.insert(output, "")
+
+        for _, plugin in ipairs(plugins) do
+            local name = vim.fs.basename(plugin.slug)
+
+            if plugin.enabled ~= false then
+                table.insert(output, " - " .. name)
+            end
+        end
+
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
+        vim.treesitter.start(buf, "markdown")
+        vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
+
+        -- Creating floating window
+
+        local width = math.floor(vim.o.columns * 0.7)
+        local height = math.floor(vim.o.lines * 0.7)
+
+        local design = {
+            style = "minimal",
+            relative = "editor",
+            height = height,
+            width = width,
+            row = (vim.o.lines - height) / 2,
+            col = (vim.o.columns - width) / 2,
+            border = "rounded",
+        }
+
+        -- open the floating window
+        vim.api.nvim_open_win(buf, true, design)
+
+    end, { desc = "Neoplug status display in a floating window" })
 end
+
 return M

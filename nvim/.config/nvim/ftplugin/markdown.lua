@@ -9,87 +9,31 @@ vim.opt.foldlevel = 999 -- So shits not foldy at start
 vim.opt.conceallevel = 2
 vim.opt.textwidth = 64 -- Width of macos screen with vsp
 
----@type table<string, string>
-local gb_col = {
-    dark0_hard = "#1d2021",
-    dark0 = "#282828",
-    dark0_soft = "#32302f",
-    dark1 = "#3c3836",
-    dark2 = "#504945",
-    dark3 = "#665c54",
-    dark4 = "#7c6f64",
-    light0_hard = "#f9f5d7",
-    light0 = "#fbf1c7",
-    light0_soft = "#f2e5bc",
-    light1 = "#ebdbb2",
-    light2 = "#d5c4a1",
-    light3 = "#bdae93",
-    light4 = "#a89984",
-    bright_red = "#fb4934",
-    bright_green = "#b8bb26",
-    bright_yellow = "#fabd2f",
-    bright_blue = "#83a598",
-    bright_purple = "#d3869b",
-    bright_aqua = "#8ec07c",
-    bright_orange = "#fe8019",
-    neutral_red = "#cc241d",
-    neutral_green = "#98971a",
-    neutral_yellow = "#d79921",
-    neutral_blue = "#458588",
-    neutral_purple = "#b16286",
-    neutral_aqua = "#689d6a",
-    neutral_orange = "#d65d0e",
-    faded_red = "#9d0006",
-    faded_green = "#79740e",
-    faded_yellow = "#b57614",
-    faded_blue = "#076678",
-    faded_purple = "#8f3f71",
-    faded_aqua = "#427b58",
-    faded_orange = "#af3a03",
-    dark_red_hard = "#792329",
-    dark_red = "#722529",
-    dark_red_soft = "#7b2c2f",
-    light_red_hard = "#fc9690",
-    light_red = "#fc9487",
-    light_red_soft = "#f78b7f",
-    dark_green_hard = "#5a633a",
-    dark_green = "#62693e",
-    dark_green_soft = "#686d43",
-    light_green_hard = "#d3d6a5",
-    light_green = "#d5d39b",
-    light_green_soft = "#cecb94",
-    dark_aqua_hard = "#3e4934",
-    dark_aqua = "#49503b",
-    dark_aqua_soft = "#525742",
-    light_aqua_hard = "#e6e9c1",
-    light_aqua = "#e8e5b5",
-    light_aqua_soft = "#e1dbac",
-    gray = "#928374",
-}
+local gruvbox = require("custom.color").gruvbox
 
 -- Potentially have another table that stores 'val' tables
 -- so you can reuse colors without have to respecify
 
 local groups = {
-    MyMarkupYellow = { fg = gb_col.bright_yellow },
-    MyMarkupGreen =  { fg = gb_col.bright_green },
-    MyMarkupPurple = { fg = gb_col.bright_purple },
-    MyMarkupRed =    { fg = gb_col.bright_red },
-    MyMarkupOrange = { fg = gb_col.bright_orange },
-    MyMarkupBlue =    { fg = gb_col.bright_blue },
+    MyMarkupYellow = { fg = gruvbox.bright_yellow },
+    MyMarkupGreen =  { fg = gruvbox.bright_green },
+    MyMarkupPurple = { fg = gruvbox.bright_purple },
+    MyMarkupRed =    { fg = gruvbox.bright_red },
+    MyMarkupOrange = { fg = gruvbox.bright_orange },
+    MyMarkupBlue =    { fg = gruvbox.bright_blue },
 
-    MyMarkupBold = { bold = true, fg = gb_col.bright_aqua },
-    MyMarkupItalic = { italic = true, fg = gb_col.bright_aqua },
-    MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gb_col.light_red },
+    MyMarkupBold = { bold = true, fg = gruvbox.bright_aqua },
+    MyMarkupItalic = { italic = true, fg = gruvbox.bright_aqua },
+    MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gruvbox.light_red },
     MyMarkupRaw = { bold = true, fg = "#83a598", bg = "#302F2F"},
     MyMarkupRawBlock = { fg = "#83a598" },
     MyMarkupLinkLabel = { underline = true, fg = "#83a598" },
-    MyMarkupHeading1 = { bold = true, underdouble = true, fg = gb_col.bright_yellow },
-    MyMarkupHeading2 = { bold = true, underdouble = true, fg = gb_col.bright_green },
-    MyMarkupHeading3 = { bold = true, underdouble = true,  fg = gb_col.bright_purple },
-    MyMarkupHeading4 = { bold = true, underdouble = true, fg = gb_col.bright_red },
-    MyMarkupHeading5 = { bold = true, underdouble = true, fg = gb_col.bright_orange },
-    MyMarkupHeading6 = { bold = true, underdouble = true,  fg = gb_col.bright_blue },
+    MyMarkupHeading1 = { bold = true, underdouble = true, fg = gruvbox.bright_yellow },
+    MyMarkupHeading2 = { bold = true, underdouble = true, fg = gruvbox.bright_green },
+    MyMarkupHeading3 = { bold = true, underdouble = true,  fg = gruvbox.bright_purple },
+    MyMarkupHeading4 = { bold = true, underdouble = true, fg = gruvbox.bright_red },
+    MyMarkupHeading5 = { bold = true, underdouble = true, fg = gruvbox.bright_orange },
+    MyMarkupHeading6 = { bold = true, underdouble = true,  fg = gruvbox.bright_blue },
 
     ["@markup.strong.markdown_inline"] = { link = "MyMarkupBold" },
     ["@markup.italic.markdown_inline"] = { link = "MyMarkupItalic" },
@@ -109,26 +53,141 @@ for name, val in pairs(groups) do
     vim.api.nvim_set_hl(0, name, val)
 end
 
-local node_names = {
+local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
+
+-- TABLE RENDERING
+
+-- See md_features.md for table render ideas
+
+-- BLOCK QUOTES
+
+local blockquote_query = vim.treesitter.query.parse("markdown", "((block_quote_marker) @str)")
+local blockquote_cont_query = vim.treesitter.query.parse("markdown",
+    "((block_continuation) @str (#has-ancestor? @str block_quote))")
+
+-- In order to query inline stuff you need to query the markdown-inline parser
+-- local shortcut_query = vim.treesitter.query.parse("markdown", "((shortcut_link) @str)")
+
+local function refresh_blockquote(bufnr)
+    bufnr = bufnr or 0
+
+    -- pass this in
+    local parser = vim.treesitter.get_parser(bufnr, "markdown")
+    if not parser then
+        vim.notify("Error: get_parser", vim.log.levels.ERROR)
+        return
+    end
+
+    local tree = parser:parse()[1]
+
+    for _, node, _, _ in blockquote_query:iter_captures(tree:root(), bufnr) do
+        local sl, sc, _, _ = node:range()
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+            { hl_group = "MyMarkupBlue", end_col = sc + 1, conceal = "▉" })
+    end
+
+    for _, node, _, _ in blockquote_cont_query:iter_captures(tree:root(), bufnr) do
+        local sl, sc, _, _ = node:range()
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+            { hl_group = "MyMarkupBlue", end_col = sc + 1, conceal = "▉" })
+    end
+
+    -- for _, node, _, _ in shortcut_query:iter_captures(tree:root(), bufnr) do
+    --     local sl, sc, _, ec = node:range()
+    --
+    --     vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+    --         { hl_group = "MyMarkupPurple", end_col = ec, conceal = "" })
+    --     vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+    --         { virt_text = { { "ⓘ INFO", "MyMarkupBlue" } } })
+    -- end
+end
+refresh_blockquote()
+
+
+-- CHECKBOX RENDERING
+
+local checked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_checked) @str)")
+local unchecked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_unchecked) @str)")
+
+local function refresh_checkbox(bufnr)
+    bufnr = bufnr or 0
+
+    -- pass this in
+    local parser = vim.treesitter.get_parser(bufnr, "markdown")
+    if not parser then
+        vim.notify("Error: get_parser", vim.log.levels.ERROR)
+        return
+    end
+
+    local tree = parser:parse()[1]
+
+    for _, node, _, _ in checked_query:iter_captures(tree:root(), bufnr) do
+        local sl, sc, _, ec = node:range()
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+            { hl_group = "MyMarkupPurple", end_col = ec, conceal = "☑" })
+    end
+
+    for _, node, _, _ in unchecked_query:iter_captures(tree:root(), bufnr) do
+        local sl, sc, _, ec = node:range()
+
+        vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+            { hl_group = "MyMarkupPurple", end_col = ec, conceal = "☐" })
+    end
+end
+refresh_checkbox()
+
+-- LINK RENDERING
+
+-- local bullet_query = vim.treesitter.query.parse("markdown", "((list_marker_minus) @str)")
+-- local number_query = vim.treesitter.query.parse("markdown", "((list_marker_dot) @str)")
+--
+-- local function refresh_lists(bufnr)
+--     bufnr = bufnr or 0
+--
+--     local parser = vim.treesitter.get_parser(bufnr, "markdown")
+--     if not parser then
+--         vim.notify("Error: get_parser", vim.log.levels.ERROR)
+--         return
+--     end
+--
+--     local tree = parser:parse()[1]
+--
+--     for _, node, _, _ in bullet_query:iter_captures(tree:root(), bufnr) do
+--         local sl, sc, _, _ = node:range()
+--
+--         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+--             { hl_group = "MyMarkupPurple", end_col = sc + 1, conceal = "•" })
+--     end
+--
+--     for _, node, _, _ in number_query:iter_captures(tree:root(), bufnr) do
+--         local sl, sc, _, _ = node:range()
+--
+--         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
+--             { virt_text = { { " ", "MyMarkupPurple" } }, virt_text_pos = "inline" })
+--     end
+-- end
+-- refresh_lists()
+
+-- HEADER RENDERING
+
+local header_node_names = {
     "atx_h1_marker", "atx_h2_marker", "atx_h3_marker", "atx_h4_marker",
     "atx_h5_marker", "atx_h6_marker"
 }
 
-local conceal_chars = { "①", "②", "③", "④", "⑤", "⑥" }
-
-local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
-
 local queries = {}
-for _, name in ipairs(node_names) do
+for _, name in ipairs(header_node_names) do
     local query_str = "((" .. name .. ") @str)"
     table.insert(queries, vim.treesitter.query.parse('markdown', query_str))
 end
 
+local conceal_chars = { "①", "②", "③", "④", "⑤", "⑥" }
+
 local function refresh_header(bufnr)
     bufnr = bufnr or 0
-
-    -- Nuke all previous extmarks
-    vim.api.nvim_buf_clear_namespace(bufnr, mark_ns, 0, -1)
 
     local parser = vim.treesitter.get_parser(bufnr, "markdown")
     if not parser then
@@ -167,7 +226,10 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP"  }, 
     buffer = 0,
     callback = function(args)
         vim.schedule(function()
+            vim.api.nvim_buf_clear_namespace(args.buf, mark_ns, 0, -1)
             refresh_header(args.buf)
+            refresh_checkbox(args.buf)
+            refresh_blockquote(args.buf)
         end)
     end,
 })
