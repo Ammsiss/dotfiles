@@ -1,5 +1,5 @@
 ---@type plugin_spec
-local M = { slug = "3rd/image.nvim", enabled = false }
+local M = { slug = "3rd/image.nvim", enabled = true }
 
 function M.config()
     require("image").setup({
