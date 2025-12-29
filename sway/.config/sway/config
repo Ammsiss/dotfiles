@@ -42,11 +42,6 @@ output * bg /usr/share/backgrounds/default.jxl fill
 
 output DP-2 {
     pos 0 0
-    resolution 2560x1440@180Hz
-    bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
-}
-output DP-1 {
-    pos 1920 0
     resolution 2560x1440@170Hz
     bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
 }
@@ -64,7 +59,7 @@ workspace 9 output DP-1
 workspace 10 output DP-1
 
 # Set Secondary Display Workspaces
-workspace m output DP-2
+workspace m output DP-1
 
 #
 # Example configuration:

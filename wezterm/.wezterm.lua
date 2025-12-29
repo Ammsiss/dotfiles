@@ -41,8 +41,5 @@ return {
         cursor_border = "#ebdbb2",
     },
     keys = {
-        { key = "v", mods = "CMD", action = wez.action.PasteFrom("Clipboard") },
-        { key = "c", mods = "CMD", action = wez.action.CopyTo("Clipboard") },
-        -- { key = 'n', mods = 'CTRL', action = wez.action.SpawnWindow }
     }
 }

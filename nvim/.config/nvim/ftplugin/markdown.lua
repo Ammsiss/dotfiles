@@ -25,7 +25,7 @@ local groups = {
     MyMarkupBold = { bold = true, fg = gruvbox.bright_aqua },
     MyMarkupItalic = { italic = true, fg = gruvbox.bright_aqua },
     MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gruvbox.light_red },
-    MyMarkupRaw = { bold = true, fg = "#83a598", bg = "#302F2F"},
+    MyMarkupRaw = { bold = true, fg = "#83a598" },
     MyMarkupRawBlock = { fg = "#83a598" },
     MyMarkupLinkLabel = { underline = true, fg = "#83a598" },
     MyMarkupHeading1 = { bold = true, underdouble = true, fg = gruvbox.bright_yellow },
