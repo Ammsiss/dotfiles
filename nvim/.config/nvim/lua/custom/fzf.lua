@@ -1,3 +1,5 @@
+-- Create api that converst fzf options into a programmaable data.
+
 local fzf_default =
     "fzf --color=pointer:#E67E22,prompt:#E67E22 " ..
         "--prompt='> ' " ..
@@ -119,9 +121,42 @@ local function git_status()
     end)
 end
 
--- TO ADD
+-- FEATURES
+--
+-- See this for inspiration
+-- sh -c "$(curl -s https://raw.githubusercontent.com/ibhagwan/fzf-lua/main/scripts/mini.sh)"
+--
+-- Dev-icon support
 
--- Command for buffers
+-- COMMANDS
+
+-- buffers
+-- files from path (visual selection?)
+-- quickfix list
+-- marks
+-- treesitter
+--
+-- FOR GREPPING look into the builtin lgrep command
+--
+-- grep_cword    search word under cursor
+-- grep_cWORD   search WORD under cursor
+-- grep_visual  search visual selection
+--
+-- lsp references (vim.lsp.buf.references())
+-- lsp_definitions
+-- lsp_declarations
+--
+-- colorschemes
+-- highlight groups
+--
+-- neovim commands
+-- neovim options
+-- key mappings
+--
+-- location list and quick fix list
+--
+-- man pages
+-- neovim help files
 
 vim.keymap.set("n", "<leader>fd", find_files, {})
 vim.keymap.set("n", "<leader>en", edit_dotfiles, {})
