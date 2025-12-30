@@ -22,14 +22,21 @@ colors
 # Path exports
 # TODO: move to ~/.zprofile ?
 
+# [:+SCROLL[OFFSETS][/DENOM]]
+
 export FZF_DEFAULT_OPTS="
-    --color=pointer:#E67E22,prompt:#E67E22
-    --prompt='> ' 
-    --layout=reverse 
-    --preview 'bat --style=changes --color=always {}'
-    --preview-window=right:70%:wrap:noinfo
-    --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down
+    --height '~60%'
+    --color 'pointer:#E67E22,prompt:#E67E22'
+    --prompt '> '
+    --layout 'reverse'
+    --border
 "
+
+# --preview 'fzf-preview.sh {}'
+# --preview-window 'right:70%:noinfo'
+# --bind 'focus:transform-header:file --brief {}'
+# --bind 'ctrl-u:preview-half-page-up'
+# --bind 'ctrl-d:preview-half-page-down'
 
 # MacOS
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
@@ -51,6 +58,7 @@ alias ctime='TZ=":Canada/Pacific" ./show_time'
 
 # Aliases
 alias cl='clear'
+alias pp='~/.pull_script.sh'
 alias grep='rg'
 alias mr='make && make run'
 alias openbitch='xattr -cr'
@@ -59,10 +67,41 @@ alias ls='lsd'
 alias cat='bat'
 alias g='git'
 alias gs='git status -s'
-alias fd='rg --files --hidden | fzf --multi | xargs -r nvim'
-alias en='rg --hidden --files ~/dotfiles | fzf --multi | xargs -r nvim'
-alias eo='rg --hidden --files ~/Nexus | fzf --multi | xargs -r nvim'
-alias pp='~/.pull_script.sh'
+alias fd='
+    rg --files --hidden |
+    fzf --print0 --multi |
+    xargs -0 -o -r nvim'
+alias en='
+    rg --hidden --files ~/dotfiles |
+    fzf --print0 --multi |
+    xargs -0 -o -r nvim '
+alias eo='
+    rg --hidden --files ~/Nexus |
+    fzf --print0 --multi |
+    xargs -0 -o -r nvim'
+
+# 1. Implement this into live grep
+# 2. Make the above aliases into functions
+
+function gf {
+    if [ -z "$1" ]; then
+        echo "Must supply search term"
+        return 1
+    fi
+    rg --vimgrep "$1" | \
+    cut -d: -f1-3 | \
+    fzf \
+        --print0 \
+        --ansi \
+        --delimiter : \
+        --color "hl:-1:underline,hl+:-1:underline:reverse" \
+        --preview 'bat --style=plain --color=always {1} --highlight-line {2}' \
+        --preview-window 'right:70%:noinfo:+{2}/2' \
+        --bind 'ctrl-u:preview-half-page-up' \
+        --bind 'ctrl-d:preview-half-page-down' | \
+    xargs -0 -o -r nvim
+}
+
 
 getid() {
     osascript -e "id of app \"$1\""

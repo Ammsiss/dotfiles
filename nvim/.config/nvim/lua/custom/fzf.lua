@@ -1,12 +1,13 @@
 -- Create api that converst fzf options into a programmaable data.
 
-local fzf_default =
-    "fzf --color=pointer:#E67E22,prompt:#E67E22 " ..
-        "--prompt='> ' " ..
-        "--layout=reverse " ..
-        "--preview 'bat --style=changes --color=always {}' " ..
-        "--preview-window=right:70%:wrap:noinfo " ..
-        "--bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down "
+local fzf_default = [[
+    fzf \
+        --height "100%" \
+        --preview 'bat --style=changes --color=always {}' \
+        --preview-window 'right:70%:wrap:noinfo' \
+        --bind 'ctrl-u:preview-half-page-up' \
+        --bind 'ctrl-d:preview-half-page-down' \
+]]
 
 local float_design = {
     style = "minimal",
@@ -19,6 +20,9 @@ local float_design = {
 }
 
 local function start_fzf(picker, fzf_extra, edit_func)
+
+    -- vim.env.FZF_DEFAULT_OPTS = nil
+
     fzf_extra = fzf_extra or ""
     edit_func = edit_func or function(selection)
         vim.cmd("e " .. selection)
@@ -161,5 +165,5 @@ end
 vim.keymap.set("n", "<leader>fd", find_files, {})
 vim.keymap.set("n", "<leader>en", edit_dotfiles, {})
 vim.keymap.set("n", "<leader>eo", edit_nexus, {})
-vim.keymap.set("n", "<leader>fg", live_grep, {})
+vim.keymap.set("n", "<leader>gf", live_grep, {})
 vim.keymap.set("n", "<leader>gs", git_status, {})
