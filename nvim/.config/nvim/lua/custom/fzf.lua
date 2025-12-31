@@ -2,6 +2,9 @@
 
 local fzf_default = [[
     fzf \
+        --color 'pointer:#E67E22,prompt:#E67E22' \
+        --prompt '> ' \
+        --reverse \
         --height "100%" \
         --preview 'bat --style=changes --color=always {}' \
         --preview-window 'right:70%:wrap:noinfo' \
@@ -9,6 +12,7 @@ local fzf_default = [[
         --bind 'ctrl-d:preview-half-page-down' \
 ]]
 
+    --layout 'reverse'
 local float_design = {
     style = "minimal",
     relative = "editor",
@@ -21,7 +25,7 @@ local float_design = {
 
 local function start_fzf(picker, fzf_extra, edit_func)
 
-    -- vim.env.FZF_DEFAULT_OPTS = nil
+    vim.env.FZF_DEFAULT_OPTS = nil
 
     fzf_extra = fzf_extra or ""
     edit_func = edit_func or function(selection)

@@ -14,6 +14,11 @@
 ---@field path string -- Path to plugin directory in runtime path
 ---@field extra? table<integer, plugin_spec> Inline plugin additions
 
+-- Test with no internet. Shitll blow up
+--
+-- Fix race condition bug. When you install a new plugin or update one
+-- execution calls packadd before the plugin is installed/updated.
+
 local M = {}
 
 ---@type string
@@ -93,11 +98,12 @@ function M.setup(spec, opts)
                 local behind = tonumber(obj.stdout)
                 if (behind and behind > 0) then
                     vim.system({ "git", "pull" }, sys_opts, function()
-                        if (plugin.build) then
-                            vim.schedule(function()
+                        vim.schedule(function()
+                            vim.notify("Updated " .. plugin.slug)
+                            if (plugin.build) then
                                 vim.cmd(plugin.build)
-                            end)
-                        end
+                            end
+                        end)
                     end)
                 end
             end)
@@ -110,7 +116,7 @@ function M.setup(spec, opts)
         end
     end
 
-    if opts.auto_update ~= nil then
+    if opts.auto_update ~= false then
         update_plugins()
     end
 
@@ -131,8 +137,8 @@ function M.setup(spec, opts)
     end
 
     vim.api.nvim_create_user_command("Neoplug", function()
-        -- Set up highlights (Should be namespaced)
 
+        -- Set up highlights (Should be namespaced)
         local gruvbox = require("custom.color").gruvbox
         local groups = { NeoplugGreen = { fg = gruvbox.bright_green }, }
         for name, val in pairs(groups) do
