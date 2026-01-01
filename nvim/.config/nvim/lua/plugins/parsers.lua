@@ -11,7 +11,7 @@ function M.config()
     })
     treesitter.install({
         "c", "lua", "vim", "vimdoc", "query", "markdown",
-        "markdown_inline", "cpp", "bash", "make"
+        "markdown_inline", "cpp", "zsh", "make"
     })
 end
 
