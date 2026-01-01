@@ -22,8 +22,7 @@ local float_design = {
     border = "none",
 }
 
-local function start_fzf(picker, fzf_extra, edit_func)
-
+local function start_fzf(picker, default, fzf_extra, edit_func)
     vim.env.FZF_DEFAULT_OPTS = nil
 
     fzf_extra = fzf_extra or ""
@@ -35,7 +34,7 @@ local function start_fzf(picker, fzf_extra, edit_func)
     local temp_file = vim.fn.tempname()
 
     vim.fn.jobstart(
-        picker .. "|" .. fzf_default .. fzf_extra .. ">" .. temp_file, {
+        picker .. "|" .. default .. fzf_extra .. ">" .. temp_file, {
             term = true,
             on_exit = function(_, exit_code, _)
                 if exit_code == 0 then
@@ -59,7 +58,6 @@ local function start_fzf(picker, fzf_extra, edit_func)
 end
 
 local function open_term_win()
-    -- Create scratch buf, open in floating win
     local buf = vim.api.nvim_create_buf(false, true)
 
     float_design.width = vim.o.columns
@@ -70,31 +68,39 @@ end
 
 local function find_files()
     open_term_win()
-    start_fzf("rg --files --hidden")
+    start_fzf("rg --files --hidden", fzf_default)
 end
 
 local function edit_nexus()
     open_term_win()
-    start_fzf("rg --hidden --files ~/Nexus")
+    start_fzf("rg --hidden --files ~/Nexus", fzf_default)
 end
 
 local function edit_dotfiles()
     open_term_win()
-    start_fzf("rg --hidden --files ~/dotfiles")
+    start_fzf("rg --hidden --files ~/dotfiles", fzf_default)
 end
 
 local function live_grep()
-    local fzf_extra = [[
-    --no-hscroll \
-    --ansi --phony --disabled --delimiter=':' \
-    --bind "change:reload:rg -F --color=always --hidden --line-number --smart-case -- {q} || true" \
-    --preview 'bat \
-      --paging=never --color=always --style=numbers,header,changes,grid \
-      --highlight-line {2} --line-range {2}: {1}' \
+    local grep_fzf_default = [[
+            : | rg_prefix='rg --column --hidden --line-number --no-heading --color=always --smart-case' \
+            fzf --bind 'start:reload:${=rg_prefix} ""' \
+                --bind 'change:reload:${=rg_prefix} {q} || true' \
+                --ansi \
+                --delimiter : \
+                --disabled \
+                --height=100% \
+                --layout=reverse \
+                --color 'pointer:#E67E22,prompt:#E67E22' \
+                --prompt '> ' \
+                --preview 'bat --style=plain --color=always {1} --highlight-line {2}' \
+                --preview-window 'right:70%:noinfo:+{2}/2' \
+                --bind 'ctrl-u:preview-half-page-up' \
+                --bind 'ctrl-d:preview-half-page-down' \
     ]]
 
     open_term_win()
-    start_fzf("ls", fzf_extra, function(selection)
+    start_fzf("ls", grep_fzf_default, nil, function(selection)
         vim.cmd("e " .. selection:match("[^:]+"))
         vim.cmd(selection:match(":(%d+)"))
         vim.cmd("normal! zz")
@@ -123,7 +129,7 @@ local function git_status()
        [[; bat --style=changes --color=always "$repo"/{}' ]]
 
     open_term_win()
-    start_fzf(gs_picker, fzf_extra, function(selected)
+    start_fzf(gs_picker, fzf_default, fzf_extra, function(selected)
         vim.cmd("e " .. git_root .. "/" .. selected)
     end)
 end

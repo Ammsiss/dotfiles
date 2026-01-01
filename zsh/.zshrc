@@ -67,21 +67,42 @@ alias ls='lsd'
 alias cat='bat'
 alias g='git'
 alias gs='git status -s'
-alias fd='
-    rg --files --hidden |
-    fzf --print0 --multi |
-    xargs -0 -o -r nvim'
-alias en='
-    rg --hidden --files ~/dotfiles |
-    fzf --print0 --multi |
-    xargs -0 -o -r nvim '
-alias eo='
-    rg --hidden --files ~/Nexus |
-    fzf --print0 --multi |
-    xargs -0 -o -r nvim'
 
-# 1. Implement this into live grep
-# 2. Make the above aliases into functions
+function fd {
+    rg --files --hidden | \
+    fzf \
+        --print0 \
+        --multi \
+        --preview 'bat --style=plain --color=always {}' \
+        --preview-window 'right:70%:noinfo' \
+        --bind 'ctrl-u:preview-half-page-up' \
+        --bind 'ctrl-d:preview-half-page-down' | \
+    xargs -0 -o -r nvim
+}
+
+function en {
+    rg --files --hidden ~/dotfiles | \
+    fzf \
+        --print0 \
+        --multi \
+        --preview 'bat --style=plain --color=always {}' \
+        --preview-window 'right:70%:noinfo' \
+        --bind 'ctrl-u:preview-half-page-up' \
+        --bind 'ctrl-d:preview-half-page-down' | \
+    xargs -0 -o -r nvim
+}
+
+function eo {
+    rg --files --hidden ~/Nexus | \
+    fzf \
+        --print0 \
+        --multi \
+        --preview 'bat --style=plain --color=always {}' \
+        --preview-window 'right:70%:noinfo' \
+        --bind 'ctrl-u:preview-half-page-up' \
+        --bind 'ctrl-d:preview-half-page-down' | \
+    xargs -0 -o -r nvim
+}
 
 function gf {
     if [ -z "$1" ]; then
@@ -89,7 +110,6 @@ function gf {
         return 1
     fi
     rg --vimgrep "$1" | \
-    cut -d: -f1-3 | \
     fzf \
         --print0 \
         --ansi \
@@ -99,6 +119,7 @@ function gf {
         --preview-window 'right:70%:noinfo:+{2}/2' \
         --bind 'ctrl-u:preview-half-page-up' \
         --bind 'ctrl-d:preview-half-page-down' | \
+    cut -z -d: -f1 | \
     xargs -0 -o -r nvim
 }
 
