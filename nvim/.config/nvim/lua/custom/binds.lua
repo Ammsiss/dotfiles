@@ -1,6 +1,10 @@
 local utils = require("custom.utils")
 local set = utils.set
 
+set("<leader>d", function()
+    vim.diagnostic.open_float(nil, { scope = "cursor", source = true })
+end)
+
 -- fat finger this with moonlander
 set("<F1>", "", "i")
 

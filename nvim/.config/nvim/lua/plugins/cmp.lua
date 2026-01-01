@@ -5,7 +5,6 @@ M.expects = {
     { slug = "hrsh7th/cmp-nvim-lsp", priority = 100 },
     { slug = "hrsh7th/cmp-path", priority = 100 },
     { slug = "hrsh7th/cmp-buffer", priority = 100 },
-    { slug = "hrsh7th/cmp-nvim-lsp-signature-help", priority = 100 },
 }
 
 function M.config()
@@ -16,7 +15,6 @@ function M.config()
             { name = "nvim_lsp", priority = 1000 },
             { name = "path",     priority = 750 },
             { name = "buffer",   priority = 500 },
-            { name = "nvim_lsp_signature_help" },
         },
         mapping = {
             ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
