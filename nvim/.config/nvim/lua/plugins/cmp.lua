@@ -1,5 +1,5 @@
 ---@type plugin_spec
-local M = { slug = "hrsh7th/nvim-cmp" }
+local M = { slug = "hrsh7th/nvim-cmp", priority = 0 }
 
 M.expects = {
     { slug = "hrsh7th/cmp-nvim-lsp", priority = 100 },

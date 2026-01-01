@@ -25,7 +25,7 @@ colors
 # [:+SCROLL[OFFSETS][/DENOM]]
 
 export FZF_DEFAULT_OPTS="
-    --height '~60%'
+    --height '60%'
     --color 'pointer:#E67E22,prompt:#E67E22'
     --prompt '> '
     --layout 'reverse'

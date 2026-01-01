@@ -5,17 +5,13 @@ local M = {
 }
 
 function M.config()
-    require("nvim-treesitter.configs").setup({
-        -- A list of parser names, or "all"
-        ensure_installed = {
-            "c", "lua", "vim", "vimdoc", "query", "markdown",
-            "markdown_inline", "cpp", "bash", "make"
-        },
-        auto_install = false,
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false,
-        },
+    local treesitter = require("nvim-treesitter")
+    treesitter.setup({
+        install_dir = vim.fn.stdpath("data") .. "/site"
+    })
+    treesitter.install({
+        "c", "lua", "vim", "vimdoc", "query", "markdown",
+        "markdown_inline", "cpp", "bash", "make"
     })
 end
 

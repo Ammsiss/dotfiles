@@ -26,7 +26,7 @@ local function make_split_num(num, cmd)
         if num == 0 then
             num = ""
         end
-        utils.c_cmd("<C-w>" .. num .. cmd)
+        utils.feedkeys("<C-w>" .. num .. cmd)
     end
 end
 for num = 0, 9 do
@@ -52,7 +52,9 @@ set("<M-o>", ":cprev<CR>")
 set("<leader>fq", ":lua vim.diagnostic.setqflist()<CR>")
 
 -- Because ']' on moonlander is awkward
-set("<C-p>", "<C-]>")
+set("<C-p>", function()
+    utils.feedkeys("<C-]>")
+end)
 
 -- So cursor is not left behind
 set("<C-e>", "j<C-e>")
@@ -124,6 +126,7 @@ set("<leader>sf", function()
         return
     end
 
+    -- Use vim.fs.root
     -- Look for root dir markers first
     local marker = vim.fs.find("common.mk", {
         upward = true, limit = 1, type = "file"

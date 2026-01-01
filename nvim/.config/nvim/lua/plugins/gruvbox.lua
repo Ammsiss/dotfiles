@@ -1,7 +1,7 @@
 ---@type plugin_spec
 local M = {
     slug = "ellisonleao/gruvbox.nvim",
-    priority = 1000
+    priority = 1000,
 }
 
 local gb = require("custom.color").gruvbox

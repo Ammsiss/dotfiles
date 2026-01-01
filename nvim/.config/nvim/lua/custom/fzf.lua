@@ -12,7 +12,6 @@ local fzf_default = [[
         --bind 'ctrl-d:preview-half-page-down' \
 ]]
 
-    --layout 'reverse'
 local float_design = {
     style = "minimal",
     relative = "editor",

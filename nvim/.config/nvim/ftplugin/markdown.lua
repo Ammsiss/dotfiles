@@ -1,18 +1,27 @@
+vim.treesitter.start(0, "markdown")
+
+vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo[0][0].foldmethod = 'expr'
+vim.opt.foldlevel = 999
+
+vim.opt.path = ".,**" -- For opening photos in []
+
 vim.opt.formatoptions = "jtcqln"
-
-vim.opt.path = ".,**"
-
-vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.opt.foldmethod = 'expr'
-vim.opt.foldlevel = 999 -- So shits not foldy at start
-
+vim.opt.wrap = false
 vim.opt.conceallevel = 2
-vim.opt.textwidth = 64 -- Width of macos screen with vsp
+vim.opt.textwidth = 64
+
+-- MAPPINGS
+
+vim.keymap.set("n", "<C-p>", function()
+    vim.cmd.normal({ args = { "yi(" }, bang = true })
+    local link = vim.fn.getreg("\"")
+    vim.system({ "firefox", link })
+end, { buffer = 0 })
+
+-- HIGHLIGHTS
 
 local gruvbox = require("custom.color").gruvbox
-
--- Potentially have another table that stores 'val' tables
--- so you can reuse colors without have to respecify
 
 local groups = {
     MyMarkupYellow = { fg = gruvbox.bright_yellow },
@@ -53,11 +62,10 @@ for name, val in pairs(groups) do
     vim.api.nvim_set_hl(0, name, val)
 end
 
-local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
+-- RENDERING
 
--- TABLE RENDERING
-
--- See md_features.md for table render ideas
+-- TABLE
+    -- See md_features.md for table render ideas
 
 -- BLOCK QUOTES
 
@@ -65,20 +73,8 @@ local blockquote_query = vim.treesitter.query.parse("markdown", "((block_quote_m
 local blockquote_cont_query = vim.treesitter.query.parse("markdown",
     "((block_continuation) @str (#has-ancestor? @str block_quote))")
 
--- In order to query inline stuff you need to query the markdown-inline parser
--- local shortcut_query = vim.treesitter.query.parse("markdown", "((shortcut_link) @str)")
-
-local function refresh_blockquote(bufnr)
+local function refresh_blockquote(bufnr, mark_ns, tree)
     bufnr = bufnr or 0
-
-    -- pass this in
-    local parser = vim.treesitter.get_parser(bufnr, "markdown")
-    if not parser then
-        vim.notify("Error: get_parser", vim.log.levels.ERROR)
-        return
-    end
-
-    local tree = parser:parse()[1]
 
     for _, node, _, _ in blockquote_query:iter_captures(tree:root(), bufnr) do
         local sl, sc, _, _ = node:range()
@@ -93,36 +89,17 @@ local function refresh_blockquote(bufnr)
         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
             { hl_group = "MyMarkupBlue", end_col = sc + 1, conceal = "▉" })
     end
-
-    -- for _, node, _, _ in shortcut_query:iter_captures(tree:root(), bufnr) do
-    --     local sl, sc, _, ec = node:range()
-    --
-    --     vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
-    --         { hl_group = "MyMarkupPurple", end_col = ec, conceal = "" })
-    --     vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc,
-    --         { virt_text = { { "ⓘ INFO", "MyMarkupBlue" } } })
-    -- end
 end
-refresh_blockquote()
 
--- CHECKBOX RENDERING
+-- CHECKBOX
 
 local checked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_checked) @str)")
 local unchecked_query = vim.treesitter.query.parse("markdown", "((task_list_marker_unchecked) @str)")
 local check_marker_query = vim.treesitter.query.parse("markdown",
     "(list_item (list_marker_minus) @task_bullet [(task_list_marker_unchecked) (task_list_marker_checked)])")
 
-local function refresh_checkbox(bufnr)
+local function refresh_checkbox(bufnr, mark_ns, tree)
     bufnr = bufnr or 0
-
-    -- pass this in
-    local parser = vim.treesitter.get_parser(bufnr, "markdown")
-    if not parser then
-        vim.notify("Error: get_parser", vim.log.levels.ERROR)
-        return
-    end
-
-    local tree = parser:parse()[1]
 
     for _, node, _, _ in checked_query:iter_captures(tree:root(), bufnr) do
         local sl, sc, _, ec = node:range()
@@ -145,27 +122,17 @@ local function refresh_checkbox(bufnr)
             { hl_group = "MyMarkupPurple", end_col = ec, conceal = "" })
     end
 end
-refresh_checkbox()
 
--- LIST RENDERING
+-- LIST
 
 local bullet_query = vim.treesitter.query.parse("markdown", "((list_marker_minus) @minus)")
 local bulletn1_query = vim.treesitter.query.parse("markdown",
     "(list (list_item (list (list_item (list_marker_minus) @nested_minus))))")
 local bulletn2_query = vim.treesitter.query.parse("markdown",
     "(list (list_item (list (list_item (list (list_item (list_marker_minus) @nested_minus))))))")
-local number_query = vim.treesitter.query.parse("markdown", "((list_marker_dot) @str)")
 
-local function refresh_lists(bufnr)
+local function refresh_lists(bufnr, mark_ns, tree)
     bufnr = bufnr or 0
-
-    local parser = vim.treesitter.get_parser(bufnr, "markdown")
-    if not parser then
-        vim.notify("Error: get_parser", vim.log.levels.ERROR)
-        return
-    end
-
-    local tree = parser:parse()[1]
 
     for _, node, _, _ in bullet_query:iter_captures(tree:root(), bufnr) do
         local sl, _, _, ec = node:range()
@@ -199,7 +166,6 @@ local function refresh_lists(bufnr)
             { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "◑", priority = 20 })
     end
 end
-refresh_lists()
 
 -- HEADER RENDERING
 
@@ -208,24 +174,16 @@ local header_node_names = {
     "atx_h5_marker", "atx_h6_marker"
 }
 
-local queries = {}
+local header_queries = {}
 for _, name in ipairs(header_node_names) do
     local query_str = "((" .. name .. ") @str)"
-    table.insert(queries, vim.treesitter.query.parse('markdown', query_str))
+    table.insert(header_queries, vim.treesitter.query.parse('markdown', query_str))
 end
 
-local conceal_chars = { "①", "②", "③", "④", "⑤", "⑥" }
+local header_conceal_chars = { "①", "②", "③", "④", "⑤", "⑥" }
 
-local function refresh_header(bufnr)
+local function refresh_header(bufnr, mark_ns, tree)
     bufnr = bufnr or 0
-
-    local parser = vim.treesitter.get_parser(bufnr, "markdown")
-    if not parser then
-        vim.notify("Error: get_parser", vim.log.levels.ERROR)
-        return
-    end
-
-    local tree = parser:parse()[1]
 
     local sign_colors = {
         "MyMarkupYellow",
@@ -236,31 +194,38 @@ local function refresh_header(bufnr)
         "MyMarkupBlue",
     }
 
-    for i, query in ipairs(queries) do
-        -- Gather captures for each query
+    for i, query in ipairs(header_queries) do
         for _, node, _, _ in query:iter_captures(tree:root(), bufnr) do
 
             local sl, sc, _, ec = node:range()
             local hl = "MyMarkupHeading" .. i
 
             vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, sc, {
-                hl_group = hl, end_col = ec, conceal = conceal_chars[i],
+                hl_group = hl, end_col = ec, conceal = header_conceal_chars[i],
                 sign_text = "⇒", sign_hl_group = sign_colors[i]
             })
         end
     end
 end
-refresh_header()
 
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "TextChangedP"  }, {
+local function refresh(args)
+    vim.schedule(function()
+        local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
+        vim.api.nvim_buf_clear_namespace(args.buf, mark_ns, 0, -1)
+
+        local parser = vim.treesitter.get_parser(args.buf, "markdown")
+        assert(parser) -- Throws error anyway but silences lls
+
+        local tree = parser:parse()[1]
+
+        refresh_header(args.buf, mark_ns, tree)
+        refresh_checkbox(args.buf, mark_ns, tree)
+        refresh_blockquote(args.buf, mark_ns, tree)
+        refresh_lists(args.buf, mark_ns, tree)
+    end)
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI", "TextChangedP"  }, {
     buffer = 0,
-    callback = function(args)
-        vim.schedule(function()
-            vim.api.nvim_buf_clear_namespace(args.buf, mark_ns, 0, -1)
-            refresh_header(args.buf)
-            refresh_checkbox(args.buf)
-            refresh_blockquote(args.buf)
-            refresh_lists(args.buf)
-        end)
-    end,
+    callback = refresh
 })

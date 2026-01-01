@@ -1,6 +1,6 @@
 local M = {}
 
-function M.c_cmd(cmd)
+function M.feedkeys(cmd)
     vim.api.nvim_feedkeys(
         vim.api.nvim_replace_termcodes(
             cmd, true, false, true
@@ -26,6 +26,24 @@ function M.set(lhs, rhs, mode, opts)
     opts = vim.tbl_extend("force", default_opts, opts or {})
 
     vim.keymap.set(mode, lhs, rhs, opts)
+end
+
+function M.new_wait_group(on_done)
+    return {
+        count = 0,
+        done = false,
+        on_done = on_done,
+        add = function(self, n)
+            self.count = self.count + (n or 1)
+        end,
+        finish = function(self)
+            self.count = self.count - 1
+            if self.count <= 0 and not self.done then
+                self.done = true
+                vim.schedule(self.on_done)
+            end
+        end
+    }
 end
 
 return M
