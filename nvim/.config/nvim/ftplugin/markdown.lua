@@ -1,23 +1,13 @@
-vim.treesitter.start(0, "markdown")
+vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt_local.foldmethod = 'expr'
+vim.opt_local.foldlevel = 999
 
-vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.wo[0][0].foldmethod = 'expr'
-vim.opt.foldlevel = 999
+vim.opt_local.path = ".,**" -- For opening photos in []
 
-vim.opt.path = ".,**" -- For opening photos in []
-
-vim.opt.formatoptions = "jtcqln"
-vim.opt.wrap = false
-vim.opt.conceallevel = 2
-vim.opt.textwidth = 64
-
--- MAPPINGS
-
-vim.keymap.set("n", "<C-p>", function()
-    vim.cmd.normal({ args = { "yi(" }, bang = true })
-    local link = vim.fn.getreg("\"")
-    vim.system({ "firefox", link })
-end, { buffer = 0 })
+vim.opt_local.formatoptions = "jtcqln"
+vim.opt_local.textwidth = 64
+vim.opt_local.wrap = false
+vim.opt_local.conceallevel = 2
 
 -- HIGHLIGHTS
 
@@ -208,24 +198,42 @@ local function refresh_header(bufnr, mark_ns, tree)
     end
 end
 
-local function refresh(args)
+local function refresh(buf)
     vim.schedule(function()
         local mark_ns = vim.api.nvim_create_namespace('MarkdownRendering')
-        vim.api.nvim_buf_clear_namespace(args.buf, mark_ns, 0, -1)
+        vim.api.nvim_buf_clear_namespace(buf, mark_ns, 0, -1)
 
-        local parser = vim.treesitter.get_parser(args.buf, "markdown")
+        local parser = vim.treesitter.get_parser(buf, "markdown")
         assert(parser) -- Throws error anyway but silences lls
 
         local tree = parser:parse()[1]
 
-        refresh_header(args.buf, mark_ns, tree)
-        refresh_checkbox(args.buf, mark_ns, tree)
-        refresh_blockquote(args.buf, mark_ns, tree)
-        refresh_lists(args.buf, mark_ns, tree)
+        refresh_header(buf, mark_ns, tree)
+        refresh_checkbox(buf, mark_ns, tree)
+        refresh_blockquote(buf, mark_ns, tree)
+        refresh_lists(buf, mark_ns, tree)
     end)
 end
 
-vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI", "TextChangedP"  }, {
-    buffer = 0,
-    callback = refresh
+local bufnr = vim.api.nvim_get_current_buf()
+
+vim.treesitter.start(bufnr, "markdown")
+
+refresh(bufnr)
+
+vim.api.nvim_create_autocmd({
+    "BufEnter", "TextChanged", "TextChangedI", "TextChangedP"
+}, {
+    buffer = bufnr,
+    callback = function(args)
+        refresh(args.buf)
+    end
 })
+
+-- MAPPINGS
+
+vim.keymap.set("n", "<C-p>", function()
+    vim.cmd.normal({ args = { "yi(" }, bang = true })
+    local link = vim.fn.getreg("\"")
+    vim.system({ "firefox", link })
+end, { buffer = 0 })

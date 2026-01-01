@@ -7,7 +7,7 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 --- Indent
-vim.opt.autoindent = true
+vim.opt.autoindent = true -- Move
 vim.opt.shiftround = true
 --- Search
 vim.opt.scrolloff = 8
