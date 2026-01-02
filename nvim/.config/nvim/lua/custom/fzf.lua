@@ -23,6 +23,9 @@ local float_design = {
 }
 
 local function start_fzf(picker, default, fzf_extra, edit_func)
+
+    local bufnr = vim.api.nvim_get_current_buf()
+
     vim.env.FZF_DEFAULT_OPTS = nil
 
     fzf_extra = fzf_extra or ""
@@ -32,6 +35,8 @@ local function start_fzf(picker, default, fzf_extra, edit_func)
 
     -- Generate temp file for fzf selection
     local temp_file = vim.fn.tempname()
+
+    local term_dead = false
 
     vim.fn.jobstart(
         picker .. "|" .. default .. fzf_extra .. ">" .. temp_file, {
@@ -43,18 +48,31 @@ local function start_fzf(picker, default, fzf_extra, edit_func)
                         local selection = fd:read("*l")
                         fd:close()
 
-                        vim.cmd("close")
+                        if not term_dead then
+                            term_dead = true
+                            vim.api.nvim_buf_delete(bufnr, { force = true })
+                        end
 
                         edit_func(selection)
                     end
                 else
-                    vim.cmd("close")
+                    if not term_dead then
+                        term_dead = true
+                        vim.api.nvim_buf_delete(bufnr, { force = true })
+                    end
                 end
             end
         }
     )
+
     vim.api.nvim_feedkeys("i", "n", false)
-    vim.keymap.set("t", "<ESC>", function() vim.cmd("close") end, { buffer = 0 })
+
+    vim.keymap.set("t", "<ESC>", function()
+        if not term_dead then
+            term_dead = true
+            vim.api.nvim_buf_delete(bufnr, { force = true })
+        end
+    end, { buffer = bufnr })
 end
 
 local function open_term_win()
