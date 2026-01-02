@@ -8,6 +8,8 @@
   "workspace.checkThirdParty": false,
   "workspace.library": [
     "$VIMRUNTIME",
-    "${3rd}/luv/library"
+    "${3rd}/luv/library",
+    "$HOME/.local/share/nvim/neoplug/pack/packages/opt",
+    "$HOME/dotfiles/nvim/.config/nvim"
   ]
 }
