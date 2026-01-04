@@ -11,28 +11,29 @@ vim.opt_local.conceallevel = 2
 
 -- HIGHLIGHTS
 
-local gruvbox = require("custom.color").gruvbox
+local gb = require("custom.color").gruvbox
 
 local groups = {
-    MyMarkupYellow = { fg = gruvbox.bright_yellow },
-    MyMarkupGreen =  { fg = gruvbox.bright_green },
-    MyMarkupPurple = { fg = gruvbox.bright_purple },
-    MyMarkupRed =    { fg = gruvbox.bright_red },
-    MyMarkupOrange = { fg = gruvbox.bright_orange },
-    MyMarkupBlue =    { fg = gruvbox.bright_blue },
+    MyMarkupYellow = { fg = gb.bright_yellow },
+    MyMarkupGreen =  { fg = gb.bright_green },
+    MyMarkupPurple = { fg = gb.bright_purple },
+    MyMarkupRed =    { fg = gb.bright_red },
+    MyMarkupOrange = { fg = gb.bright_orange },
+    MyMarkupBlue =   { fg = gb.bright_blue },
+    MyMarkupNeutralOrange =   { fg = gb.neutral_orange },
 
-    MyMarkupBold = { bold = true, fg = gruvbox.bright_aqua },
-    MyMarkupItalic = { italic = true, fg = gruvbox.bright_aqua },
-    MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gruvbox.light_red },
+    MyMarkupBold = { bold = true, fg = gb.bright_aqua },
+    MyMarkupItalic = { italic = true, fg = gb.bright_aqua },
+    MyMarkupStrikethrough = { strikethrough = true, italic = true, fg = gb.light_red },
     MyMarkupRaw = { bold = true, fg = "#83a598" },
     MyMarkupRawBlock = { fg = "#83a598" },
     MyMarkupLinkLabel = { underline = true, fg = "#83a598" },
-    MyMarkupHeading1 = { bold = true, underdouble = true, fg = gruvbox.bright_yellow },
-    MyMarkupHeading2 = { bold = true, underline = true, fg = gruvbox.bright_green },
-    MyMarkupHeading3 = { bold = true, underdouble = true,  fg = gruvbox.bright_purple },
-    MyMarkupHeading4 = { bold = true, underline = true, fg = gruvbox.bright_red },
-    MyMarkupHeading5 = { bold = true, underline = true, fg = gruvbox.bright_orange },
-    MyMarkupHeading6 = { bold = true, underline = true,  fg = gruvbox.bright_blue },
+    MyMarkupHeading1 = { bold = true, underdouble = true, fg = gb.bright_yellow },
+    MyMarkupHeading2 = { bold = true, underline = true, fg = gb.bright_green },
+    MyMarkupHeading3 = { bold = true, underdouble = true,  fg = gb.bright_purple },
+    MyMarkupHeading4 = { bold = true, underline = true, fg = gb.bright_red },
+    MyMarkupHeading5 = { bold = true, underline = true, fg = gb.bright_orange },
+    MyMarkupHeading6 = { bold = true, underline = true,  fg = gb.bright_blue },
 
     ["@markup.strong.markdown_inline"] = { link = "MyMarkupBold" },
     ["@markup.italic.markdown_inline"] = { link = "MyMarkupItalic" },
@@ -132,7 +133,7 @@ local function refresh_lists(bufnr, mark_ns, tree)
 
         if dash_index then
             vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, dash_index - 1,
-                { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "●", priority = 0 })
+                { hl_group = "MyMarkupNeutralOrange", end_col = ec - 1, conceal = "●", priority = 0 })
         end
     end
 
@@ -143,7 +144,7 @@ local function refresh_lists(bufnr, mark_ns, tree)
         local dash_index = string.find(line, "-")
 
         vim.api.nvim_buf_set_extmark(bufnr, mark_ns, sl, dash_index - 1,
-            { hl_group = "MyMarkupOrange", end_col = ec - 1, conceal = "◐", priority = 10 })
+            { hl_group = "MyMarkupNeutralOrange", end_col = ec - 1, conceal = "◐", priority = 10 })
     end
 
     for _, node, _, _ in bulletn2_query:iter_captures(tree:root(), bufnr) do
@@ -233,7 +234,7 @@ vim.api.nvim_create_autocmd({
 -- MAPPINGS
 
 vim.keymap.set("n", "<C-p>", function()
-    vim.cmd.normal({ args = { "yi(" }, bang = true })
-    local link = vim.fn.getreg("\"")
+    vim.cmd.normal({ args = { "\"ryi(" }, bang = true })
+    local link = vim.fn.getreg("r")
     vim.system({ "firefox", link })
 end, { buffer = 0 })
