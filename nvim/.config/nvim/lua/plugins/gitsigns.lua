@@ -19,27 +19,36 @@ function M.config()
             topdelete    = { text = '‾' },
             changedelete = { text = '~' },
             untracked    = { text = '┆' },
-        }
+        },
+        on_attach = function(bufnr)
+            vim.keymap.set('n', '<leader>hr', signs.reset_hunk,
+                { desc = "Gitsigns->reset_hunk()", buffer = bufnr })
+            vim.keymap.set('n', '<leader>hR', signs.reset_buffer,
+                { desc = "Gitsigns->reset_buffer()", buffer = bufnr })
+
+            vim.keymap.set('n', '<leader>hs', signs.stage_hunk,
+                { desc = "Gitsigns->stage_hunk()", buffer = bufnr })
+            vim.keymap.set('n', '<leader>hS', signs.stage_buffer,
+                { desc = "Gitsigns->stage_buffer()", buffer = bufnr })
+
+            vim.keymap.set("n", "<leader>hp", signs.preview_hunk,
+                { desc = "Gitsigns->preview_hunk()", buffer = bufnr })
+            vim.keymap.set("n", "<leader>hi", signs.preview_hunk_inline,
+                { desc = "Gitsigns->preview_hunk_inline()", buffer = bufnr })
+
+            vim.keymap.set("n", "<leader>hts", signs.toggle_signs,
+                { desc = "Gitsigns->toggle_signs()", buffer = bufnr })
+            vim.keymap.set("n", "<leader>htb", signs.toggle_current_line_blame,
+                { desc = "Gitsigns->toggle_current_line_blame()", buffer = bufnr })
+            vim.keymap.set("n", "<leader>htw", signs.toggle_word_diff,
+                { desc = "Gitsigns->toggle_word_diff()", buffer = bufnr })
+        end
     })
 
-    vim.keymap.set('n', '<leader>gh', signs.reset_hunk)
-    vim.keymap.set('n', '<leader>ts', function() vim.cmd("Gitsigns toggle_signs") end)
-
-    vim.keymap.set("n", "<leader>gi", ":Gitsigns preview_hunk<CR>", { noremap = true, silent = true })
-
-    vim.keymap.set("n", "<leader>gn", function()
-        vim.cmd(":Gitsigns nav_hunk next")
-        vim.cmd(":Gitsigns preview_hunk")
-    end, { noremap = true, silent = true })
-
-    vim.keymap.set("n", "<leader>gp", function()
-        vim.cmd(":Gitsigns nav_hunk prev")
-        vim.cmd(":Gitsigns preview_hunk")
-    end, { noremap = true, silent = true })
-
-    vim.keymap.set("n", "<leader>gt", function()
-        signs.toggle_signs()
-    end, { noremap = true, silent = true })
+    local gb = require("custom.color").gruvbox
+    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = gb.dark0, bg = gb.bright_red })
+    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = gb.dark0, bg = gb.bright_green })
+    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = gb.dark0, bg = gb.bright_green })
 end
 
 return M
