@@ -19,7 +19,7 @@
     diffFilter = delta --color-only
 [delta]
     navigate = true
-    side-by-side = false
+    side-by-side = true
     inline-hint-style = syntax
     syntax-theme = gruvbox-dark
     dark = true
@@ -43,7 +43,7 @@
     file-removed-label = [-]
     file-renamed-label = [->]
     # Line numbers
-    line-numbers = true
+    line-numbers = false
     line-numbers-minus-style = brightred
     line-numbers-plus-style = brightgreen
     line-numbers-left-style = "#5E81AC"
