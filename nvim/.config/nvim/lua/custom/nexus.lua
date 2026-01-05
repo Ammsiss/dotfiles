@@ -19,7 +19,7 @@ set("<leader>op", function()
     end
 
     local match = vim.fs.find(file, {
-        limit = 1, type = "file", path = "~/Nexus"
+        limit = 1, type = "file", path = "~/Pictures"
     })
 
     if match[1] then

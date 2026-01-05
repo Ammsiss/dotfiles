@@ -9,4 +9,4 @@
 #
 
 # grimshot uses this
-export XDG_SCREENSHOTS_DIR="$HOME/Nexus/resources"
+export XDG_SCREENSHOTS_DIR="$HOME/Pictures"

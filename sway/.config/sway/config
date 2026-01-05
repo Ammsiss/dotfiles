@@ -148,8 +148,9 @@ input "type:keyboard" {
 # Screenshots
 #
     # Save and add the file name to the clipboard
-    bindsym $mod+Shift+p exec grimshot save area | xargs basename | \
-        tr -d '\n' | wl-copy
+    bindsym $mod+Shift+p exec grimshot save area | wl-copy
+
+    bindsym $mod+Shift+Control+p exec grimshot copy area
 #
 # Workspaces:
 #
