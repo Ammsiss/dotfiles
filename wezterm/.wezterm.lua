@@ -18,7 +18,7 @@ local function getDecoration()
         return "RESIZE"
     elseif hostname == "Junjis-Mac-mini.local" then
         return "RESIZE"
-    elseif hostname == "fedora" then
+    else
         return "NONE"
     end
 end
@@ -28,8 +28,7 @@ return {
     color_scheme = "GruvboxDark",
     font = wez.font("FiraCode Nerd Font"),
     font_size = getFontSize(),
-    -- cell_width = 1.5,
-    window_background_opacity = 0.55,
+    window_background_opacity = 1.0,
     cursor_blink_rate = 0,
     window_decorations = getDecoration(),
     use_fancy_tab_bar = false,

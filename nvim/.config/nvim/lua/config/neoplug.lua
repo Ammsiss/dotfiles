@@ -159,49 +159,6 @@ function M.setup(spec, opts)
             update_plugin(plugin)
         end
     end, { desc = "Update all plugins" })
-
-    vim.api.nvim_create_user_command("Neoplug", function()
-        local gruvbox = require("custom.color").gruvbox
-        local groups = { NeoplugGreen = { fg = gruvbox.bright_green }, }
-        for name, val in pairs(groups) do
-            vim.api.nvim_set_hl(0, name, val)
-        end
-
-        local buf = vim.api.nvim_create_buf(false, true)
-
-        local output = {}
-
-        table.insert(output, "")
-        table.insert(output, "# Total: " .. #plugins)
-        table.insert(output, "")
-
-        for _, plugin in ipairs(plugins) do
-            local name = vim.fs.basename(plugin.slug)
-
-            if plugin.enabled ~= false then
-                table.insert(output, " - " .. name)
-            end
-        end
-
-        vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
-        vim.treesitter.start(buf, "markdown")
-        vim.api.nvim_set_option_value("modifiable", false, { buf = buf })
-
-        local width = math.floor(vim.o.columns * 0.7)
-        local height = math.floor(vim.o.lines * 0.7)
-
-        local design = {
-            style = "minimal",
-            relative = "editor",
-            height = height,
-            width = width,
-            row = (vim.o.lines - height) / 2,
-            col = (vim.o.columns - width) / 2,
-            border = "rounded",
-        }
-
-        vim.api.nvim_open_win(buf, true, design)
-    end, { desc = "Neoplug status display in a floating window" })
 end
 
 return M

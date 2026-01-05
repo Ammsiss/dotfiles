@@ -27,7 +27,7 @@ function M.config()
         -- contrast = "",
         -- palette_overrides = {},
         overrides = {
-            Visual = { fg = gb.bright_purple },
+            Visual = { fg = "NONE", bg = "#6B492A" },
             Search = { fg = gb.bright_blue, reverse = true },
             CurSearch = { fg = gb.bright_green, reverse = true},
             FloatBorder = { fg = gb.bright_blue },
@@ -42,6 +42,7 @@ function M.config()
         transparent_mode = true,
     })
     vim.cmd("colorscheme gruvbox")
+    vim.opt.background = "dark"
 end
 
 return M
