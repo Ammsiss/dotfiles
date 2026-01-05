@@ -8,7 +8,7 @@ local fzf_default = [[
         --reverse \
         --ansi \
         --height "100%" \
-        --preview 'bat --style=changes --color=always {2}' \
+        --preview 'bat --style=plain --color=always {2}' \
         --accept-nth 2 \
         --preview-window 'right:70%:wrap:noinfo' \
         --bind 'ctrl-u:preview-half-page-up' \
@@ -122,20 +122,20 @@ end
 
 local function find_files()
     open_term_win()
-
     local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden" }, {}):wait())
-
     start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_nexus()
     open_term_win()
-    start_fzf("rg --hidden --files ~/Nexus", fzf_default)
+    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden", "/Users/ammsiss/Nexus" }, {}):wait())
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_dotfiles()
     open_term_win()
-    start_fzf("rg --hidden --files ~/dotfiles", fzf_default)
+    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden", "/Users/ammsiss/dotfiles" }, {}):wait())
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function live_grep()
