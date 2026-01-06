@@ -1,12 +1,15 @@
 -- Create api that converst fzf options into a programmaable data.
+-- Custom previewer that can be a neovim buffer
 
 local fzf_default = [[
     fzf \
         --color 'pointer:#E67E22,prompt:#E67E22' \
         --prompt '> ' \
         --reverse \
+        --ansi \
         --height "100%" \
-        --preview 'bat --style=changes --color=always {}' \
+        --preview 'bat --style=grid,header-filename --color=always {2}' \
+        --accept-nth 2 \
         --preview-window 'right:70%:wrap:noinfo' \
         --bind 'ctrl-u:preview-half-page-up' \
         --bind 'ctrl-d:preview-half-page-down' \
@@ -84,19 +87,65 @@ local function open_term_win()
     vim.api.nvim_open_win(buf, true, float_design)
 end
 
+local function colorize_hex(text, hex)
+  hex = hex:gsub("^#", "")
+  assert(#hex == 6, "hex color must be RRGGBB")
+
+  local r = tonumber(hex:sub(1, 2), 16)
+  local g = tonumber(hex:sub(3, 4), 16)
+  local b = tonumber(hex:sub(5, 6), 16)
+
+  local ansi_start = string.format("\27[38;2;%d;%d;%dm", r, g, b)
+  local ansi_reset = "\27[0m"
+
+  return ansi_start .. text .. ansi_reset
+end
+
+local function add_devicons(obj)
+    local items = vim.split(obj.stdout, "\n", { trimempty = true })
+
+    for i, item in ipairs(items) do
+        vim.fs.basename(item)
+        local icon, color_code = require("nvim-web-devicons").get_icon_color(
+            vim.fs.basename(item), nil, { default = true })
+
+        items[i] = colorize_hex(icon, color_code) .. " " .. item
+    end
+
+    local fzf_input = ""
+    for _, item in ipairs(items) do
+        fzf_input = fzf_input .. item .. "\n"
+    end
+
+    return fzf_input
+end
+
 local function find_files()
     open_term_win()
-    start_fzf("rg --files --hidden", fzf_default)
+
+    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden" }, {}):wait())
+
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_nexus()
     open_term_win()
-    start_fzf("rg --hidden --files ~/Nexus", fzf_default)
+
+    local home = vim.loop.os_homedir()
+    local rg_cmd = { "rg", "--files", "--hidden", home .. "/Nexus" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
+
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_dotfiles()
     open_term_win()
-    start_fzf("rg --hidden --files ~/dotfiles", fzf_default)
+
+    local home = vim.loop.os_homedir()
+    local rg_cmd = { "rg", "--files", "--hidden", home .. "/dotfiles" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
+
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function live_grep()
@@ -139,15 +188,15 @@ local function git_status()
 
     local git_root = result.stdout:sub(1, -2) -- trim newline
 
-    local gs_picker =
-        "git diff --name-only --diff-filter=ACMRT HEAD"
+    local rg_cmd = { "git", "diff", "--name-only", "--diff-filter=ACMRT", "HEAD" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
 
     local fzf_extra =
         "--preview='repo=" .. git_root ..
-       [[; bat --style=changes --color=always "$repo"/{}' ]]
+       [[; bat --style=changes --color=always "$repo"/{2}' ]]
 
     open_term_win()
-    start_fzf(gs_picker, fzf_default, fzf_extra, function(selected)
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default, fzf_extra, function(selected)
         vim.cmd("e " .. git_root .. "/" .. selected)
     end)
 end
