@@ -7,7 +7,7 @@ set("<leader>d", function()
 end)
 
 vim.keymap.set("i", "<C-k>", function()
-    vim.lsp.buf.signature_help()
+    vim.lsp.buf.signature_help({ zindex = 10000 })
 end, { desc = "Open function signature help in floating window" })
 
 -- fat finger this with moonlander

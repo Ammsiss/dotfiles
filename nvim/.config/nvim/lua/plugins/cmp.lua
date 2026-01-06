@@ -6,6 +6,7 @@ M.expects = {
     { slug = "hrsh7th/cmp-path", priority = 100 },
     { slug = "hrsh7th/cmp-buffer", priority = 100 },
     { slug = "hrsh7th/cmp-cmdline", priority = 100 },
+    { slug = "hrsh7th/cmp-nvim-lsp-signature-help", priority = 100 },
 }
 
 function M.config()
@@ -29,7 +30,14 @@ function M.config()
             { name = "nvim_lsp" },
         }, {
             { name = "buffer" },
+        }, {
+            { name = "nvim_lsp_signature_help" },
         }),
+        view = {
+            docs = {
+                auto_open = false
+            }
+        }
     })
 
     -- `/` and '?' cmdline setup.
@@ -60,8 +68,7 @@ function M.config()
     vim.lsp.config("lua_ls", { capabilities = capabilities })
     vim.lsp.config("clangd", {
         capabilities = capabilities,
-        -- See #999
-        cmd = { "clangd", "--header-insertion-decorators=false" }
+        cmd = { "clangd", "--header-insertion-decorators=false" } -- See #999
     })
 end
 
