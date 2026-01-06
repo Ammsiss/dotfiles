@@ -5,42 +5,59 @@ M.expects = {
     { slug = "hrsh7th/cmp-nvim-lsp", priority = 100 },
     { slug = "hrsh7th/cmp-path", priority = 100 },
     { slug = "hrsh7th/cmp-buffer", priority = 100 },
+    { slug = "hrsh7th/cmp-cmdline", priority = 100 },
 }
 
 function M.config()
     local cmp = require("cmp")
 
-    cmp.setup {
-        sources = {
-            { name = "nvim_lsp", priority = 1000 },
-            { name = "path",     priority = 750 },
-            { name = "buffer",   priority = 500 },
-        },
+    -- Global setup
+    cmp.setup({
         mapping = {
-            ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
-            ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
-            ["<C-y>"] = cmp.mapping(
-                cmp.mapping.confirm {
-                    behavior = cmp.ConfirmBehavior.Insert,
-                    select = true,
-                },
-                { "i", "c" }
-            ),
+            ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+            ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+            ['<C-e>'] = cmp.mapping.abort(),
+            ['<C-d>'] = cmp.mapping.scroll_docs(4),
+            ['<C-f>'] = cmp.mapping.scroll_docs(-4),
         },
         window = {
-            completion = cmp.config.window.bordered({
-                border = "rounded",
-                winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:PmenuSel,Search:None",
-            }),
-            documentation = cmp.config.window.bordered({
-                border = "rounded",
-                winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder",
-            }),
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered(),
         },
-    }
+        sources = cmp.config.sources({
+            { name = "nvim_lsp" },
+        }, {
+            { name = "buffer" },
+        }),
+    })
 
-    vim.api.nvim_set_hl(0, "CmpNormal", { fg = "NONE", bg = "NONE" })
-    vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#60898a", bg = "NONE" })
+    -- `/` and '?' cmdline setup.
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+            { name = 'buffer' }
+        }
+    })
+
+    -- `:` cmdline setup.
+    cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+            { name = 'path' }
+        }, {
+            {
+                name = 'cmdline',
+                option = {
+                    ignore_cmds = {}
+                }
+            }
+        })
+    })
+
+    -- Setup lspconfig.
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    vim.lsp.config("lua_ls", { capabilities = capabilities })
+    vim.lsp.config("clangd", { capabilities = capabilities })
 end
 
 return M

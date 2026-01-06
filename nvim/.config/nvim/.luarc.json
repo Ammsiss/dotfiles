@@ -4,12 +4,10 @@
     "lua/?.lua",
     "lua/?/init.lua"
   ],
-  "diagnostics.globals": ["vim"],
   "workspace.checkThirdParty": false,
   "workspace.library": [
     "$VIMRUNTIME",
     "${3rd}/luv/library",
-    "$HOME/.local/share/nvim/neoplug/pack/packages/opt",
-    "$HOME/dotfiles/nvim/.config/nvim"
+    // "$HOME/.local/share/nvim/neoplug/pack/packages/opt",
   ]
 }

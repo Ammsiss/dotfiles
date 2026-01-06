@@ -38,11 +38,10 @@ local function make_split_num(num, cmd)
         utils.feedkeys("<C-w>" .. num .. cmd)
     end
 end
-for num = 0, 9 do
+for num = 1, 9 do
     local lhs = "<leader>"
-    if num ~= 0 then
-        lhs = lhs .. num
-    end
+    lhs = lhs .. num
+
     set(lhs .. "h", make_split_num(num * 2, "<"))
     set(lhs .. "j", make_split_num(num * 2, "-"))
     set(lhs .. "k", make_split_num(num * 2, "+"))

@@ -25,6 +25,7 @@ vim.opt.pumheight = 10
 vim.opt.showmode = false
 vim.opt.winborder = "rounded"
 vim.opt.clipboard = "unnamedplus"
+vim.o.completeopt = "menu,menuone,noselect"
 
 --- Diagnostic settings
 vim.diagnostic.config({
