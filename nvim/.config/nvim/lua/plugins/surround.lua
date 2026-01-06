@@ -1,5 +1,5 @@
 ---@type plugin_spec
-local M = { slug = "kylechui/nvim-surround" }
+local M = { slug = "kylechui/nvim-surround", enabled = false }
 
 M.config = function()
     require("nvim-surround").setup({
