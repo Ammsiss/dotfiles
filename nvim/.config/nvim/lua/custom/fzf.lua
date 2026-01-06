@@ -8,7 +8,7 @@ local fzf_default = [[
         --reverse \
         --ansi \
         --height "100%" \
-        --preview 'bat --style=plain --color=always {2}' \
+        --preview 'bat --style=grid,header-filename --color=always {2}' \
         --accept-nth 2 \
         --preview-window 'right:70%:wrap:noinfo' \
         --bind 'ctrl-u:preview-half-page-up' \
@@ -122,19 +122,29 @@ end
 
 local function find_files()
     open_term_win()
+
     local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden" }, {}):wait())
+
     start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_nexus()
     open_term_win()
-    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden", "/Users/ammsiss/Nexus" }, {}):wait())
+
+    local home = vim.loop.os_homedir()
+    local rg_cmd = { "rg", "--files", "--hidden", home .. "/Nexus" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
+
     start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
 local function edit_dotfiles()
     open_term_win()
-    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden", "/Users/ammsiss/dotfiles" }, {}):wait())
+
+    local home = vim.loop.os_homedir()
+    local rg_cmd = { "rg", "--files", "--hidden", home .. "/dotfiles" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
+
     start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end
 
@@ -178,15 +188,15 @@ local function git_status()
 
     local git_root = result.stdout:sub(1, -2) -- trim newline
 
-    local gs_picker =
-        "git diff --name-only --diff-filter=ACMRT HEAD"
+    local rg_cmd = { "git", "diff", "--name-only", "--diff-filter=ACMRT", "HEAD" }
+    local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
 
     local fzf_extra =
         "--preview='repo=" .. git_root ..
-       [[; bat --style=changes --color=always "$repo"/{}' ]]
+       [[; bat --style=changes --color=always "$repo"/{2}' ]]
 
     open_term_win()
-    start_fzf(gs_picker, fzf_default, fzf_extra, function(selected)
+    start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default, fzf_extra, function(selected)
         vim.cmd("e " .. git_root .. "/" .. selected)
     end)
 end
