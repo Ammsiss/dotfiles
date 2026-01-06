@@ -46,9 +46,9 @@ function M.config()
     })
 
     local gb = require("custom.color").gruvbox
-    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = gb.dark0, bg = gb.bright_red })
-    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = gb.dark0, bg = gb.bright_green })
-    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = gb.dark0, bg = gb.bright_green })
+    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = "NONE", bg = gb.faded_red })
+    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "NONE", bg = gb.faded_green })
+    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = "NONE", bg = gb.faded_green })
 end
 
 return M
