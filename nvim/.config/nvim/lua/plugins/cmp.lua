@@ -21,8 +21,9 @@ function M.config()
             ['<C-f>'] = cmp.mapping.scroll_docs(-4),
         },
         window = {
-            completion = cmp.config.window.bordered(),
+            -- See PR#1812
             documentation = cmp.config.window.bordered(),
+            completion = cmp.config.window.bordered(),
         },
         sources = cmp.config.sources({
             { name = "nvim_lsp" },
@@ -57,7 +58,11 @@ function M.config()
     -- Setup lspconfig.
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
     vim.lsp.config("lua_ls", { capabilities = capabilities })
-    vim.lsp.config("clangd", { capabilities = capabilities })
+    vim.lsp.config("clangd", {
+        capabilities = capabilities,
+        -- See #999
+        cmd = { "clangd", "--header-insertion-decorators=false" }
+    })
 end
 
 return M
