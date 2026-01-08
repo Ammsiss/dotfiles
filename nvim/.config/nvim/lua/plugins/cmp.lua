@@ -23,7 +23,7 @@ function M.config()
         },
         window = {
             -- See PR#1812
-            documentation = cmp.config.window.bordered(),
+            -- documentation = cmp.config.window.bordered(),
             completion = cmp.config.window.bordered(),
         },
         sources = cmp.config.sources({
