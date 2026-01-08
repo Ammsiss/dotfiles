@@ -109,18 +109,6 @@ end
 set("<leader>;", "/RETURN VALUE<CR>")
 set("<leader>p", "/ERROR<CR>")
 
--- Bind for running Makefile
-set("<leader>b", function()
-    vim.cmd("silent! make")
-
-    local qflist = vim.fn.getqflist({ title = 0, items = 1})
-    if #qflist.items == 0 then
-        vim.cmd("silent! !make run")
-    else
-        print("Errors in build.\n")
-    end
-end)
-
 -- Switch between header and source files
 set("<leader>sf", function()
     local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
