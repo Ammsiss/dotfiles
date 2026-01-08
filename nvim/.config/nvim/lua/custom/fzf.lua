@@ -123,7 +123,8 @@ end
 local function find_files()
     open_term_win()
 
-    local fzf_input = add_devicons(vim.system({ "rg", "--files", "--hidden" }, {}):wait())
+    local fzf_input = add_devicons(vim.system(
+        { "rg", "--files", "--hidden", "-L" }, {}):wait())
 
     start_fzf("echo -n \"" .. fzf_input .. "\"", fzf_default)
 end

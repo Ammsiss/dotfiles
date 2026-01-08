@@ -25,3 +25,10 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
         vim.treesitter.start(opts.buf, "zsh")
     end
 })
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = "make",
+    callback = function(opts)
+        vim.treesitter.start(opts.buf, "make")
+    end
+})
