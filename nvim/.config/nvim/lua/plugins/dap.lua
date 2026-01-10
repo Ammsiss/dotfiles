@@ -11,47 +11,68 @@ local function del_keymaps_by_desc()
   end
 end
 
+local utils = require("custom.utils")
+
 M.config = function()
     local dap = require("dap")
-    local utils = require("dap.utils")
+    local dap_utils = require("dap.utils")
 
     vim.cmd("au FileType dap-repl lua require('dap.ext.autocompl').attach()")
 
     dap.adapters.lldb = {
         type = 'executable',
-        command = '/usr/bin/lldb-dap',
+        command = (function()
+            if utils.os() == "macos" then
+                return '/opt/homebrew/opt/llvm/bin/lldb-dap'
+            else
+                return '/usr/bin/lldb-dap'
+            end
+        end)(),
         name = 'lldb'
     }
 
-    dap.configurations.c = {
-        {
+    local function get_template()
+        return {
             name = 'Launch',
             type = 'lldb',
             request = 'launch',
             program = function()
-                return utils.pick_file({ executables = true })
-            end,
-            cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
-            postRunCommands = { 'process handle -p true -s false -n false SIGWINCH' },
-            stopOnEntry = false,
-            args = {},
-        },
-        {
-            name = 'Launch with args',
-            type = 'lldb',
-            request = 'launch',
-            program = function()
-                return utils.pick_file({ executables = true })
+                return dap_utils.pick_file({ executables = true })
             end,
             cwd = '${workspaceFolder}',
             console = 'integratedTerminal',
             postRunCommands = { 'process handle -p true -s false -n false SIGWINCH' },
             stopOnEntry = false,
             args = function()
-                return utils.splitstr(vim.fn.input('Args: '))
+                return dap_utils.splitstr(vim.fn.input('Args: ', '', 'file'))
             end,
         }
+    end
+
+    local integrated_config = get_template()
+    integrated_config.name = "Integrated terminal"
+    integrated_config.console = "integratedTerminal"
+
+    local external_config = get_template()
+    external_config.name = "External terminal"
+    external_config.console = "externalTerminal"
+
+    dap.configurations.c = {
+        integrated_config,
+        external_config
+    }
+
+    dap.configurations.cpp = dap.configurations.c
+
+    dap.defaults.fallback.external_terminal = {
+        command = (function()
+            if utils.os() == "macos" then
+                return "/opt/homebrew/bin/wezterm"
+            else
+                return "/usr/bin/wezterm"
+            end
+        end)(),
+        args = {'-e'};
     }
 
     local term_buf

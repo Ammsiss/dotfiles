@@ -1,5 +1,15 @@
 local M = {}
 
+function M.os()
+    if vim.uv.os_uname().sysname == "Darwin" then
+        return "macos"
+    elseif vim.uv.os_uname().sysname == "Linux" then
+        return "linux"
+    else
+        return "???"
+    end
+end
+
 function M.feedkeys(cmd)
     vim.api.nvim_feedkeys(
         vim.api.nvim_replace_termcodes(
