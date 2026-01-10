@@ -118,7 +118,7 @@ end
 local function edit_nexus()
     open_term_win()
 
-    local home = vim.loop.os_homedir()
+    local home = vim.uv.os_homedir()
     local rg_cmd = { "rg", "--files", "--hidden", home .. "/Nexus" }
     local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
 
@@ -128,7 +128,7 @@ end
 local function edit_dotfiles()
     open_term_win()
 
-    local home = vim.loop.os_homedir()
+    local home = vim.uv.os_homedir()
     local rg_cmd = { "rg", "--files", "--hidden", home .. "/dotfiles" }
     local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
 
