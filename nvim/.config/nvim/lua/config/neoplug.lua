@@ -40,11 +40,11 @@ function M.setup(spec, opts)
     ---@type string
     local plug_path = vim.fn.stdpath("config") .. "/lua/" .. spec.path
 
-    local scandir = vim.loop.fs_scandir(plug_path)
+    local scandir = vim.uv.fs_scandir(plug_path)
 
     if scandir then
         while true do
-            local fname = vim.loop.fs_scandir_next(scandir)
+            local fname = vim.uv.fs_scandir_next(scandir)
             if not fname then break end
 
             local module = spec.path .. "." .. fname:gsub("%.lua$", "")
