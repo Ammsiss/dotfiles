@@ -50,16 +50,15 @@ function M.create_float_win()
     local float_design = {
         style = "minimal",
         relative = "editor",
-        width = vim.o.columns,
-        height = vim.o.lines - 2, -- Don't cover status bar
-        row = 0,
-        col = 0,
+        width = 20,
+        height = vim.o.lines - 8, -- Don't cover status bar
+        row = (vim.o.lines / 2) - ((vim.o.lines - 8) / 2),
+        col = vim.o.columns / 2 - 10,
         border = "none",
     }
 
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
-
     local win = vim.api.nvim_open_win(buf, true, float_design)
 
     return win, buf

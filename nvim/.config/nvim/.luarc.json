@@ -8,6 +8,6 @@
   "workspace.library": [
     "$VIMRUNTIME",
     "${3rd}/luv/library",
-    // "$HOME/.local/share/nvim/neoplug/pack/packages/opt",
+    "$HOME/.local/share/nvim/neoplug/pack/packages/opt",
   ]
 }
