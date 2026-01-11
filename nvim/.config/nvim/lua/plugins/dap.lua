@@ -19,6 +19,13 @@ M.config = function()
 
     vim.cmd("au FileType dap-repl lua require('dap.ext.autocompl').attach()")
 
+    vim.fn.sign_define('DapBreakpoint', {
+        text = '●', texthl = 'GruvboxRed', linehl = '', numhl = ''
+    })
+    vim.fn.sign_define('DapStopped', {
+        text = '→', texthl = 'GruvboxOrangeBold', linehl = 'debugPC', numhl = ''
+    })
+
     dap.adapters.lldb = {
         type = 'executable',
         command = (function()
@@ -33,14 +40,14 @@ M.config = function()
 
     local function get_template()
         return {
-            name = 'Launch',
+            name = '',
             type = 'lldb',
             request = 'launch',
             program = function()
                 return dap_utils.pick_file({ executables = true })
             end,
             cwd = '${workspaceFolder}',
-            console = 'integratedTerminal',
+            console = '',
             postRunCommands = { 'process handle -p true -s false -n false SIGWINCH' },
             stopOnEntry = false,
             args = function()
@@ -146,6 +153,9 @@ M.config = function()
             if preview then
                 preview.close()
             end
+
+            dap.repl.close()
+
             del_keymaps_by_desc()
         end
     end

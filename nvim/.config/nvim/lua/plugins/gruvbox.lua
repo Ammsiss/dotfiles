@@ -9,7 +9,7 @@ local gb = require("custom.color").gruvbox
 function M.config()
     require("gruvbox").setup({
         overrides = {
-            Visual = { fg = "NONE", bg = "#6B492A" },
+            Visual = { fg = "NONE", bg = gb.visual_orange },
             Search = { fg = "NONE", bg = gb.faded_aqua },
             CurSearch = { fg = "NONE", bg = "#6B492A" },
             IncSearch = { fg = "NONE", bg = "#6B492A" },

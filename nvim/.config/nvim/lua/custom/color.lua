@@ -55,6 +55,7 @@ M.gruvbox = {
     light_aqua = "#e8e5b5",
     light_aqua_soft = "#e1dbac",
     gray = "#928374",
+    visual_orange = "#6B492A",
 }
 
 return M
