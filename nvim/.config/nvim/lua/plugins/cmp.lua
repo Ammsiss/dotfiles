@@ -6,7 +6,6 @@ M.expects = {
     { slug = "hrsh7th/cmp-path", priority = 100 },
     { slug = "hrsh7th/cmp-buffer", priority = 100 },
     { slug = "hrsh7th/cmp-cmdline", priority = 100 },
-    { slug = "hrsh7th/cmp-nvim-lsp-signature-help", priority = 100 },
 }
 
 function M.config()
@@ -30,8 +29,6 @@ function M.config()
             { name = "nvim_lsp" },
         }, {
             { name = "buffer" },
-        }, {
-            { name = "nvim_lsp_signature_help" },
         }),
         view = {
             docs = {
