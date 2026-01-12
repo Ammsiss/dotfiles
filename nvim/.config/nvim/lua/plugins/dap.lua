@@ -1,16 +1,6 @@
 ---@type plugin_spec
 local M = { slug = "mfussenegger/nvim-dap" }
 
-local map_desc = "DAP"
-
-local function del_keymaps_by_desc()
-  for _, map in ipairs(vim.api.nvim_get_keymap('n')) do
-    if map.desc == map_desc then
-      vim.keymap.del(map.mode, map.lhs)
-    end
-  end
-end
-
 local utils = require("custom.utils")
 
 M.config = function()
@@ -110,7 +100,7 @@ M.config = function()
 
     dap.defaults.fallback.terminal_win_cmd = terminal_win_cmd
 
-    vim.keymap.set('n', '<leader>bd', function() dap.continue() end)
+    vim.keymap.set('n', '<leader>bs', function() dap.continue() end)
     vim.keymap.set('n', '<leader>bl', function() dap.run_last() end)
     vim.keymap.set('n', '<leader>bb', function() dap.toggle_breakpoint() end)
 
@@ -122,27 +112,30 @@ M.config = function()
 
     dap.listeners.on_session["dap-binds-plug"] = function(_, new)
         if new then
-            vim.keymap.set('n', '<leader>c', function() dap.continue() end, { desc = map_desc })
-            vim.keymap.set('n', '<leader>d', function() dap.step_over() end, { desc = map_desc })
-            vim.keymap.set('n', '<leader>s', function() dap.step_into() end, { desc = map_desc })
-            vim.keymap.set('n', '<leader>S', function() dap.step_out() end, { desc = map_desc })
-            vim.keymap.set('n', '<leader>gc', function() dap.run_to_cursor() end, { desc = map_desc })
-            vim.keymap.set('n', '<leader>r', function() dap.repl.toggle(nil, "wincmd b | belowright vsp") end, { desc = map_desc })
-            vim.keymap.set({'n', 'v'}, 'gK', function() widgets.hover() end, { desc = map_desc })
+            vim.keymap.set('n', '<leader>bc', function() dap.continue() end)
+            vim.keymap.set('n', '<leader>bd', function() dap.step_over() end)
+            vim.keymap.set('n', '<leader>bs', function() dap.step_into() end)
+            vim.keymap.set('n', '<leader>bS', function() dap.step_out() end)
+            vim.keymap.set('n', '<leader>gc', function() dap.run_to_cursor() end)
+            vim.keymap.set({'n', 'v'}, '<leader>gK', function() widgets.hover() end)
+
+            vim.keymap.set('n', '<leader>br', function()
+                dap.repl.toggle(nil, "wincmd b | belowright vsp")
+            end)
 
             vim.keymap.set('n', '<leader>fr', function()
                 if not centered_float then
                     centered_float = widgets.centered_float(widgets.frames)
                 end
                     centered_float.toggle()
-            end, { desc = map_desc })
+            end)
 
             vim.keymap.set('n', '<leader>x', function()
                 if not sidebar then
                     sidebar = widgets.sidebar(widgets.scopes)
                 end
                 sidebar.toggle()
-            end, { desc = map_desc })
+            end)
         else
             if sidebar then
                 sidebar.close()
@@ -155,8 +148,6 @@ M.config = function()
             end
 
             dap.repl.close()
-
-            del_keymaps_by_desc()
         end
     end
 end

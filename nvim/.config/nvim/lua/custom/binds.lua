@@ -6,10 +6,6 @@ set("<leader>d", function()
     vim.diagnostic.open_float(nil, { scope = "cursor", source = true })
 end)
 
-vim.keymap.set("i", "<C-k>", function()
-    vim.lsp.buf.signature_help({ zindex = 10000 })
-end, { desc = "Open function signature help in floating window" })
-
 -- fat finger this with moonlander
 set("<F1>", "", "i")
 
