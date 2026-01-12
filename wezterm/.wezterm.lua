@@ -3,7 +3,7 @@ local hostname = wez.hostname()
 
 local function getFontSize()
     if hostname == "Junjis-MacBook-Air.local" then
-        return 17
+        return 21
     elseif hostname == "Junjis-Mac-mini.local" then
         return 20
     elseif hostname == "fedora" then -- bug, hostname not fedora

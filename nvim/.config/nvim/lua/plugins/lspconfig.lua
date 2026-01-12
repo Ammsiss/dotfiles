@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
                     local char = vim.v.char
                     if char == '(' or char == ' ' then
                         vim.defer_fn(function()
-                            vim.lsp.buf.signature_help({ silent = true })
+                            vim.lsp.buf.signature_help({ silent = true, zindex = 10000 })
                         end, 75)
                     end
                 end,
