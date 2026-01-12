@@ -6,7 +6,6 @@ vim.opt_local.path = ".,**" -- For opening photos in []
 
 vim.opt_local.formatoptions = "jtcqln"
 vim.opt_local.textwidth = 64
-vim.opt_local.wrap = false
 vim.opt_local.conceallevel = 2
 
 -- HIGHLIGHTS

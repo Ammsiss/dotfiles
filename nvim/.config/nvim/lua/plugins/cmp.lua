@@ -65,7 +65,11 @@ function M.config()
     vim.lsp.config("lua_ls", { capabilities = capabilities })
     vim.lsp.config("clangd", {
         capabilities = capabilities,
-        cmd = { "clangd", "--header-insertion-decorators=false" } -- See #999
+        cmd = {
+            "clangd",
+            "--header-insertion-decorators=false", -- See #999
+            "--function-arg-placeholders=0"
+        }
     })
 end
 
