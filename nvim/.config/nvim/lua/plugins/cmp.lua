@@ -67,6 +67,7 @@ function M.config()
         capabilities = capabilities,
         cmd = {
             "clangd",
+            "--background-index",
             "--header-insertion-decorators=false", -- See #999
             "--function-arg-placeholders=0"
         }

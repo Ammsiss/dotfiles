@@ -20,4 +20,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
+vim.keymap.set('i', '<C-k>', function() vim.lsp.buf.hover({ silent = true, zindex = 10000 }) end)
+
 return M
