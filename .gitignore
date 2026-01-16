@@ -2,3 +2,4 @@
 nvim-dev/
 test.lua
 .hushlogin
+.git/
