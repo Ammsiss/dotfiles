@@ -19,3 +19,4 @@ require("custom.statusline")
 
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("clangd")
+vim.g.c_syntax_for_h = 1 -- .h files recognized as c not cpp
