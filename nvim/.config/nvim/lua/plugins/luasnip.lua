@@ -70,7 +70,12 @@ return {
             }),
 
             -- Use a condition node for common array traversal case
-            ls.snippet("for", fmt("for ({}) {{\n\t{}\n}}{}", { i(1), i(2), i(0) })),
+            ls.snippet("for", fmt("for ({}) {{\n\t{}\n}}{}", {
+                c(1, {
+                    i(1),
+                    { t("int i = 0; i < "), i(1), t("; ++i") }
+                }), i(2), i(0)
+            })),
 
             ls.snippet("while", fmt("while ({}) {{\n\t{}\n}}{}", { i(1), i(2), i(0) })),
 
