@@ -175,7 +175,7 @@ local function git_status()
 
     local git_root = result.stdout:sub(1, -2) -- trim newline
 
-    local rg_cmd = { "git", "diff", "--name-only", "--diff-filter=ACMRT", "HEAD" }
+    local rg_cmd = { "git", "diff", "--name-only", "--diff-filter=ACMRT" }
     local fzf_input = add_devicons(vim.system(rg_cmd, {}):wait())
 
     local fzf_extra =

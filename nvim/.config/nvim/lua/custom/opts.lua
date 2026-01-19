@@ -20,6 +20,7 @@ vim.opt.wrapscan = false
 --- Misc
 vim.opt.list = true
 vim.opt.listchars = { tab = ">-", trail = "-" }
+vim.opt.fillchars = "diff: "
 vim.opt.wrap = true
 vim.opt.pumheight = 10
 vim.opt.showmode = false
