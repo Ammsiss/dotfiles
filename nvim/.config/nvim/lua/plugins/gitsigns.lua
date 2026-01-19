@@ -20,6 +20,7 @@ function M.config()
             changedelete = { text = '~' },
             untracked    = { text = '┆' },
         },
+        signcolumn = false,
         on_attach = function(bufnr)
             vim.keymap.set('n', '<leader>hr', signs.reset_hunk,
                 { desc = "Gitsigns->reset_hunk()", buffer = bufnr })
