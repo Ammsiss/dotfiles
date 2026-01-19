@@ -3,6 +3,7 @@ local M = { slug = "lewis6991/gitsigns.nvim" }
 
 function M.config()
     local signs = require("gitsigns")
+
     signs.setup({
         signs = {
             add          = { text = '+' },
@@ -22,6 +23,9 @@ function M.config()
         },
         signcolumn = false,
         on_attach = function(bufnr)
+            vim.keymap.set("n", "<leader>hd", signs.diffthis,
+                { desc = "Gitsigns->diffthis()", buffer = bufnr })
+
             vim.keymap.set('n', '<leader>hr', signs.reset_hunk,
                 { desc = "Gitsigns->reset_hunk()", buffer = bufnr })
             vim.keymap.set('n', '<leader>hR', signs.reset_buffer,
