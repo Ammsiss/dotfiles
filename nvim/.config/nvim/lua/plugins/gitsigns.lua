@@ -21,7 +21,7 @@ function M.config()
             changedelete = { text = '~' },
             untracked    = { text = '┆' },
         },
-        signcolumn = false,
+        attach_to_untracked = true,
         on_attach = function(bufnr)
             vim.keymap.set("n", "<leader>hd", signs.diffthis,
                 { desc = "Gitsigns->diffthis()", buffer = bufnr })
