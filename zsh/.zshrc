@@ -67,6 +67,10 @@ alias ls='lsd'
 alias cat='bat'
 alias g='git'
 alias gs='git status -s'
+alias vi='TERMCAP=$HOME/.termcap TERM=xterm vi'
+alias vis='TERMCAP=$HOME/.termcap TERM=xterm vi -s'
+alias ex='TERMCAP=$HOME/.termcap TERM=xterm ex'
+alias exs='TERMCAP=$HOME/.termcap TERM=xterm ex -s'
 
 function fd {
     rg --files --hidden | \

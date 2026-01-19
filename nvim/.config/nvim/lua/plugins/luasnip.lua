@@ -107,6 +107,10 @@ return {
             ls.snippet("ifndef", fmt("#ifndef {}\n#define {}\n\n#endif{}", {
                 i(1), rep(1), i(0)
             })),
+
+            ls.snippet("{", fmt("{{\n\t{}\n}}{}", {
+                i(1), i(0)
+            })),
         })
 
         ls.filetype_extend("h", { "c" })
