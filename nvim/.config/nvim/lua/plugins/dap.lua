@@ -6,6 +6,7 @@ local utils = require("custom.utils")
 M.config = function()
     local dap = require("dap")
     local dap_utils = require("dap.utils")
+    local widgets = require('dap.ui.widgets')
 
     vim.cmd("au FileType dap-repl lua require('dap.ext.autocompl').attach()")
 
@@ -100,53 +101,39 @@ M.config = function()
 
     dap.defaults.fallback.terminal_win_cmd = terminal_win_cmd
 
-    vim.keymap.set('n', '<leader>bs', function() dap.continue() end)
-    vim.keymap.set('n', '<leader>bl', function() dap.run_last() end)
-    vim.keymap.set('n', '<leader>bb', function() dap.toggle_breakpoint() end)
+    vim.keymap.set('n', '<leader>bc', dap.continue)
+    vim.keymap.set('n', '<leader>bl', dap.run_last)
+    vim.keymap.set('n', '<leader>bb', dap.toggle_breakpoint)
 
-    local widgets = require('dap.ui.widgets')
+    local function if_session(fn)
+        return function(...)
+            if dap.session() then
+                fn(...)
+            end
+        end
+    end
 
-    local sidebar = nil
-    local centered_float = nil
-    local preview = nil
+    vim.keymap.set('n', '<leader>gc', if_session(dap.run_to_cursor))
+    vim.keymap.set('n', '<leader>n', if_session(dap.step_over))
+    vim.keymap.set('n', '<leader>s', if_session(dap.step_into))
+    vim.keymap.set('n', '<leader>S', if_session(dap.step_out))
+
+    local sidebar = widgets.sidebar(widgets.scopes)
+
+    vim.keymap.set('n', '<leader>x', if_session(sidebar.toggle))
+    vim.keymap.set({'n', 'v'}, '<leader>gK', if_session(widgets.hover))
+
+    vim.keymap.set('n', '<leader>fr', if_session(function()
+        widgets.centered_float(widgets.frames)
+    end))
+
+    vim.keymap.set('n', '<leader>r', if_session(function()
+        dap.repl.toggle(nil, "wincmd b | belowright vsp")
+    end))
 
     dap.listeners.on_session["dap-binds-plug"] = function(_, new)
-        if new then
-            vim.keymap.set('n', '<leader>bc', function() dap.continue() end)
-            vim.keymap.set('n', '<leader>bd', function() dap.step_over() end)
-            vim.keymap.set('n', '<leader>bs', function() dap.step_into() end)
-            vim.keymap.set('n', '<leader>bS', function() dap.step_out() end)
-            vim.keymap.set('n', '<leader>gc', function() dap.run_to_cursor() end)
-            vim.keymap.set({'n', 'v'}, '<leader>gK', function() widgets.hover() end)
-
-            vim.keymap.set('n', '<leader>br', function()
-                dap.repl.toggle(nil, "wincmd b | belowright vsp")
-            end)
-
-            vim.keymap.set('n', '<leader>fr', function()
-                if not centered_float then
-                    centered_float = widgets.centered_float(widgets.frames)
-                end
-                    centered_float.toggle()
-            end)
-
-            vim.keymap.set('n', '<leader>x', function()
-                if not sidebar then
-                    sidebar = widgets.sidebar(widgets.scopes)
-                end
-                sidebar.toggle()
-            end)
-        else
-            if sidebar then
-                sidebar.close()
-            end
-            if centered_float then
-                centered_float.close()
-            end
-            if preview then
-                preview.close()
-            end
-
+        if not new then
+            sidebar.close()
             dap.repl.close()
         end
     end
