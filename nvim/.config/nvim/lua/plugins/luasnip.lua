@@ -83,7 +83,7 @@ return {
             -- do this properly
             ls.snippet("err", fmt("if ({})\n\terrExit(\"{}\");", { i(1), rep(1) })),
 
-            ls.snippet("#in", fmt("#include {}{}", {
+            ls.snippet("inc", fmt("#include {}{}", {
                 c(1, {
                     { t("<"), i(1), t(">") },
                     { t("\""), i(1), t("\"") },
@@ -104,7 +104,7 @@ return {
                 i(1), i(2), i(3), i(0)
             })),
 
-            ls.snippet("ifndef", fmt("#ifndef {}\n#define {}\n\n#endif{}", {
+            ls.snippet("ifn", fmt("#ifndef {}\n#define {}\n\n#endif{}", {
                 i(1), rep(1), i(0)
             })),
 

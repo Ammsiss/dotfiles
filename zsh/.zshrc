@@ -71,6 +71,7 @@ alias vi='TERMCAP=$HOME/.termcap TERM=xterm vi'
 alias vis='TERMCAP=$HOME/.termcap TERM=xterm vi -s'
 alias ex='TERMCAP=$HOME/.termcap TERM=xterm ex'
 alias exs='TERMCAP=$HOME/.termcap TERM=xterm ex -s'
+alias diff='delta'
 
 function fd {
     rg --files --hidden | \
