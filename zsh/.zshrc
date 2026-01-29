@@ -39,6 +39,9 @@ export FZF_DEFAULT_OPTS="
 # --bind 'ctrl-d:preview-half-page-down'
 
 # MacOS
+
+source ~/dotfiles/lsd/.lscolors.sh
+
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export MallocNanoZone=0
