@@ -69,7 +69,17 @@ function M.config()
 
     -- Setup lspconfig.
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    vim.lsp.config("lua_ls", { capabilities = capabilities })
+    vim.lsp.config("lua_ls", {
+        capabilities = capabilities,
+        settings = {
+            -- See <lazydev.nvim/issues/136>
+            Lua = {
+                workspace = {
+                    library = vim.api.nvim_get_runtime_file("", true)
+                }
+            }
+        }
+    })
     vim.lsp.config("clangd", {
         capabilities = capabilities,
         cmd = {
