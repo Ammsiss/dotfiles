@@ -1,5 +1,5 @@
 ---@type plugin_spec
-local M = { slug = "mason-org/mason.nvim", enabled = false }
+local M = { slug = "mason-org/mason.nvim", enabled = true }
 
 function M.config()
     require("mason").setup()

@@ -38,12 +38,11 @@ set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
 
-output * bg /usr/share/backgrounds/default.jxl fill
-
-output DP-2 {
+output DP-1 {
     pos 0 0
     resolution 2560x1440@170Hz
-    bg /home/ammsiss/Pictures/sad_guy_wallpaper.jpg fill
+    bg /home/ammsiss/Pictures/gray_bg.jpg fill
+    # Make this bg same color as terminal
 }
 
 # Set Primary Display Workspaces
@@ -101,8 +100,8 @@ input "1133:49288:Logitech_G_Pro_Wireless_Gaming_Mouse" {
 }
 
 input "type:keyboard" {
-    repeat_delay 200
-    repeat_rate 40
+    repeat_delay 225
+    repeat_rate 25
 }
 
 ### Key bindings
