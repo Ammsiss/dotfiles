@@ -16,7 +16,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.incsearch = true
 vim.opt.hlsearch = true
-vim.opt.wrapscan = false
+vim.opt.wrapscan = true
 --- Misc
 vim.opt.list = true
 vim.opt.listchars = { tab = ">-", trail = "-" }
@@ -24,7 +24,7 @@ vim.opt.fillchars = "diff: "
 vim.opt.wrap = true
 vim.opt.pumheight = 10
 vim.opt.showmode = false
-vim.opt.equalalways = false
+vim.opt.equalalways = true
 vim.opt.winborder = "rounded"
 vim.opt.clipboard = "unnamedplus"
 vim.o.completeopt = "menu,menuone,noselect"

@@ -111,7 +111,7 @@ set("<leader>tl", function()
 
     local match = vim.fs.find(file, {
         limit = 1, type = "file",
-        path = "~/Projects/TLPI_Exercises"
+        path = "~/TLPI_Exercises"
     })[1]
 
     if match then

@@ -4,12 +4,6 @@ vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.wo[0][0].foldmethod = "expr"
 vim.wo[0][0].foldlevel = 99999
 
-vim.keymap.set("n", "<leader>er", "i<Tab><Tab>errExit(\"\");<Esc>hhi",
-    { buffer = 0 })
-vim.keymap.set("n", "<leader>ii",
-    "i#include \"tlpi_hdr.h\" // IWYU pragma: export<Esc>\"",
-    { buffer = 0 })
-
 -- Switch between header and source files
 vim.keymap.set("n", "<leader>fs", function()
     local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))

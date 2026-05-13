@@ -50,11 +50,8 @@ export MANPAGER='nvim +Man!'
 
 # Fedora
 export PATH="$HOME/.local/bin:$PATH"
-alias gd="git status --porcelain | awk '{ print substr($0, 4) }' | fzf | xargs git diff"
 
-cca() {
-    echo -n "$1" | hexdump -c
-}
+alias gd="git status --porcelain | awk '{ print substr($0, 4) }' | fzf | xargs git diff"
 
 # for portability always include the colon.
 alias ctime='TZ=":Canada/Pacific" ./show_time'
@@ -75,6 +72,7 @@ alias vis='TERMCAP=$HOME/.termcap TERM=xterm vi -s'
 alias ex='TERMCAP=$HOME/.termcap TERM=xterm ex'
 alias exs='TERMCAP=$HOME/.termcap TERM=xterm ex -s'
 alias diff='delta'
+alias make='bear --append -- make'
 
 function fd {
     rg --files --hidden | \

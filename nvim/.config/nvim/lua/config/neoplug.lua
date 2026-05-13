@@ -70,7 +70,7 @@ function M.setup(spec, opts)
         return (a.priority or 0) > (b.priority or 0)
     end)
 
-    -- Clone -- 
+    -- Clone --
     for _, plugin in ipairs(plugins) do
         local name = vim.fs.basename(plugin.slug)
         local plugin_path = plug_dir .. name
