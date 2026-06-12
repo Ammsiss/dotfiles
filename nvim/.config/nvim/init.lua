@@ -14,7 +14,6 @@ require("config.neoplug").setup({
 })
 
 require("custom.binds")
-require("custom.fzf")
 require("custom.statusline")
 require("custom.filetree");
 

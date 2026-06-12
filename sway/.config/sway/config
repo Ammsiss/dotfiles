@@ -4,14 +4,22 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-default_border pixel 3
-default_floating_border pixel 3
+default_border pixel 0
+default_floating_border pixel 0
 
 gaps inner 0
 gaps outer 0
 
+for_window [app_id="wezterm"] border pixel 3
+
 client.focused #282828 #282828 #ebdbb2 #af5f00 #af5f00
-client.focused_inactive #45475a  #1e1e2e   #cdd6f4  #45475a   #45475a
+client.focused_inactive #45475a #1e1e2e  #cdd6f4 #45475a  #45475a
+
+for_window [app_id="thunar"] floating enable, resize set width 1000 px height 550 px
+for_window [app_id="qalculate"] floating enable, resize set width 450 px, height 250 px
+
+# Use this for getting the app id of currently focused app
+# swaymsg -t get_tree | jq '.. | select(.focused? == true) | {name, app_id, class: .window_properties.class}'
 
 ### Variables
 #
@@ -34,42 +42,30 @@ set $rofi_cmd rofi \
 # Shows a combined list of the applications with desktop files and
 # executables from PATH.
 # TODO: add window with the next release of rofi-wayland
-set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
+set $menu $rofi_cmd -drun-use-desktop-cache -show combi -combi-modes drun#run -modes combi
 
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
 
-output HDMI-A-1 {
+output DP-1 {
     pos 0 0
-    resolution 1920x1080@100Hz
-    bg /home/ammsiss/Pictures/gray_bg.jpg fill
-}
-
-workspace n output HDMI-A-1
-
-bindsym $mod+n workspace n
-
-bindsym $mod+Shift+n move container to workspace n
-
-output DP-2 {
-    pos 1920 0
     resolution 2560x1440@180Hz
-    bg /home/ammsiss/Pictures/gray_bg.jpg fill
+    bg /home/juta/.local/share/backgrounds/sway/minimal-orange-bg-1440p.jpg fill
 }
 
-workspace 1 output DP-2
-workspace 2 output DP-2
-workspace 3 output DP-2
-workspace 4 output DP-2
-workspace 5 output DP-2
-workspace 6 output DP-2
-workspace 7 output DP-2
-workspace 8 output DP-2
-workspace 9 output DP-2
-workspace 10 output DP-2
-workspace m output DP-2
+workspace 1 output DP-1
+workspace 2 output DP-1
+workspace 3 output DP-1
+workspace 4 output DP-1
+workspace 5 output DP-1
+workspace 6 output DP-1
+workspace 7 output DP-1
+workspace 8 output DP-1
+workspace 9 output DP-1
+workspace 10 output DP-1
+workspace m output DP-1
 
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
@@ -94,7 +90,6 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 bindsym $mod+Shift+m move container to workspace m
-
 
 #
 # Example configuration:

@@ -69,6 +69,7 @@
 
 ## ZSH
 
+- [ ] Make the .zshrc check for updates for plugins
 - [ ] Add environment variable that stores c/c++ build flags.
 - [ ] Learn more about zle line editor with the goal of syncing the
   vim line editor mode with the system clipboard. Also figure out

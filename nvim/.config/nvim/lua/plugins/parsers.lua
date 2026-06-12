@@ -10,8 +10,7 @@ function M.config()
         install_dir = vim.fn.stdpath("data") .. "/site"
     })
     treesitter.install({
-        "c", "lua", "vim", "vimdoc", "query", "markdown",
-        "markdown_inline", "cpp", "zsh", "make", "json",
+        "cpp", "zsh", "make", "json",
         "yaml", "toml", "latex"
     })
 end

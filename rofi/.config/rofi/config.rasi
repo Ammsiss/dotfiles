@@ -1,0 +1,14 @@
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
+
+* {
+    font: "FiraCode 16";
+}
+
+element-icon {
+    size: 28px;
+}
+
+element {
+    padding: 5px;
+    spacing: 7px;
+}

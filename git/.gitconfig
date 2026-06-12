@@ -1,14 +1,14 @@
 [init]
     defaultBranch = main
 [user]
-    name = Junji
-    email = j7nj1.t41@gmail.com
+    name = Juta
+    email = juuta.clo@gmail.com
 [core]
     editor = nvim
     autocrlf = input
     safecrlf = true
     pager = delta
-    excludesfile = ~/dotfiles/git/.gitignore_global
+    excludesfile = ~/.gitignore_global
 [push]
     default = simple
 [diff]
@@ -17,6 +17,21 @@
     prompt = false
 [interactive]
     diffFilter = delta --color-only
+[commit]
+    template = ~/.gitmessage.txt
+[alias]
+    c = commit
+    ch = checkout
+    s = status
+    ch = checkout
+    br = branch
+    p = push
+    track = status -sb
+    unstage = restore --staged
+    last = log -1 HEAD
+    t = log --oneline --decorate --graph --all
+    d = diff
+    ds = diff --staged
 [delta]
     navigate = true
     side-by-side = true
@@ -49,23 +64,3 @@
     line-numbers-left-style = "#5E81AC"
     line-numbers-right-style = "#5E81AC"
     line-numbers-zero-style = "#4C566A"
-    # Commit hash
-    ; commit-style = "#ffffff" bold
-    ; commit-decoration-style = "ul"
-; [merge]
-;     conflictStyle = zdiff3
-[commit]
-    template = ~/dotfiles/git/.gitmessage.txt
-[alias]
-    c = commit
-    ch = checkout
-    s = status
-    ch = checkout
-    br = branch
-    p = push
-    track = status -sb
-    unstage = restore --staged
-    last = log -1 HEAD
-    t = log --oneline --decorate --graph --all
-    d = diff
-    ds = diff --staged
