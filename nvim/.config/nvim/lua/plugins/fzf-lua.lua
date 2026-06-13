@@ -51,10 +51,9 @@ function M.config()
     set("<leader>fr", fzf.lsp_references)
 
     -- DAP
-    set("<leader>fb", fzf.dap_commands)
+    set("<leader>fbc", fzf.dap_commands)
     set("<leader>fbv", fzf.dap_variables)
     set("<leader>fbf", fzf.dap_frames)
-    set("<leader>fbc", fzf.dap_configurations)
     set("<leader>fbs", fzf.dap_frames)
 
     -- Misc

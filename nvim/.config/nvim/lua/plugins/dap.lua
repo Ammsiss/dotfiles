@@ -123,9 +123,9 @@ M.config = function()
     vim.keymap.set('n', '<leader>x', if_session(sidebar.toggle))
     vim.keymap.set({'n', 'v'}, '<leader>gK', if_session(widgets.hover))
 
-    vim.keymap.set('n', '<leader>fr', if_session(function()
-        widgets.centered_float(widgets.frames)
-    end))
+    -- vim.keymap.set('n', '<leader>fr', if_session(function()
+    --     widgets.centered_float(widgets.frames)
+    -- end))
 
     vim.keymap.set('n', '<leader>r', if_session(function()
         dap.repl.toggle(nil, "wincmd b | belowright vsp")
