@@ -15,6 +15,8 @@ bindkey -M menuselect '^M' .accept-line
 export MANPAGER='nvim +Man!'
 export PATH="$HOME/.local/bin:$PATH"
 
+export EDITOR="$HOME/.local/bin/nvim"
+
 alias cl='clear'
 alias ls='lsd'
 alias cat='bat'
