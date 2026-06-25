@@ -45,7 +45,7 @@ function M.config()
     set("<leader>fg", fzf.live_grep)
 
     -- Git
-    set("<leader>fs", fzf.git_status)
+    set("<leader>fx", fzf.git_status)
 
     -- Lsp
     set("<leader>fr", fzf.lsp_references)

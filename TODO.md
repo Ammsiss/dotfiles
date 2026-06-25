@@ -1,3 +1,9 @@
+### Urgent
+
+- Figure out why all the .git exes are in the dap configs list
+- Make <C-d> scroll git changes fzf-lua preview
+- fzf-lua should not show exes and respect .gitignore
+
 ### DAP
 
 - [ ] Create a callback trigger on enter of a dap session so

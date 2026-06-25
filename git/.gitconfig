@@ -1,8 +1,9 @@
 [init]
     defaultBranch = main
 [user]
+    # Default git project account association
     name = Juta
-    email = juuta.clo@gmail.com
+    email = j7nj1.t41@gmail.com
 [core]
     editor = nvim
     autocrlf = input
@@ -29,7 +30,7 @@
     track = status -sb
     unstage = restore --staged
     last = log -1 HEAD
-    t = log --oneline --decorate --graph --all
+    t = log --oneline --decorate --graph origin..HEAD
     d = diff
     ds = diff --staged
 [delta]
