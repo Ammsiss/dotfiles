@@ -23,8 +23,19 @@ alias cat='bat'
 alias gs='git status -s'
 alias diff='delta'
 alias make='bear --append -- make'
+alias mr='bear --append -- make -s && ./seashell'
+
+alias vg='exec valgrind --vgdb=no --quiet --leak-check=full --errors-for-leak-kinds=definite,indirect,possible ./seashell 2> >(tee vg.err >&2)'
 
 source ~/.lscolors.sh # stow lsd
+
+# Prompt
+setopt PROMPT_SUBST
+git_dirty_marker() {
+  git rev-parse --is-inside-work-tree &>/dev/null || { echo ' '; return; }
+  [[ -n $(git status --porcelain 2>/dev/null) ]] && echo '%F{#b16286}+%f ' || echo ' '
+}
+PROMPT='%F{#4a858c}%1~%f$(git_dirty_marker)%F{#b57614}>%f '
 
 ################################################################
 # Plugins
@@ -51,11 +62,3 @@ fi
 source "$PLUG_DIR/zsh-vi-mode/zsh-vi-mode.zsh"
 ZVM_SYSTEM_CLIPBOARD_ENABLED=true
 ZVM_VI_SURROUND_BINDKEY=s-prefix
-
-# Prompt
-setopt PROMPT_SUBST
-git_dirty_marker() {
-  git rev-parse --is-inside-work-tree &>/dev/null || { echo ' '; return; }
-  [[ -n $(git status --porcelain 2>/dev/null) ]] && echo '%F{#b16286}+%f ' || echo ' '
-}
-PROMPT='%F{#4a858c}%1~%f$(git_dirty_marker)%F{#b57614}>%f '

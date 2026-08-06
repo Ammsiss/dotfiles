@@ -25,6 +25,7 @@ end
 
 return {
     audible_bell = "Disabled",
+    exit_behavior = "Hold",
     color_scheme = "GruvboxDark",
     font = wez.font("FiraCode Nerd Font"),
     font_size = getFontSize(),

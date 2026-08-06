@@ -130,6 +130,8 @@ bindsym $mod+Shift+$down move down
 bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
 
+bindsym $mod+b splith
+bindsym $mod+v splitv
 bindsym $mod+e layout toggle split
 
 bindsym $mod+f fullscreen
@@ -176,3 +178,5 @@ bindsym $mod+minus scratchpad show
 # the trick, it's all in the `wordexp(3)`.
 
 include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
+
+exec_always sh -c 'pkill -x swayidle || true'

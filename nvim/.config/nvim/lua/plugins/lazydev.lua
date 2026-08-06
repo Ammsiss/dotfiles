@@ -1,5 +1,5 @@
 ---@type plugin_spec
-local M = { slug = "folke/lazydev.nvim" }
+local M = { slug = "folke/lazydev.nvim", enabled = false }
 
 M.config = function()
     local opts = {

@@ -1,0 +1,7 @@
+{
+    "workspace": {
+        "library": [
+            "~/.local/opt/nvim/share/nvim/runtime"
+        ]
+    }
+}

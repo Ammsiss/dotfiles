@@ -17,6 +17,6 @@ require("custom.binds")
 require("custom.statusline")
 require("custom.filetree");
 
-vim.lsp.enable("lua_ls")
+vim.lsp.enable("emmylua_ls")
 vim.lsp.enable("clangd")
 vim.g.c_syntax_for_h = 1 -- .h files recognized as c not cpp
