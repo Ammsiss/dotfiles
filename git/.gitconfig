@@ -30,9 +30,9 @@
     track = status -sb
     unstage = restore --staged
     last = log -1 HEAD
-    t = log --oneline --decorate --graph origin..HEAD
     d = diff
     ds = diff --staged
+    past = log --oneline --all --graph --decorate
 [delta]
     navigate = true
     side-by-side = true

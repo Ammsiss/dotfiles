@@ -18,6 +18,7 @@ vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.wrapscan = true
 --- Misc
+vim.opt.swapfile = false
 vim.opt.list = true
 vim.opt.listchars = { tab = ">-", trail = "-" }
 vim.opt.fillchars = "diff: "

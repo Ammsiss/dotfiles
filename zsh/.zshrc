@@ -27,6 +27,8 @@ alias mr='bear --append -- make -s && ./seashell'
 
 alias vg='exec valgrind --vgdb=no --quiet --leak-check=full --errors-for-leak-kinds=definite,indirect,possible ./seashell 2> >(tee vg.err >&2)'
 
+alias val='valgrind --vgdb=no --quiet --leak-check=full --errors-for-leak-kinds=definite,indirect --show-leak-kinds=definite,indirect'
+
 source ~/.lscolors.sh # stow lsd
 
 # Prompt

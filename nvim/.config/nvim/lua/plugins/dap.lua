@@ -40,7 +40,7 @@ M.config = function()
             cwd = '${workspaceFolder}',
             console = '',
             postRunCommands = { 'process handle -p true -s false -n false SIGWINCH' },
-            stopOnEntry = false,
+            stopOnEntry = true,
             args = function()
                 return dap_utils.splitstr(vim.fn.input('Args: ', '', 'file'))
             end,
@@ -61,6 +61,7 @@ M.config = function()
     }
 
     dap.configurations.cpp = dap.configurations.c
+    dap.configurations.asm = dap.configurations.c
 
     dap.defaults.fallback.external_terminal = {
         command = (function()

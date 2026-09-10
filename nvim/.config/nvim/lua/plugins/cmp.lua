@@ -81,6 +81,14 @@ function M.config()
             "--function-arg-placeholders=0"
         }
     })
+    vim.lsp.config("asm_lsp", {
+        capabilities = capabilities,
+        filetypes = { 'asm', 'vmasm' },
+        root_markers = { '.asm-lsp.toml', '.git' },
+        cmd = {
+            "asm-lsp"
+        }
+    })
 end
 
 return M
